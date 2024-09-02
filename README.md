@@ -1,5 +1,5 @@
 # zenithutils
-An nth implementation of coreutils / util-linux / chimera-utils / busybox / sbase / ubase / plan9base / ...
+An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase / ubase / plan9base / ...
 
 ### implements:
   - coreutils (ls, cp, uname, ln, chmod, mv, rm, ...)
@@ -29,15 +29,16 @@ An nth implementation of coreutils / util-linux / chimera-utils / busybox / sbas
   - [netbsd-curses](https://github.com/sabotage-linux/netbsd-curses) / [ncurses](https://invisible-island.net/ncurses/) for Linux/*BSD OR [pdcurses](https://github.com/wmcbrine/PDCurses) for Windows
 
 ### recommended to go along with zenithutils:
-  for a more feature-packed environment:
-  - [onetrueawk](https://github.com/onetrueawk/awk) (build fails for Windows)
-  - [bc-gh](https://github.com/gavinhoward/bc) (build fails for Windows)
-  - [nq](https://github.com/leahneukirchen/nq) (useful when building large software) (not supported on Windows)
-  - [libarchive](https://libarchive.de) // [paxmirabilis](http://www.mirbsd.org/pax.htm) (aka. mircpio) (not supported on Windows)
-  - [mksh](http://www.mirbsd.org/mksh.html) (not supported on Windows) // [mksh/win32](http://www.mirbsd.org/permalinks/wlog-10_e20130718-tg.htm)
-  - [yash](https://magicant.github.io/yash/) (not supported on Windows)
-  for bootable linux systems:
-  - [nyagetty](https://github.com/chimera-linux/nyagetty) (not supported on Windows)
+  - for a more feature-packed environment:
+    - [onetrueawk](https://github.com/onetrueawk/awk) (build fails for Windows)
+    - [bc-gh](https://github.com/gavinhoward/bc) (build fails for Windows)
+    - [nq](https://github.com/leahneukirchen/nq) (useful when building large software) (not supported on Windows)
+    - [libarchive](https://libarchive.de) // [paxmirabilis](http://www.mirbsd.org/pax.htm) (aka. mircpio) (not supported on Windows)
+    - [mksh](http://www.mirbsd.org/mksh.html) (not supported on Windows) // [mksh/win32](http://www.mirbsd.org/permalinks/wlog-10_e20130718-tg.htm)
+    - [yash](https://magicant.github.io/yash/) (not supported on Windows)
+
+  - for bootable linux systems:
+    - [nyagetty](https://github.com/chimera-linux/nyagetty) (not supported on Windows)
 
 ### why ? the alternatives work pretty well.
   - Because I wanted a replacement for chimerautils + util-linux on my custom distro im making
@@ -50,4 +51,5 @@ An nth implementation of coreutils / util-linux / chimera-utils / busybox / sbas
   - *BSD
   - MacOS (x86_64, arm64)
   - Cosmopolitan libc
+
 
