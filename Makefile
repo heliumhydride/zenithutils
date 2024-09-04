@@ -129,8 +129,8 @@ o/usr/bin/tr: init_outdir lib/prettyprint.o lib/util.o coreutils/tr.o
 coreutils/base64.o: coreutils/base64.c config.h
 	$(CC) $(CFLAGS) -c -o coreutils/base64.o coreutils/base64.c
 
-o/usr/bin/base64: init_outdir lib/prettyprint.o lib/util.o coreutils/base64.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/base64 lib/prettyprint.o lib/util.o coreutils/base64.o 
+o/usr/bin/base64: init_outdir lib/prettyprint.o lib/base64.o coreutils/base64.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/base64 lib/prettyprint.o lib/base64.o coreutils/base64.o 
 
 coreutils/base32.o: coreutils/base32.c config.h
 	$(CC) $(CFLAGS) -c -o coreutils/base32.o coreutils/base32.c
@@ -141,11 +141,11 @@ o/usr/bin/base32: init_outdir lib/prettyprint.o coreutils/base32.o
 o/usr/bin/shar: init_outdir sharutils/shar.sh
 	cp sharutils/shar.sh o/usr/bin/shar
 
-sharutils/uuencode.o: sharutils/uuencode.c
-	$(CC) $(CFLAGS) -c -o sharutils/uuencode.o sharutils/uuencode.c
+sharutils/uuencode.o: sharutils/uuencode.c lib/base64.o
+	$(CC) $(CFLAGS) -c -o sharutils/uuencode.o lib/base64.o sharutils/uuencode.c
 
-o/usr/bin/uuencode: init_outdir lib/prettyprint.o lib/util.o sharutils/uuencode.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/uuencode lib/prettyprint.o lib/util.o sharutils/uuencode.o 
+o/usr/bin/uuencode: init_outdir lib/prettyprint.o lib/base64.o sharutils/uuencode.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/uuencode lib/prettyprint.o lib/base64.o sharutils/uuencode.o 
 
 sharutils/uudecode.o: sharutils/uudecode.c
 	$(CC) $(CFLAGS) -c -o sharutils/uudecode.o sharutils/uudecode.c

@@ -1,5 +1,6 @@
 -- CODE GOALS --
 
+base64 encoding/decoding
 exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
 maybe add the file loading into a buffer from exedump, wc and strings into a function in util.c/h ? (since the buffer is just a pointer)
 ascii: check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)

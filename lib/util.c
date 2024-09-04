@@ -33,14 +33,6 @@ size_t find_n_of_char_in_str(const char c, const char* str) {
   return count;
 }
 
-char* base64_encode(char* str) {
-  
-}
-
-char* base64_decode(char* str) {
-  
-}
-
 int str_is_nan(char* str) {
   int state = 0;
   for(int i = 0; i < strlen(str); i++) {
