@@ -163,8 +163,8 @@ o/usr/bin/mktemp: init_outdir lib/prettyprint.o coreutils/mktemp.o
 coreutils/mknod.o: coreutils/mknod.c
 	$(CC) $(CFLAGS) -c -o coreutils/mknod.o coreutils/mknod.c
 
-o/sbin/mknod: init_outdir lib/prettyprint.o coreutils/mknod.o
-	$(LD) $(LDFLAGS) -o o/sbin/mknod lib/prettyprint.o coreutils/mknod.o 
+o/sbin/mknod: init_outdir lib/prettyprint.o lib/util.o coreutils/mknod.o
+	$(LD) $(LDFLAGS) -o o/sbin/mknod lib/prettyprint.o lib/util.o coreutils/mknod.o 
 
 coreutils/mkfifo.o: coreutils/mkfifo.c
 	$(CC) $(CFLAGS) -c -o coreutils/mkfifo.o coreutils/mkfifo.c
