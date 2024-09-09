@@ -16,7 +16,7 @@
 
 void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-m mode] [-u uid] [-g gid] path type maj [min]\n", argv0);
-  fprintf(stderr, "       where type is b|c/u|p\n");
+  fprintf(stderr, "where type is b|c|u|p\n");
 }
 
 int main(int argc, char* argv[]){
@@ -27,22 +27,26 @@ int main(int argc, char* argv[]){
 
   #ifndef _WIN32 // On Unix
 
+  if(optind > (argc - 3)) {
+    print_usage(argv[0]);
+    return 1;
+  }
+
   uint32_t mode = 644; // default mode = rw-r--r--;
-  int32_t uid, gid;
+  ssize_t uid, gid;
   uid = gid = -1; // -1 means default (u/g)id for user
   
   char*    filename;
   char     type;
-  uint32_t maj = 0;
-  uint32_t min = 0;
+  uint32_t maj, min;
+  maj = min = 0;
 
-  // TODO uid, gid segfault (probably at atoi())
   int opt;
   while((opt = getopt(argc, argv, ":m:u:g:")) != -1) {
     switch(opt) {
       case 'm': // set mode
         if(str_is_nan(optarg)) {
-          print_error("%s: invalid mode \"%s\": not a number", argv[0], optarg);
+          print_error("%s: invalid mode \'%s\': not a number", argv[0], optarg);
           print_usage(argv[0]);
           return 1;
         }
@@ -50,7 +54,7 @@ int main(int argc, char* argv[]){
         break;
       case 'u': // set uid
         if(str_is_nan(optarg)) {
-          print_error("%s: invalid uid \"%s\": not a number", argv[0], optarg);
+          print_error("%s: invalid uid \'%s\': not a number", argv[0], optarg);
           print_usage(argv[0]);
           return 1;
         }
@@ -58,7 +62,7 @@ int main(int argc, char* argv[]){
         break;
       case 'g': // set gid
         if(str_is_nan(optarg)) {
-          print_error("%s: invalid gid \"%s\": not a number", argv[0], optarg);
+          print_error("%s: invalid gid \'%s\': not a number", argv[0], optarg);
           print_usage(argv[0]);
           return 1;
         }
@@ -73,31 +77,30 @@ int main(int argc, char* argv[]){
   }
 
   printf("mode %u\nuid  %d\ngid  %d\n", mode, uid, gid);
-  /*
-  for(; optind<argc; optind++) {
-    printf("%s    %d\n", argv[optind], optind);
-  }
-  */
-  printf("%s %s %s %s\n", argv[optind], argv[optind+1], argv[optind+2], argv[optind+3]);
 
   filename = argv[optind];
   type     = argv[optind+1][0];
-  maj      = atoi(argv[optind+2]);
-  maj      = atoi(argv[optind+3]);
 
-  if(argv[optind] == NULL) {
-    print_error("%s: no node filename specified", argv[0]);
+  if(str_is_nan(argv[optind+2])) {
+    print_error("%s: invalid node '%s': not a number", argv[0], argv[optind+2]);
+    return 1;
+  } else if(str_is_nan(argv[optind+3])) {
+    print_error("%s: invalid node '%s': not a number", argv[0], argv[optind+3]);
     return 1;
   }
 
-  if(argv[optind+1] == NULL) {
-    print_error("%s: specify node type", argv[0]);
+  if(argc >= optind+3)
+    maj = atoi(argv[optind+2]);
+  if(argc >= optind+4)
+    min = atoi(argv[optind+3]);
+
+  if(maj <= 0) {
+    print_error("%s: invalid node maj '%d'", argv[0], maj);
     return 1;
   }
 
-  if(argv[optind+2] == 0) {
-    print_error("%s: invalid node maj", argv[0]);
-  }
+  // TODO segfault when not providing some variables
+  printf("%c %s %d:%d\n", type, filename, maj, min);
 
 	return 0;
   #endif
