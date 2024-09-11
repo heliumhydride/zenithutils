@@ -39,7 +39,6 @@ int main(int argc, char* argv[]){
   char*    filename;
   char     type;
   uint32_t maj, min;
-  maj = min = 0;
 
   int opt;
   while((opt = getopt(argc, argv, ":m:u:g:")) != -1) {
@@ -89,10 +88,17 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
-  if(argc >= optind+3)
+  if(argc >= optind+3) {
     maj = atoi(argv[optind+2]);
-  if(argc >= optind+4)
+  } else {
+    print_error("%s: node maj must be set");
+  }
+
+  if(argc >= optind+4) {
     min = atoi(argv[optind+3]);
+  } else {
+    min = 0;
+  }
 
   if(maj <= 0) {
     print_error("%s: invalid node maj '%d'", argv[0], maj);
