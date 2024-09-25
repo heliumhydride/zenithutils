@@ -1,34 +1,41 @@
 -- CODE GOALS --
 
-base64 encoding/decoding
-exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
+lib/util base64 encoding/decoding
+customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
 maybe add the file loading into a buffer from exedump, wc and strings into a function in util.c/h ? (since the buffer is just a pointer)
-ascii: check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
+customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 
-whoami
-uptime (link to w) + w
-mknod
-id
-mount, umount, mountpoint (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)
+coreutils/uniq.c
+customtools/at
+customtools/bg
+customtools/disown
+coreutils/whoami
+procutils/uptime (link to w) + procutils/w
+coreutils/mknod
+coreutils/id
+util-linux/{mount,umount,mountpoint} (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)
+customtools/read
+customtools/time
+util-linux/rev fixes
+coreutils/cat fixes
+coreutils/mv
+coreutils/cp
+coreutils/ls
+coreutils/tr
+coreutils/mktemp potential memory safety issues ?
+sharutils/{uuencode,uudecode}
+customtools/strings todos
+coretuils/pwd todos (test on real Windows, not Wine)
+coretuils/base64
+coreutils/wc todos
+coreutils/which Windows-specific fixes
+lib/libutil pipe array removal (read directly from stdin)
+coreutils/mkfifo
+findutils/xargs
+coreutils/dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/random emulation and possibly emulate /dev/sdXY)
+procutils/sysctl (On Windows, do we provide the same linux interface translated to windows or do we create a command-line alternative to the control panel ?)
+
 test building on netbsd
-read
-time
-rev fixes
-cat fixes
-ls
-tr
-mktemp potential memory safety issues ?
-uudecode/uuencode
-strings todos
-pwd todos (test on real Windows, not Wine)
-base64
-wc todos
-which Windows-specific fixes
-libutil pipe array removal (read directly from stdin)
-mkfifo
-xargs
-dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/random emulation and possibly emulate /dev/sdXY)
-sysctl (On Windows, do we provide the same linux interface translated to windows or do we create a command-line alternative to the control panel ?)
 
 -- NON CODE GOALS --
 improve readme a bit

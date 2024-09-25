@@ -5,7 +5,8 @@
 //#include <stdlib.h>
 //#include <getopt.h>
 #include <unistd.h>
-//#include <string.h>
+#include <string.h>
+#include <libgen.h>
 
 #include "../include/prettyprint.h"
 #include "../config.h"
@@ -22,21 +23,64 @@ void print_usage(char* argv0) {
 }
 
 void print_version() {
-  fprintf(stderr, "uptime from zenithutils " VERSION "\n");
+  fprintf(stderr, "w/uptime from zenithutils " VERSION "\n");
 }
 
 int main(int argc, char* argv[]){
+  int uptime_mode = 0;
   int opt;
+
+  // flags for uptime: -psV
+  // flags for w     : -AhiMNpns
+  int uptime_pflag = 0;
+  int uptime_sflag = 0;
   int pflag = 0;
   int sflag = 0;
 
-  while((opt = getopt(argc, argv, ":psV")) != -1) {
+  int hflag = 0;
+  int Aflag = 0;
+  int iflag = 0;
+  int Mflag = 0;
+  int Nflag = 0;
+  int nflag = 0;
+
+  if(basename(argv[0])[0] == 'u') {
+    uptime_mode = 1;
+  }
+
+  while((opt = getopt(argc, argv, ":psVhAiMNn")) != -1) {
     switch(opt) {
       case 'p':
-        pflag = 1;
+        if(uptime_mode) {
+          uptime_pflag = 1;
+        } else {
+          pflag = 1;
+        }
         break;
       case 's':
-        sflag = 1;
+        if(uptime_mode) {
+          uptime_sflag = 1;
+        } else {
+          sflag = 1;
+        }
+        break;
+      case 'h':
+        hflag = 1;
+        break;
+      case 'A':
+        Aflag = 1;
+        break;
+      case 'i':
+        iflag = 1;
+        break;
+      case 'M':
+        Mflag = 1;
+        break;
+      case 'N':
+        Nflag = 1;
+        break;
+      case 'n':
+        nflag = 1;
         break;
       case 'V': // compat with standard uptime -V
         print_version();
@@ -50,13 +94,7 @@ int main(int argc, char* argv[]){
     }
   }
 
-  if(pflag == 1) {
-    printf("execute uptime -p\n");
-  } else if(sflag == 1){
-    printf("execute uptime -s\n");
-  } else {
-    printf("execute default uptime behaviour\n");
-  }
+  printf("%s %d\n", basename(argv[0]), uptime_mode);
 
   #ifndef _WIN32 // On Unix
   #endif
