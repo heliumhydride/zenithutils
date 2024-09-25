@@ -19,23 +19,22 @@ void print_usage(char* argv0) {
 */
 
 int main(int argc, char* argv[]){
-  char* username;
+  char* username = NULL;
+
   #ifndef _WIN32 // On Unix
-  // i am always irrationally scared of malloc/free
-  username = malloc(255);
-  getlogin_r(username, sizeof(username));
+  // TODO when i run "su root" and then run o/usr/bin/whoami, it shows my username before running su instead of "root"...
+  username = getlogin();
   #endif
 
   #ifdef _WIN32
   // that's right we're gonna cheat (using the environment variable USERNAME)
-  username = getenv("USER");
-  if(username != NULL) {
-    print_error("%s: getting username from environment failed");
-    return 1;
-  }
+  username = getenv("USERNAME");
   #endif
 
+  if(username == NULL) {
+    print_error("%s: getting username failed", argv[0]);
+    return 1;
+  }
   printf("%s\n", username);
-  free(username);
 	return 0;
 }
