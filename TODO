@@ -6,7 +6,7 @@ maybe add the file loading into a buffer from exedump, wc and strings into a fun
 ascii: check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 
 whoami
-uptime
+uptime (link to w) + w
 mknod
 id
 mount, umount, mountpoint (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)

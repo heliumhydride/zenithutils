@@ -35,8 +35,8 @@ patch: o/usr/bin/patch
 gzip: o/usr/bin/gzip
 
 # sysctl will either show a "does not apply to windows" or will implement some kind of command line windows control panel
-# what do we do for sysctl on *BSD ???
-procutils: o/usr/bin/uptime o/usr/bin/top o/usr/bin/pstree o/usr/bin/fuser o/usr/bin/killall o/usr/bin/ps o/usr/bin/w o/usr/bin/pkill o/sbin/sysctl o/usr/bin/pidof o/usr/bin/free o/usr/bin/pgrep
+# uptime is a link to w
+procutils: o/usr/bin/w o/usr/bin/top o/usr/bin/pstree o/usr/bin/fuser o/usr/bin/killall o/usr/bin/ps o/usr/bin/pkill o/sbin/sysctl o/usr/bin/pidof o/usr/bin/free o/usr/bin/pgrep
 
 sharutils: o/usr/bin/shar o/usr/bin/uuencode o/usr/bin/uudecode
 
@@ -228,11 +228,11 @@ customtools/usleep.o: customtools/usleep.c
 o/usr/bin/usleep: init_outdir lib/prettyprint.o lib/util.o customtools/usleep.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/usleep lib/prettyprint.o lib/util.o customtools/usleep.o
 
-procutils/uptime.o: procutils/uptime.c
-	$(CC) $(CFLAGS) -c -o procutils/uptime.o procutils/uptime.c
+procutils/w.o: procutils/w.c
+	$(CC) $(CFLAGS) -c -o procutils/w.o procutils/w.c
 
-o/usr/bin/uptime: init_outdir lib/prettyprint.o lib/util.o procutils/uptime.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/uptime lib/prettyprint.o lib/util.o procutils/uptime.o
+o/usr/bin/w: init_outdir lib/prettyprint.o lib/util.o procutils/w.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/w lib/prettyprint.o lib/util.o procutils/w.o
 
 coreutils/whoami.o: coreutils/whoami.c
 	$(CC) $(CFLAGS) -c -o coreutils/whoami.o coreutils/whoami.c
