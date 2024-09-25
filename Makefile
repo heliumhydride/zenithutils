@@ -7,7 +7,7 @@ customtools: o/usr/bin/zenithutils_version o/usr/bin/ascii o/usr/bin/rng o/usr/b
 
 # logname is a link to whoami
 # md5sum is a link to md5
-coreutils: o/bin/cat o/usr/bin/nproc o/bin/ls o/usr/bin/uname o/usr/bin/seq o/bin/pwd o/usr/bin/true o/usr/bin/false o/usr/bin/yes o/usr/bin/dirname o/usr/bin/basename o/usr/bin/tac o/usr/bin/sleep o/usr/bin/wc o/usr/bin/mktemp o/sbin/mknod o/usr/bin/mkfifo o/bin/cp o/bin/mv o/bin/rm o/usr/bin/readlink o/bin/rmdir o/bin/mkdir o/bin/sync o/bin/test o/usr/bin/tee o/usr/bin/tail o/usr/bin/head o/usr/bin/sort o/usr/bin/shred o/bin/touch o/usr/bin/timeout o/usr/bin/truncate o/usr/bin/uniq o/usr/bin/users o/usr/bin/whoami o/usr/bin/nice o/bin/ln o/usr/bin/install o/usr/bin/id o/usr/bin/hostname o/usr/bin/groups o/usr/bin/df o/usr/sbin/chroot o/usr/bin/[ o/bin/chmod o/bin/chown o/bin/cut o/bin/date o/bin/dd o/usr/bin/fmt o/usr/bin/fold o/usr/bin/md5 o/usr/bin/sha1sum o/usr/bin/sha224sum o/usr/bin/sha256sum o/usr/bin/sha384sum o/usr/bin/sha512sum o/usr/bin/pr o/usr/bin/tr o/usr/bin/base64 o/usr/bin/base32 o/bin/chgrp o/bin/echo o/usr/bin/comm o/usr/bin/du o/usr/bin/env o/usr/bin/expand o/usr/bin/expr o/usr/bin/join o/usr/bin/od o/usr/bin/printf o/usr/bin/split o/usr/bin/stty o/usr/bin/tsort o/usr/bin/tty o/usr/bin/unexpand o/usr/bin/who o/usr/bin/nl
+coreutils: o/bin/cat o/usr/bin/nproc o/bin/ls o/usr/bin/uname o/usr/bin/seq o/bin/pwd o/usr/bin/true o/usr/bin/false o/usr/bin/yes o/usr/bin/dirname o/usr/bin/basename o/usr/bin/tac o/usr/bin/sleep o/usr/bin/wc o/usr/bin/mktemp o/sbin/mknod o/usr/bin/whoami o/usr/bin/mkfifo o/bin/cp o/bin/mv o/bin/rm o/usr/bin/readlink o/bin/rmdir o/bin/mkdir o/bin/sync o/bin/test o/usr/bin/tee o/usr/bin/tail o/usr/bin/head o/usr/bin/sort o/usr/bin/shred o/bin/touch o/usr/bin/timeout o/usr/bin/truncate o/usr/bin/uniq o/usr/bin/users o/usr/bin/nice o/bin/ln o/usr/bin/install o/usr/bin/id o/usr/bin/hostname o/usr/bin/groups o/usr/bin/df o/usr/sbin/chroot o/usr/bin/[ o/bin/chmod o/bin/chown o/bin/cut o/bin/date o/bin/dd o/usr/bin/fmt o/usr/bin/fold o/usr/bin/md5 o/usr/bin/sha1sum o/usr/bin/sha224sum o/usr/bin/sha256sum o/usr/bin/sha384sum o/usr/bin/sha512sum o/usr/bin/pr o/usr/bin/tr o/usr/bin/base64 o/usr/bin/base32 o/bin/chgrp o/bin/echo o/usr/bin/comm o/usr/bin/du o/usr/bin/env o/usr/bin/expand o/usr/bin/expr o/usr/bin/join o/usr/bin/od o/usr/bin/printf o/usr/bin/split o/usr/bin/stty o/usr/bin/tsort o/usr/bin/tty o/usr/bin/unexpand o/usr/bin/who o/usr/bin/nl
 
 # do we really need 'rename' and 'hardlink' ? (see 'mv' and 'ln')
 # agetty not implemented, see nyagetty from chimera linux
@@ -233,6 +233,12 @@ procutils/uptime.o: procutils/uptime.c
 
 o/usr/bin/uptime: init_outdir lib/prettyprint.o lib/util.o procutils/uptime.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/uptime lib/prettyprint.o lib/util.o procutils/uptime.o
+
+coreutils/whoami.o: coreutils/whoami.c
+	$(CC) $(CFLAGS) -c -o coreutils/whoami.o coreutils/whoami.c
+
+o/usr/bin/whoami: init_outdir lib/prettyprint.o coreutils/whoami.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/whoami lib/prettyprint.o coreutils/whoami.o
 
 clean:
 	rm -rf o/* customtools/*.o coreutils/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sh/*.o su/*.o tar/*.o util-linux/*.o which/*.o sharutils/*.o cpio/*.o

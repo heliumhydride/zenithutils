@@ -5,6 +5,10 @@ exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print pr
 maybe add the file loading into a buffer from exedump, wc and strings into a function in util.c/h ? (since the buffer is just a pointer)
 ascii: check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 
+whoami
+uptime
+mknod
+id
 mount, umount, mountpoint (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)
 test building on netbsd
 read
@@ -21,7 +25,6 @@ base64
 wc todos
 which Windows-specific fixes
 libutil pipe array removal (read directly from stdin)
-mknod
 mkfifo
 xargs
 dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/random emulation and possibly emulate /dev/sdXY)
