@@ -8,6 +8,7 @@
 #include <libgen.h>
 #include <time.h>
 #include <math.h>
+#include <stdint.h>
 
 #include "../include/prettyprint.h"
 #include "../config.h"
@@ -97,7 +98,7 @@ int main(int argc, char* argv[]){
   }
 
   #ifndef _WIN32 // On Unix
-    if(uptime_mode == 1 || !hflag) {
+    if(!hflag) {
       /*
          gather some data
       */
@@ -120,17 +121,28 @@ int main(int argc, char* argv[]){
       time(&rawtime);
       timeinfo = localtime (&rawtime);
 
-      struct utmp* data;
-      data = getutent();
+      struct utmp* utmp_dat;
+      setutent();
+      utmp_dat = getutent();
+      uint32_t n_users = 0;
+      while(utmp_dat) {
+        n_users++;
+        utmp_dat = getutent();
+      }
 
-      // we need to print something like: "[current time] up [up for x hours, x minutes], [number of users logged in] user(s), load average [load averages]"
-      printf(" %02d:%02d:%02d up  ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+      /* we need to print something like:
+          [current time] up [up for x minutes||hh:mm], [number of users logged in] user(s), load average [load averages]
+      */
+
+      printf(" %02d:%02d:%02d up ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
       if(floor(uptime/3600) > 0) {
-        printf("%.0lf:%.0lf,  ", floor(uptime/3600), floor(fmod(uptime, 60.0)));
+        printf("%.0lf:%.0lf,  ", floor(uptime/3600), floor(fmod(uptime, 60)));
       } else {
         printf("%.0lf min,  ", floor(uptime/60));
       }
-      printf("%d  \n", data->ut_pid); // testing utmp, not final product obv
+      printf("%d user", n_users);
+      if(n_users > 1) printf("s");
+      printf(",  load average: ");
     }
   #endif
 
