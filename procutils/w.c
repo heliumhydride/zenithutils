@@ -120,9 +120,8 @@ int main(int argc, char* argv[]){
       // we need to print something like: "[current time] up [up for x hours, x minutes], [number of users logged in] user(s), load average [load averages]"
       printf(" %02d:%02d:%02d up ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
       if(floor(uptime/3600) > 0) // Only print hours if system is up for an hour or more
-        printf("%lf hours, \n", floor(uptime/3600));
-      // TODO we get 42.00000 minutes, which isn't technically wrong but is definitely not standard
-      printf("%lf min,  \n", floor(uptime/60));
+        printf("%.0lf hours, \n", floor(uptime/3600));
+      printf("%.0lf min,  \n", floor(uptime/60));
     }
   #endif
 
