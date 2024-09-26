@@ -232,7 +232,7 @@ procutils/w.o: procutils/w.c
 	$(CC) $(CFLAGS) -c -o procutils/w.o procutils/w.c
 
 o/usr/bin/w: init_outdir lib/prettyprint.o lib/util.o procutils/w.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/w lib/prettyprint.o lib/util.o procutils/w.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/w -lm lib/prettyprint.o lib/util.o procutils/w.o
 
 coreutils/whoami.o: coreutils/whoami.c
 	$(CC) $(CFLAGS) -c -o coreutils/whoami.o coreutils/whoami.c

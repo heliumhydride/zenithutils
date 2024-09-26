@@ -1,12 +1,13 @@
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
 //#include <stdlib.h>
 //#include <getopt.h>
 #include <unistd.h>
 #include <string.h>
 #include <libgen.h>
+#include <time.h>
+#include <math.h>
 
 #include "../include/prettyprint.h"
 #include "../config.h"
@@ -94,9 +95,35 @@ int main(int argc, char* argv[]){
     }
   }
 
-  printf("%s %d\n", basename(argv[0]), uptime_mode);
-
   #ifndef _WIN32 // On Unix
+    if(uptime_mode == 1 || !hflag) {
+      // should we read /proc/uptime or not ?
+      FILE* uptime_file; // /proc/uptime
+      double uptime; // uptime in seconds
+
+      uptime_file = fopen("/proc/uptime", "r");
+
+      if(uptime_file == NULL) {
+        print_error("could not open /proc/uptime");
+        return 1;
+      }
+
+      fscanf(uptime_file, "%lf", &uptime);
+      fclose(uptime_file);
+      
+      time_t rawtime;
+      struct tm* timeinfo;
+
+      time(&rawtime);
+      timeinfo = localtime (&rawtime);
+
+      // we need to print something like: "[current time] up [up for x hours, x minutes], [number of users logged in] user(s), load average [load averages]"
+      printf(" %02d:%02d:%02d up ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+      if(floor(uptime/3600) > 0) // Only print hours if system is up for an hour or more
+        printf("%lf hours, \n", floor(uptime/3600));
+      // TODO we get 42.00000 minutes, which isn't technically wrong but is definitely not standard
+      printf("%lf min,  \n", floor(uptime/60));
+    }
   #endif
 
   #ifdef _WIN32
