@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 //#include <stdlib.h>
-//#include <getopt.h>
+#include <getopt.h>
 #include <unistd.h>
 #include <string.h>
 #include <libgen.h>
@@ -17,6 +17,7 @@
 #endif
 
 #ifndef _WIN32 // On Unix
+#include <utmp.h>
 #endif
 
 void print_usage(char* argv0) {
@@ -97,10 +98,12 @@ int main(int argc, char* argv[]){
 
   #ifndef _WIN32 // On Unix
     if(uptime_mode == 1 || !hflag) {
+      /*
+         gather some data
+      */
       // should we read /proc/uptime or not ?
       FILE* uptime_file; // /proc/uptime
       double uptime; // uptime in seconds
-
       uptime_file = fopen("/proc/uptime", "r");
 
       if(uptime_file == NULL) {
@@ -117,15 +120,23 @@ int main(int argc, char* argv[]){
       time(&rawtime);
       timeinfo = localtime (&rawtime);
 
+      struct utmp* data;
+      data = getutent();
+
       // we need to print something like: "[current time] up [up for x hours, x minutes], [number of users logged in] user(s), load average [load averages]"
-      printf(" %02d:%02d:%02d up ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
-      if(floor(uptime/3600) > 0) // Only print hours if system is up for an hour or more
-        printf("%.0lf hours, \n", floor(uptime/3600));
-      printf("%.0lf min,  \n", floor(uptime/60));
+      printf(" %02d:%02d:%02d up  ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+      if(floor(uptime/3600) > 0) {
+        printf("%.0lf:%.0lf,  ", floor(uptime/3600), floor(fmod(uptime, 60.0)));
+      } else {
+        printf("%.0lf min,  ", floor(uptime/60));
+      }
+      printf("%d  \n", data->ut_pid); // testing utmp, not final product obv
     }
   #endif
 
   #ifdef _WIN32
+    // TODO windows
+    // TODO do we emulate /dev/ttyX or just output CON ?
   #endif
 	return 0;
 }
