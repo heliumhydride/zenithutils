@@ -240,6 +240,12 @@ coreutils/whoami.o: coreutils/whoami.c
 o/usr/bin/whoami: init_outdir lib/prettyprint.o coreutils/whoami.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/whoami lib/prettyprint.o coreutils/whoami.o
 
+coreutils/tty.o: coreutils/tty.c
+	$(CC) $(CFLAGS) -c -o coreutils/tty.o coreutils/tty.c
+
+o/usr/bin/tty: init_outdir coreutils/tty.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/tty coreutils/tty.o
+
 clean:
 	rm -rf o/* customtools/*.o coreutils/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sh/*.o su/*.o tar/*.o util-linux/*.o which/*.o sharutils/*.o cpio/*.o
 
