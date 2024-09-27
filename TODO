@@ -1,16 +1,16 @@
 -- CODE GOALS --
 
+procutils/w
 lib/util base64 encoding/decoding
+coretuils/base64
 customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
 maybe add the file loading into a buffer from exedump, wc and strings into a function in util.c/h ? (since the buffer is just a pointer)
 customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
-
 coreutils/uniq.c
 customtools/at
 customtools/bg
 customtools/disown
 coreutils/whoami
-procutils/uptime (link to w) + procutils/w
 coreutils/mknod
 coreutils/id
 util-linux/{mount,umount,mountpoint} (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)
@@ -26,7 +26,6 @@ coreutils/mktemp potential memory safety issues ?
 sharutils/{uuencode,uudecode}
 customtools/strings todos
 coretuils/pwd todos (test on real Windows, not Wine)
-coretuils/base64
 coreutils/wc todos
 coreutils/which Windows-specific fixes
 lib/libutil pipe array removal (read directly from stdin)
