@@ -54,5 +54,5 @@ int main(int argc, char* argv[]){
   }
   
   printf("%ld\n", randombytes_uniform(max-min) + min);
-	return 0;
+  return 0;
 }

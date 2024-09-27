@@ -22,5 +22,5 @@ int main(int argc, char* argv[]){
   }
 
   sleep(time);
-	return 0;
+  return 0;
 }

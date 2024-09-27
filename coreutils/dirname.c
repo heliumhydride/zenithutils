@@ -14,5 +14,5 @@ int main(int argc, char* argv[]){
   }
 
   printf("%s\n", dirname(argv[1]));
-	return 0;
+  return 0;
 }

@@ -108,6 +108,6 @@ int main(int argc, char* argv[]){
   // TODO segfault when not providing some variables
   printf("%c %s %d:%d\n", type, filename, maj, min);
 
-	return 0;
+  return 0;
   #endif
 }

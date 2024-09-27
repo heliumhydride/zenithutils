@@ -12,5 +12,5 @@ int main(int argc, char* argv[]){
     printf("%s\n", expletive);
 
   // we dont need return ?
-	return 0;
+  return 0;
 }

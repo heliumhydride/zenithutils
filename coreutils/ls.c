@@ -140,5 +140,5 @@ int main(int argc, char* argv[]){
     ls_colors = "di=";
   */
 
-	return 0;
+  return 0;
 }

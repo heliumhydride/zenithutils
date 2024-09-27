@@ -19,5 +19,5 @@ int main(int argc, char* argv[]){
   printf("-----------------------------------------------\n\n");
   printf("run 'man zenithutils' for more info on this software\n");
 
-	return 0;
+  return 0;
 }

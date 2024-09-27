@@ -70,5 +70,5 @@ int main(int argc, char* argv[]){
 
   printf("%s", fetch_from_stdin());
 
-	return 0;
+  return 0;
 }

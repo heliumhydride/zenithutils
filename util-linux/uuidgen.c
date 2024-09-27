@@ -72,5 +72,5 @@ int main(int argc, char* argv[]){
   for(int i = 0; i < count; i++)
     printf("%s\n", uuidgen());
 
-	return 0;
+  return 0;
 }

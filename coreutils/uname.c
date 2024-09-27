@@ -134,5 +134,5 @@ int main(int argc, char* argv[]){
     print_os(u);
 
   printf("\n");
-	return 0;
+  return 0;
 }
