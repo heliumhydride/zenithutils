@@ -11,5 +11,4 @@ char* fetch_from_stdin();
 size_t find_n_of_char_in_str(const char c, const char* str);
 int str_is_nan(char* str);
 void format_time(int* new_time, float time);
-
 #endif
