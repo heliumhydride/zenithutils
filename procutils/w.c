@@ -125,16 +125,18 @@ int main(int argc, char* argv[]){
       setutent();
       utmp_dat = getutent();
       uint32_t n_users = 0;
-      while(utmp_dat) {
-        n_users++;
-        utmp_dat = getutent();
+      while((utmp_dat = getutent()) != NULL) {
+        if (utmp_dat->ut_line[0] == '~') continue;
+        if (utmp_dat->ut_user[0] && (strcmp(utmp_dat->ut_user, "LOGIN")==1)) {
+          n_users++;
+        }
       }
 
       /* we need to print something like:
           [current time] up [up for x minutes||hh:mm], [number of users logged in] user(s), load average [load averages]
       */
 
-      printf(" %02d:%02d:%02d up ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+      printf(" %02d:%02d:%02d up  ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
       if(floor(uptime/3600) > 0) {
         printf("%.0lf:%.0lf,  ", floor(uptime/3600), floor(fmod(uptime, 60)));
       } else {
