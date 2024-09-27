@@ -11,6 +11,7 @@
 #include <stdint.h>
 
 #include "../include/prettyprint.h"
+#include "../include/util.h"
 #include "../config.h"
 
 #ifdef _WIN32
@@ -27,12 +28,6 @@ void print_usage(char* argv0) {
 
 void print_version() {
   fprintf(stderr, "w/uptime from zenithutils " VERSION "\n");
-}
-
-void format_time(int* new_time, float time) {
-  new_time[0] = (int)floor(time/3600);             // hours
-  new_time[1] = (int)floor(fmod(time, 3600) / 60); // minutes
-  new_time[2] = (int)floor(fmod(time, 60));        // seconds
 }
 
 int main(int argc, char* argv[]){
