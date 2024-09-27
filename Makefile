@@ -1,6 +1,6 @@
 include config.mk
 
-all: customtools coreutils which sharutils util-linux findutils sed procutils diffutils grep patch su gzip iconv
+all: coreutils customtools diffutils findutils grep gzip iconv patch procutils sed sharutils su util-linux which
 
 # yes read, like the shellscript read (with -r, and all that good stuff)
 customtools: o/usr/bin/zenithutils_version o/usr/bin/ascii o/usr/bin/rng o/usr/bin/read o/usr/bin/strings o/usr/bin/exedump o/usr/bin/usleep o/usr/bin/time o/usr/bin/lsmod
@@ -248,7 +248,7 @@ o/usr/bin/tty: init_outdir coreutils/tty.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/tty coreutils/tty.o
 
 clean:
-	rm -rf o/* customtools/*.o coreutils/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sh/*.o su/*.o tar/*.o util-linux/*.o which/*.o sharutils/*.o cpio/*.o
+	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o
 
 init_outdir: o/bin o/sbin o/usr/bin o/usr/sbin
 
