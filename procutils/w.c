@@ -29,6 +29,12 @@ void print_version() {
   fprintf(stderr, "w/uptime from zenithutils " VERSION "\n");
 }
 
+void format_time(int* new_time, float time) {
+  new_time[0] = (int)floor(time/3600);             // hours
+  new_time[1] = (int)floor(fmod(time, 3600) / 60); // minutes
+  new_time[2] = (int)floor(fmod(time, 60));        // seconds
+}
+
 int main(int argc, char* argv[]){
   int uptime_mode = 0;
   int opt;
@@ -100,11 +106,11 @@ int main(int argc, char* argv[]){
   #ifndef _WIN32 // On Unix
     if(!hflag) {
       /*
-         gather some data
+         gather some data here
       */
       // should we read /proc/uptime or not ?
       FILE* uptime_file; // /proc/uptime
-      double uptime; // uptime in seconds
+      float uptime; // uptime in seconds
       uptime_file = fopen("/proc/uptime", "r");
 
       if(uptime_file == NULL) {
@@ -112,18 +118,19 @@ int main(int argc, char* argv[]){
         return 1;
       }
 
-      fscanf(uptime_file, "%lf", &uptime);
+      fscanf(uptime_file, "%f", &uptime);
       fclose(uptime_file);
       
+      int uptime_new[3] = {0,0,0};
+      format_time(uptime_new,uptime);
+
       time_t rawtime;
       struct tm* timeinfo;
-
       time(&rawtime);
       timeinfo = localtime (&rawtime);
 
       struct utmp* utmp_dat;
       setutent();
-      utmp_dat = getutent();
       uint32_t n_users = 0;
       while((utmp_dat = getutent()) != NULL) {
         if (utmp_dat->ut_line[0] == '~') continue;
@@ -131,6 +138,10 @@ int main(int argc, char* argv[]){
           n_users++;
         }
       }
+      endutent();
+      /*
+         stop gathering some data
+      */
 
       /* we need to print something like:
           [current time] up [up for x minutes||hh:mm], [number of users logged in] user(s), load average [load averages]
@@ -138,12 +149,14 @@ int main(int argc, char* argv[]){
 
       printf(" %02d:%02d:%02d up  ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
       if(floor(uptime/3600) > 0) {
-        printf("%.0lf:%.0lf,  ", floor(uptime/3600), floor(fmod(uptime, 60)));
+        printf("%d:%02d,  ", uptime_new[0], uptime_new[1]);
       } else {
-        printf("%.0lf min,  ", floor(uptime/60));
+        printf("%d min,  ", (int)floor(uptime/60));
       }
+
       printf("%d user", n_users);
       if(n_users > 1) printf("s");
+
       printf(",  load average: ");
     }
   #endif
@@ -152,5 +165,5 @@ int main(int argc, char* argv[]){
     // TODO windows
     // TODO do we emulate /dev/ttyX or just output CON ?
   #endif
-	return 0;
+  return 0;
 }
