@@ -20,11 +20,11 @@ int main(int argc, char* argv[]){
   // Do we use getopt() or do we use our own parser ? (for -eq, -lt, ...)
 
   int opt;
-  char mode = '\0';
+  int mode = 0;
   char* test_optarg = NULL;
 
-  // TODO fix print_usage running when not putting an argument for -z and -n
-  while((opt = getopt(argc, argv, ":b:c:d:e:f:g:h:p:r:s:t:u:w:x:L:S:z:n:")) != -1) {
+  // TODO fix print_usage running when not putting an argument for -n
+  while((opt = getopt(argc, argv, ":zn:b:c:d:e:f:g:h:p:r:s:t:u:w:x:L:S:")) != -1) {
     switch(opt) {
       case 'b': // fallthrough
       case 'c': // fallthrough
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]){
     }
   }
 
-  if(argc <= 1 || mode == '\0') {
+  if(argc <= 1) {
     print_usage(argv[0]);
     return 1;
   }
@@ -64,12 +64,22 @@ int main(int argc, char* argv[]){
     case 'e': // check if file exists
       break;
     case 'z': // check if string length is zero
-      if(strlen(test_optarg) == 0) {return 0;}
-      else {return 1;}
+      // TODO -z always returns 0
+      if(test_optarg == NULL) { return 0; }
+      else {
+        if(strlen(test_optarg) == 0) {
+          return 0;
+        } 
+        return 1;
+      }
       break;
     case 'n': // check if string length is non-zero
-      if(strlen(test_optarg) != 0) {return 0;}
+      if(test_optarg != NULL) {return 0;}
       else {return 1;}
+      break;
+    default:
+      print_usage(argv[0]);
+      return 1;
       break;
   }
 
