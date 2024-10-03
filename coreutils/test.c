@@ -1,29 +1,77 @@
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <string.h>
 //#include <unistd.h>
-//#include <string.h>
 
 #include "../include/prettyprint.h"
 
+void print_usage(char* argv0) {
+  fprintf(stderr, "usage: %s -b|-c|-d|-e|-f|-g|-h|-p|-r|-s|-t|-u|-w|-x|-L|-S filename\n", argv0);
+  fprintf(stderr, "       %s -z|-n string\n", argv0);
+  fprintf(stderr, "       %s value1 comparator value2\n", argv0);
+}
+
 int main(int argc, char* argv[]){
+  // TODO implement -o, -a, multiple arguments for test
+  // TODO implement -eq, -lt, ...
   // Do we use getopt() or do we use our own parser ? (for -eq, -lt, ...)
 
   int opt;
-  // Not like other opts, [X]flag will increase everytime it is used (so eflag can ==2 for example)
-  // zflag != nflag
-  int bflag = 0; int cflag = 0; int dflag = 0;
-  int eflag = 0; int fflag = 0; int gflag = 0;
-  int hflag = 0; int nflag = 0; int pflag = 0;
-  int rflag = 0; int sflag = 0; int tflag = 0;
-  int uflag = 0; int wflag = 0; int xflag = 0;
-  int zflag = 0; int Lflag = 0; int Sflag = 0; 
-  if(argc <= 1) {
-    return 1;
-  } else {
-    return 0;
+  char mode = '\0';
+  char* test_optarg = NULL;
+
+  // TODO fix print_usage running when not putting an argument for -z and -n
+  while((opt = getopt(argc, argv, ":b:c:d:e:f:g:h:p:r:s:t:u:w:x:L:S:z:n:")) != -1) {
+    switch(opt) {
+      case 'b': // fallthrough
+      case 'c': // fallthrough
+      case 'd': // fallthrough
+      case 'e': // fallthrough
+      case 'f': // fallthrough
+      case 'g': // fallthrough
+      case 'h': // fallthrough
+      case 'p': // fallthrough
+      case 'r': // fallthrough
+      case 's': // fallthrough
+      case 't': // fallthrough
+      case 'u': // fallthrough
+      case 'w': // fallthrough
+      case 'x': // fallthrough
+      case 'L': // fallthrough
+      case 'S': // fallthrough
+      case 'z': // fallthrough
+      case 'n':
+        test_optarg = optarg;
+        mode = opt;
+        break;
+      case '?':
+        print_error("%s: invalid option -- '%c'", argv[0], optopt);
+        print_usage(argv[0]);
+        return 1;
+        break;
+    }
   }
+
+  if(argc <= 1 || mode == '\0') {
+    print_usage(argv[0]);
+    return 1;
+  }
+
+  switch(mode) {
+    case 'e': // check if file exists
+      break;
+    case 'z': // check if string length is zero
+      if(strlen(test_optarg) == 0) {return 0;}
+      else {return 1;}
+      break;
+    case 'n': // check if string length is non-zero
+      if(strlen(test_optarg) != 0) {return 0;}
+      else {return 1;}
+      break;
+  }
+
+  return 0;
 }
