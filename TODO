@@ -1,5 +1,6 @@
 -- CODE GOALS --
 
+coreutils/sleep take floats properly (use usleep ?)
 fix libutil.o compilation (undefined reference to fmod)
 coreutils/test
 procutils/w
