@@ -11,6 +11,7 @@ customtools/ascii check if a control code is provided as an argument (eg. ascii 
 coreutils/uniq.c
 customtools/at
 customtools/bg
+customtools/fg
 customtools/disown
 coreutils/whoami
 coreutils/mknod
@@ -35,6 +36,7 @@ coreutils/mkfifo
 findutils/xargs
 coreutils/dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/random emulation and possibly emulate /dev/sdXY)
 procutils/sysctl (On Windows, do we provide the same linux interface translated to windows or do we create a command-line alternative to the control panel ?)
+coreutils/env
 
 test building on netbsd
 
