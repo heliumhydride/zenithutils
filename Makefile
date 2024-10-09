@@ -73,9 +73,11 @@ coreutils/uname.o: coreutils/uname.c
 o/usr/bin/uname: init_outdir lib/prettyprint.o lib/utsname_winnt.o coreutils/uname.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/uname lib/prettyprint.o lib/utsname_winnt.o coreutils/uname.o 
 
-# statically linking libm is weird but it avoids having to link everything using libutil with libm (even if it doesn't use the format_time function)
 lib/util.o: lib/util.c
-	$(CC) $(CFLAGS) -c -o lib/util.o lib/util.c -lm -static
+	$(CC) $(CFLAGS) -c -o lib/util.o lib/util.c
+
+lib/util_m.o: lib/util_m.c
+	$(CC) $(CFLAGS) -c -o lib/util_m.o lib/util_m.c
 
 which/which.o: which/which.c
 	$(CC) $(CFLAGS) -c -o which/which.o which/which.c
@@ -233,8 +235,8 @@ o/usr/bin/usleep: init_outdir lib/prettyprint.o lib/util.o customtools/usleep.o
 procutils/w.o: procutils/w.c
 	$(CC) $(CFLAGS) -c -o procutils/w.o procutils/w.c
 
-o/usr/bin/w: init_outdir lib/prettyprint.o lib/util.o procutils/w.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/w -lm lib/prettyprint.o lib/util.o procutils/w.o
+o/usr/bin/w: init_outdir lib/prettyprint.o lib/util.o lib/util_m.o procutils/w.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/w -lm lib/prettyprint.o lib/util.o lib/util_m.o procutils/w.o
 
 coreutils/whoami.o: coreutils/whoami.c
 	$(CC) $(CFLAGS) -c -o coreutils/whoami.o coreutils/whoami.c
