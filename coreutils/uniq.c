@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <unistd.h>
-//#include <stdlib.h>
-//#include <string.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "../include/prettyprint.h"
+#include "../include/util.h"
 
 void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-cdu] [infile [outfile]]", argv0);
@@ -36,11 +37,14 @@ int main(int argc, char* argv[]){
         break;
     }
   }
+  // TODO allow taking one or two file args, while still keeping getopt working correctly (see usage, infile, outfile)
 
   char* stdin_buffer;
+  char* old_line;
+  char* current_line;
+  int count = 1; // TODO count occurences of a line
 
   if(argc == optind) { // No arg, we read from stdin
-    // TODO fix segfault after stdin read
     stdin_buffer = fetch_from_stdin();
     if(NULL == stdin_buffer) {
       print_error("%s: fetch_from_stdin() failed", argv[0]);
@@ -61,7 +65,6 @@ int main(int argc, char* argv[]){
         print_error("%s: ftell() failed", argv[0]);
         return 1;
       }
-
       stdin_buffer = malloc(sizeof(char) * (filesize + 1));
 
       if(fseek(fileptr, 0L, SEEK_SET) != 0) {
@@ -79,8 +82,14 @@ int main(int argc, char* argv[]){
     fclose(fileptr);
   }
 
-  printf("%s", stdin_buffer);
   // TODO split into each line
+  while((current_line = strsep(&stdin_buffer, "  ")) != NULL) {
+    if(cflag == 1)
+      printf("%8d ", count);
+    if(uflag != 1 && current_line != old_line)
+      printf("%s\n", current_line);
+    old_line = current_line;
+  }
   // TODO go through each line and either show only duplicates or unique lines (store previous file into prev_linebuffer)
 
 	return 0;
