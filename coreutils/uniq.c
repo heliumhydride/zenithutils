@@ -37,10 +37,51 @@ int main(int argc, char* argv[]){
     }
   }
 
-  // TODO check for stdin input or filename
-  // TODO load file into buffer
+  char* stdin_buffer;
+
+  if(argc == optind) { // No arg, we read from stdin
+    // TODO fix segfault after stdin read
+    stdin_buffer = fetch_from_stdin();
+    if(NULL == stdin_buffer) {
+      print_error("%s: fetch_from_stdin() failed", argv[0]);
+      return 1;
+    }
+  } else { // We read from a file
+    FILE* fileptr;
+    fileptr = fopen(argv[optind], "r");
+    if(NULL == fileptr) {
+      print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
+      return 1;
+    }
+
+    char ch;
+    if(fseek(fileptr, 0L, SEEK_END) == 0) {
+      size_t filesize = ftell(fileptr);
+      if(filesize == -1) {
+        print_error("%s: ftell() failed", argv[0]);
+        return 1;
+      }
+
+      stdin_buffer = malloc(sizeof(char) * (filesize + 1));
+
+      if(fseek(fileptr, 0L, SEEK_SET) != 0) {
+        print_error("%s: fseek() failed", argv[0]);
+        return 1;
+      }
+
+      size_t newlen = fread(stdin_buffer, sizeof(char), filesize, fileptr);
+      if(ferror(fileptr) != 0) {
+        print_error("%s: reading file \"%s\" failed", argv[0], argv[optind]);
+      } else {
+        stdin_buffer[newlen++] = '\0';
+      }
+    }
+    fclose(fileptr);
+  }
+
+  printf("%s", stdin_buffer);
   // TODO split into each line
-  // TODO go through each line and either show only duplicates or unique lines
+  // TODO go through each line and either show only duplicates or unique lines (store previous file into prev_linebuffer)
 
 	return 0;
 }
