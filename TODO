@@ -1,5 +1,6 @@
 -- CODE GOALS --
 
+customtools/strings.c: look for all individual strings instead of just printable characters by checking null byte after each printable character
 coreutils/test
 procutils/w
 lib/util base64 encoding/decoding
