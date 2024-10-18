@@ -120,8 +120,11 @@ int main(int argc, char* argv[]) {
   char* str_ptr = tmp_str;
   char ch; char* chptr = &ch;
   for(int i = 0; i < filesize; i++) {
-    *chptr = buf[i];
-    while(*chptr++ != '\0' || *chptr != '\n') {
+    ch = buf[i];
+    if(is_printable_ch(ch))
+      printf("%c", *chptr);
+    /*
+    while(*chptr++ != '\0' || *chptr != '\n') { // strings will be separated by NULL or LF
       if(is_printable_ch(*chptr))
         *str_ptr++ = *chptr;
     }
@@ -129,6 +132,8 @@ int main(int argc, char* argv[]) {
     if(fflag)
       printf("%s: ", argv[optind]);
     printf("%s\n", tmp_str);
+    str_ptr = tmp_str; // reset string pointer to be able to repeat the loop
+    */
   }
 
   free(buf);
