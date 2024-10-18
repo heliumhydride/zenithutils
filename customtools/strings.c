@@ -3,16 +3,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
-//#include <unistd.h>
+#include <unistd.h>
 //#include <string.h>
 
 #include "../include/prettyprint.h"
 
 void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s file [files ...]\n", argv0);
+  fprintf(stderr, "usage: %s [-nfo] [-t o|d|x] file [files ...]\n", argv0);
 }
 
-int main(int argc, char* argv[]){
+int is_printable_ch(char ch) {
+  switch(ch) {
+    case ' ': case '!': case '#': case '$': case '%':
+    case '&': case '\'': case '(': case ')': case '*':
+    case '+': case ',': case '-': case '.': case '/':
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
+    case ':': case ';': case '<': case '=': case '>':
+    case '?': case '@': case 'A': case 'B': case 'C':
+    case 'D': case 'E': case 'F': case 'G': case 'H':
+    case 'I': case 'J': case 'K': case 'L': case 'M':
+    case 'N': case 'O': case 'P': case 'Q': case 'R':
+    case 'S': case 'T': case 'U': case 'V': case 'W':
+    case 'X': case 'Y': case 'Z': case '[': case '\\':
+    case ']': case '^': case '_': case '`': case 'a':
+    case 'b': case 'c': case 'd': case 'e': case 'f':
+    case 'g': case 'h': case 'i': case 'j': case 'k':
+    case 'l': case 'm': case 'n': case 'o': case 'p':
+    case 'q': case 'r': case 's': case 't': case 'u':
+    case 'v': case 'w': case 'x': case 'y': case 'z':
+    case '{': case '|': case '}': case '~': case '\"':
+    case '\t': // case '\n':
+      return 1;
+      break;
+    default:
+      return 0;
+      break;
+  }
+}
+
+int main(int argc, char* argv[]) {
   int opt;
 
   int tflag = 0;
@@ -60,7 +90,7 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
-  size_t filesize;
+  ssize_t filesize;
   if(fseek(fileptr, 0L, SEEK_END) == 0) {
     filesize = ftell(fileptr);
     if(filesize == -1) {
@@ -83,34 +113,22 @@ int main(int argc, char* argv[]){
   }
 
   fclose(fileptr);
+
+
   // TODO: Split each string, not characters (to put filename before each line/string via -f option)
-  char ch;
+  char* tmp_str;
+  char* str_ptr = tmp_str;
+  char ch; char* chptr = &ch;
   for(int i = 0; i < filesize; i++) {
-    ch = buf[i];
-    switch(ch) {
-      case ' ': case '!': case '#': case '$': case '%':
-      case '&': case '\'': case '(': case ')': case '*':
-      case '+': case ',': case '-': case '.': case '/':
-      case '0': case '1': case '2': case '3': case '4':
-      case '5': case '6': case '7': case '8': case '9':
-      case ':': case ';': case '<': case '=': case '>':
-      case '?': case '@': case 'A': case 'B': case 'C':
-      case 'D': case 'E': case 'F': case 'G': case 'H':
-      case 'I': case 'J': case 'K': case 'L': case 'M':
-      case 'N': case 'O': case 'P': case 'Q': case 'R':
-      case 'S': case 'T': case 'U': case 'V': case 'W':
-      case 'X': case 'Y': case 'Z': case '[': case '\\':
-      case ']': case '^': case '_': case '`': case 'a':
-      case 'b': case 'c': case 'd': case 'e': case 'f':
-      case 'g': case 'h': case 'i': case 'j': case 'k':
-      case 'l': case 'm': case 'n': case 'o': case 'p':
-      case 'q': case 'r': case 's': case 't': case 'u':
-      case 'v': case 'w': case 'x': case 'y': case 'z':
-      case '{': case '|': case '}': case '~': case '\"':
-      case '\n': case '\t':
-        printf("%c", ch);
-        break;
+    *chptr = buf[i];
+    while(*chptr++ != '\0' || *chptr != '\n') {
+      if(is_printable_ch(*chptr))
+        *str_ptr++ = *chptr;
     }
+    *str_ptr-- = '\0'; // terminate string
+    if(fflag)
+      printf("%s: ", argv[optind]);
+    printf("%s\n", tmp_str);
   }
 
   free(buf);
