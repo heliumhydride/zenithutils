@@ -1,5 +1,6 @@
 -- CODE GOALS --
 
+customtools/read: check if variable was set correctly (check if input == getenv(variable))
 customtools/strings.c: look for all individual strings instead of just printable characters by checking null byte after each printable character
 coreutils/test
 procutils/w
@@ -17,7 +18,6 @@ coreutils/whoami fixes
 coreutils/mknod
 coreutils/id
 util-linux/{mount,umount,mountpoint} (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)
-customtools/read
 customtools/time
 util-linux/rev fixes
 coreutils/cat fixes
