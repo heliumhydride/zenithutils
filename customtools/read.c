@@ -51,10 +51,9 @@ int main(int argc, char* argv[]){
     printf("%s", prompt);
 
   char buf[1024];
+  // TODO implement -r and -s here
   fgets(buf, 1024, stdin);
   buf[strlen(buf)-1] = '\0'; // strip off '\n' at the end of the buffer
-
-  // TODO: implement -r and -s functionality
 
   if(argc > optind) { // we have a variable to be set as an argument
     // TODO: fix variable not being set ???
@@ -64,6 +63,10 @@ int main(int argc, char* argv[]){
     #ifndef _WIN32
     if(setenv(argv[optind], buf, 1) != 0) { // atleast setenv makes sense in return values
     #endif
+      print_error("%s: setting environment variable '%s' failed", argv[0], argv[optind]);
+      return 1;
+    }
+    if(getenv(argv[optind]) == NULL) {
       print_error("%s: setting environment variable '%s' failed", argv[0], argv[optind]);
       return 1;
     }
