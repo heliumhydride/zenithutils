@@ -1,8 +1,14 @@
 -- CODE GOALS --
 
+coreutils/{mkdir,rmdir}
+coreutils/printf
+coreutils/tee
+coreutils/head
+coreutils/groups
+coreutils/test
 customtools/read: check if variable was set correctly (check if input == getenv(variable))
 customtools/strings.c: look for all individual strings instead of just printable characters by checking null byte after each printable character
-coreutils/test
+coreutils/users
 procutils/w
 lib/util base64 encoding/decoding
 coretuils/base64
