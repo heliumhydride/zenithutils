@@ -18,6 +18,8 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
   - possible future implementations of awk and bc
   - read, time from sh
   - strings
+  - ed
+  - dos2unix/unix2dos
 
 ### required dependencies:
   - a c99 toolchain such as gcc / mingw / Clang+LLVM / tcc... but not visual c
@@ -27,6 +29,7 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
   - [openpam](https://git.des.dev/openpam/openpam/wiki) / linux-pam for 'su'
   - [zlib](https://zlib.net) / [zlib-ng](https://github.com/zlib-ng/zlib-ng) with zlib compat for 'gzip'
   - [netbsd-curses](https://github.com/sabotage-linux/netbsd-curses) / [ncurses](https://invisible-island.net/ncurses/) for Linux/*BSD OR [pdcurses](https://github.com/wmcbrine/PDCurses) for Windows
+  - [libicu](https://icu.unicode.org/) for iconv
 
 ### recommended to go along with zenithutils:
   - for a more feature-packed environment:
@@ -51,5 +54,6 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
   - *BSD
   - MacOS (x86_64, arm64)
   - Cosmopolitan libc
+
 
 

@@ -1,5 +1,7 @@
 -- CODE GOALS --
 
+coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
+coreutils/mktemp: -t needs an argument
 coreutils/{mkdir,rmdir}
 coreutils/printf
 coreutils/tee
@@ -43,6 +45,7 @@ findutils/xargs
 coreutils/dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/random emulation and possibly emulate /dev/sdXY)
 procutils/sysctl (On Windows, do we provide the same linux interface translated to windows or do we create a command-line alternative to the control panel ?)
 coreutils/env
+iconv/iconv (use libicu ?)
 
 test building on netbsd
 
