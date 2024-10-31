@@ -267,7 +267,7 @@ o/usr/bin/uniq: init_outdir lib/prettyprint.o lib/util.o coreutils/uniq.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/uniq lib/prettyprint.o lib/util.o coreutils/uniq.o
 
 clean:
-	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o
+	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
 
 init_outdir: o/bin o/sbin o/usr/bin o/usr/sbin
 
