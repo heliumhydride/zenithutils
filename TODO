@@ -12,6 +12,7 @@ customtools/read: check if variable was set correctly (check if input == getenv(
 customtools/strings.c: look for all individual strings instead of just printable characters by checking null byte after each printable character
 coreutils/users
 procutils/w
+util-linux/nologin: if /etc/nologin.txt exists, print its contents
 lib/util base64 encoding/decoding
 coretuils/base64
 customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
@@ -46,6 +47,8 @@ coreutils/dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/rando
 procutils/sysctl (On Windows, do we provide the same linux interface translated to windows or do we create a command-line alternative to the control panel ?)
 coreutils/env
 iconv/iconv (use libicu ?)
+make install target
+allow to change installation prefix and destdir
 
 test building on netbsd
 
