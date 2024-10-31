@@ -18,8 +18,9 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
   - possible future implementations of awk and bc
   - read, time from sh
   - strings
-  - ed
-  - dos2unix/unix2dos
+  - ed (integrated in coreutils in Makefile)
+  - dos2unix/unix2dos (integrated in coreutils in Makefile)
+  - portions of shadow (passwdutils in Makefile)
 
 ### required dependencies:
   - a c99 toolchain such as gcc / mingw / Clang+LLVM / tcc... but not visual c

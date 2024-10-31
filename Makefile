@@ -1,9 +1,9 @@
 include config.mk
 
-all: coreutils customtools diffutils findutils grep gzip iconv patch procutils sed sharutils su util-linux which
+all: coreutils customtools diffutils findutils grep gzip iconv patch procutils sed sharutils su util-linux which passwdutils
 
 # yes read, like the shellscript read (with -r, and all that good stuff)
-customtools: o/usr/bin/zenithutils_version o/usr/bin/ascii o/usr/bin/rng o/usr/bin/read o/usr/bin/strings o/usr/bin/exedump o/usr/bin/usleep o/usr/bin/time o/usr/bin/lsmod
+customtools: o/usr/bin/zenithutils_version o/usr/bin/ascii o/usr/bin/rng o/usr/bin/read o/usr/bin/strings o/usr/bin/exedump o/usr/bin/usleep o/usr/bin/time
 
 # logname is a link to whoami
 # md5sum is a link to md5
@@ -13,9 +13,11 @@ coreutils: o/bin/cat o/usr/bin/nproc o/bin/ls o/usr/bin/uname o/usr/bin/seq o/bi
 # do we really need 'rename' and 'hardlink' ? (see 'mv' and 'ln')
 # agetty not implemented, see nyagetty from chimera linux
 # hwclock not being implemented for now
-# losetup, login, mkswap, pivot_root, ionice, write, show a "does not apply to windows" and return 1
+# losetup, pivot_root, ionice, write, show a "does not apply to windows" and return 1
+# for mkswap/swapon/swapoff on windows: do we have functions in the win32 api to change pagefile settings ?
+# for login on windows: use as a frontend to LogonUI/runas.exe maybe ? kind of a strech but I don't see what else login.exe would do...
 # fsck on windows: do we just 'execvp("chkdsk.exe", ...);' ?
-util-linux: o/usr/bin/rev o/usr/sbin/nologin o/usr/bin/uuidgen o/usr/bin/lscpu o/bin/kill o/usr/bin/blkid o/usr/bin/cal o/usr/bin/cfdisk o/usr/bin/chsh o/usr/bin/col o/usr/bin/dmesg o/usr/bin/eject o/usr/bin/fallocate o/sbin/fdisk o/usr/bin/findfs o/sbin/fsck o/usr/bin/getopt o/usr/bin/hexdump o/usr/bin/ionice o/usr/bin/last o/usr/bin/login o/usr/sbin/losetup o/usr/bin/lsblk o/usr/bin/lslogins o/usr/bin/mcookie o/sbin/mkfs o/sbin/mkswap o/bin/more o/sbin/mount o/usr/bin/mountpoint o/usr/sbin/pivot_root o/usr/bin/renice o/usr/bin/write o/usr/bin/whereis
+util-linux: o/usr/bin/rev o/usr/sbin/nologin o/usr/bin/uuidgen o/usr/bin/lscpu o/bin/kill o/usr/bin/blkid o/usr/bin/cal o/usr/bin/cfdisk o/usr/bin/chsh o/usr/bin/col o/usr/bin/dmesg o/usr/bin/eject o/usr/bin/fallocate o/sbin/fdisk o/usr/bin/findfs o/sbin/fsck o/usr/bin/getopt o/usr/bin/hexdump o/usr/bin/ionice o/usr/bin/last o/usr/bin/login o/usr/sbin/losetup o/usr/bin/lsblk o/usr/bin/lslogins o/usr/bin/mcookie o/sbin/mkfs o/sbin/mkswap o/bin/more o/sbin/mount o/usr/bin/mountpoint o/usr/sbin/pivot_root o/usr/bin/renice o/usr/bin/write o/usr/bin/whereis o/usr/bin/swapon o/usr/bin/swapoff
 
 findutils: o/usr/bin/xargs o/usr/bin/find 
 
@@ -42,6 +44,8 @@ procutils: o/usr/bin/w o/usr/bin/top o/usr/bin/pstree o/usr/bin/fuser o/usr/bin/
 sharutils: o/usr/bin/shar o/usr/bin/uuencode o/usr/bin/uudecode
 
 iconv: o/usr/bin/iconv
+
+passwdutils: o/usr/bin/passwd o/usr/sbin/chage o/usr/sbin/useradd o/usr/sbin/userdel o/usr/sbin/usermod o/usr/sbin/groupadd o/usr/sbin/groupdel o/usr/sbin/groupmod
 
 o/usr/bin/zenithutils_version: init_outdir customtools/zenithutils_version.c
 	$(CC) $(CFLAGS) -o o/usr/bin/zenithutils_version customtools/zenithutils_version.c
