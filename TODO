@@ -28,7 +28,6 @@ coreutils/mknod
 coreutils/id
 util-linux/{mount,umount,mountpoint} (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)
 customtools/time
-util-linux/rev fixes
 coreutils/cat fixes
 coreutils/mv
 coreutils/cp
@@ -40,7 +39,6 @@ customtools/strings todos
 coretuils/pwd todos (test on real Windows, not Wine)
 coreutils/wc todos
 coreutils/which Windows-specific fixes
-lib/libutil pipe array removal (read directly from stdin)
 coreutils/mkfifo
 findutils/xargs
 coreutils/dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/random emulation and possibly emulate /dev/sdXY)

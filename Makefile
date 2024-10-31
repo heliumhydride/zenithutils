@@ -198,8 +198,8 @@ o/usr/bin/ascii: init_outdir customtools/ascii.c
 util-linux/rev.o: util-linux/rev.c
 	$(CC) $(CFLAGS) -c -o util-linux/rev.o util-linux/rev.c
 
-o/usr/bin/rev: init_outdir lib/prettyprint.o lib/util.o util-linux/rev.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/rev lib/prettyprint.o lib/util.o util-linux/rev.o
+o/usr/bin/rev: init_outdir lib/prettyprint.o util-linux/rev.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/rev lib/prettyprint.o util-linux/rev.o
 
 o/usr/sbin/nologin: init_outdir util-linux/nologin.c
 	$(CC) $(CFLAGS) -o o/usr/sbin/nologin util-linux/nologin.c
