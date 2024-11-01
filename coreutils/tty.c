@@ -7,7 +7,7 @@
 #include <unistd.h>
 //#include <string.h>
 
-int main(int argc, char* argv[]){
+int main(void){
   #ifndef _WIN32 // On Unix
   char* tty_dev = ttyname(STDIN_FILENO);
   if(tty_dev == NULL) {
