@@ -3,6 +3,7 @@
 lib/util: remake read_from_stdin() into a getline_stdin (take inspiration from util-linux/rev) | char buf[4096]; fgets(buf, 4096, stdin); return buf;
 lib/util: put the file loading function from exedump, wc, strings, cat, tac, ... into a function | readfile(FILE* fileptr, char* buf) | return NULL when fileptr == stdin
 lib/util: create a get_filesize(FILE* fileptr) function (take inspiration from util-linux/rev), also error out from fileptr == stdin and use it in exedump wc strings cat tac rev uniq
+make a scripts/check.sh to check all files using cppcheck
 make programs that take options and filenames extract filenames in between options
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
