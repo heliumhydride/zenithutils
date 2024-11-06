@@ -4,7 +4,6 @@ lib/util: remake read_from_stdin() into a getline_stdin (take inspiration from u
 lib/util: put the file loading function from exedump, wc, strings, cat, tac, ... into a function | readfile(FILE* fileptr, char* buf) | return NULL when fileptr == stdin
 lib/util: create a get_filesize(FILE* fileptr) function (take inspiration from util-linux/rev), also error out from fileptr == stdin and use it in exedump wc strings cat tac rev uniq
 coreutils/pwd: add option to output mingw paths (c:/... or /...) instead of win32 paths (c:\...)
-coreutils/seq: fix seq not working with negative numbers
 which: also check for [path].exe and [path] on windows, not just [path]
 make programs that take options and filenames extract filenames in between options
 remove as much warnings as possible
@@ -55,6 +54,7 @@ iconv/iconv (use libicu ?)
 make install target
 allow to change installation prefix and destdir
 
+create a test suite shell script
 test building on netbsd
 
 -- NON CODE GOALS --

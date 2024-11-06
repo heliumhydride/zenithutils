@@ -4,6 +4,13 @@
 #define VERSION "v0.01a"
 
 /*
+  coreutils options
+*/
+
+// If 1, print 'c:/path/to/dir' instead of 'c:\path\to\dir'
+#define PWD_USE_MINGW_PATHS 1
+
+/*
   Base32 and Base64 alphabets
 */
 
