@@ -12,7 +12,7 @@ void print_usage(char* argv0) {
 
 int main(int argc, char* argv[]){
   ssize_t first;
-  size_t last;
+  ssize_t last;
   ssize_t increment;
 
   if(argc < 2) {
