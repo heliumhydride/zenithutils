@@ -8,10 +8,20 @@
 #include <string.h>
 
 #include "../include/prettyprint.h"
+#include "../config.h"
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
+void mingw_path(char* out, char* path) {
+  size_t pathlen = strlen(path);
+  for(size_t i = 0; i < pathlen; i++) {
+    out[i] = path[i];
+    if(path[i] == '\\')
+      out[i] = '/';
+  }
+}
 
 void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-LP]", argv0);
@@ -63,7 +73,13 @@ int main(int argc, char* argv[]){
 
     #ifdef _WIN32
       GetCurrentDirectory(PATH_MAX, cwd);
-      printf("%s\n", cwd);
+      if(FORCE_MINGW_PATHS) {
+        char* m_cwd = malloc(strlen(cwd));
+        mingw_path(m_cwd, cwd);
+        printf("%s\n", m_cwd);
+      } else {
+        printf("%s\n", cwd);
+      }
     #endif
   } else {
     // We use PWD/CD environment variable (gnu pwd -L behaviour)
