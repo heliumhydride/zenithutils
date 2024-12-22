@@ -14,19 +14,49 @@ char* strsep(char** stringp, const char* delim) {
   return rv;
 }
 
-char* fetch_from_stdin() {
+char* getbytes_stdin() {
   int i = 0;
-  // TODO: remove pipe array, and read directly from stdin
-  //char pipe[65536];
-  char* pipe = malloc(65536);
+  char* pipe = malloc(STDIN_MAX);
   while(-1 != (pipe[i++] = getchar()));
     pipe[i-1] = '\0';
   return pipe;
 }
 
+void getline_stdin(char* buf) {
+  // TODO multiline stdin ?
+  fgets(buf, STDIN_MAX, stdin);
+}
+
+ssize_t get_filesize(FILE* fileptr) {
+  if(fileptr == stdin)
+    return -1;
+  ssize_t filesize;
+  if(fseek(fileptr, 0L, SEEK_END) != 0)
+    return -1;
+  if((filesize = ftell(fileptr)) == -1)
+    return -1;
+  if(fseek(fileptr, 0L, SEEK_SET) != 0)
+    return -1;
+  return filesize;
+}
+
+int readfile(FILE* fileptr, char* buf) {
+  ssize_t filesize = get_filesize(fileptr);
+  if(filesize == -1)
+    return -1;
+
+  size_t bytes_read = fread(buf, sizeof(char), filesize, fileptr);
+  if(ferror(fileptr) != 0) {
+    return -1;
+  }
+
+  buf[bytes_read++] = '\0'; // terminate buffer string
+  return 0;
+}
+
 size_t find_n_of_char_in_str(const char c, const char* str) {
   size_t count = 0;
-  for(int i = 0; i < strlen(str); i++) {
+  for(size_t i = 0; i < strlen(str); i++) {
     if(str[i] == c) 
       count++;
   }
@@ -35,7 +65,7 @@ size_t find_n_of_char_in_str(const char c, const char* str) {
 
 int str_is_nan(char* str) {
   int state = 0;
-  for(int i = 0; i < strlen(str); i++) {
+  for(size_t i = 0; i < strlen(str); i++) {
     switch(str[i]) {
       case '-': // fallthrough
       case '0': // fallthrough
@@ -54,4 +84,25 @@ int str_is_nan(char* str) {
     }
   }
   return state;
+}
+
+int is_printable_ch(char c) {
+  /*
+    Alternative portable isprint(char c) (ASCII ONLY)
+    Will return 1 if character is printable, 0 if it is not
+  */
+  // TODO Unicode ?
+
+  /* 
+    if(c == '\n')
+      return 1;
+  */
+  /*
+    if(c == '\r')
+      return 1;
+  */
+  if(c >= 32 && c <= 126) // From Space to ~
+    return 1;
+  // if checks fail return 0
+  return 0;
 }

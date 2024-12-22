@@ -50,5 +50,8 @@ int main(int argc, char* argv[]) {
     }
     printf("\n"); // print newline at the end still
   }
+  if(!use_stdin)
+    fclose(fileptr);
+  free(line);
   return 0;
 }

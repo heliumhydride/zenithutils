@@ -15,12 +15,12 @@ int main(int argc, char* argv[]) {
 
   if (argc < 2) {
     //cat_from_stdin(); // no file arg, read from stdin
-    printf("%s", fetch_from_stdin());
+    printf("%s", getbytes_stdin());
   } else {
     for(int fileN=argc-1; fileN > 0; fileN--) {
       if(!strcmp("-", argv[fileN])) {
         //cat_from_stdin();
-        printf("%s", fetch_from_stdin());
+        printf("%s", getbytes_stdin());
       } else {
         FILE *fileptr;
         fileptr = fopen(argv[fileN], "r");

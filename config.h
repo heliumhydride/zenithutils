@@ -4,6 +4,13 @@
 #define VERSION "v0.01a"
 
 /*
+  global options
+*/
+
+// recommended values are either 4096 or 65535
+#define STDIN_MAX 4096 // Maximum buffer for stdin input
+
+/*
   coreutils options
 */
 

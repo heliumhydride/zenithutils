@@ -17,12 +17,12 @@ int main(int argc, char* argv[]) {
   //print_usage(argv[0]);
 
   if (argc < 2) {
-    //fetch_from_stdin(); // no file arg, read from stdin
-    printf("%s", fetch_from_stdin());
+    //getbytes_stdin(); // no file arg, read from stdin
+    printf("%s", getbytes_stdin());
   } else {
     for(int fileN=1; fileN < argc; fileN++) {
       if(!strcmp("-", argv[fileN])) {
-        printf("%s", fetch_from_stdin());
+        printf("%s", getbytes_stdin());
       } else {
         FILE *fileptr;
         fileptr = fopen(argv[fileN], "r");

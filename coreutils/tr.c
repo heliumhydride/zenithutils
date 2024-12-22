@@ -68,7 +68,7 @@ int main(int argc, char* argv[]){
     // 'ab' -> 'xy'; 'a' -> 'x'; 'b' -> 'y'
   }
 
-  printf("%s", fetch_from_stdin());
+  printf("%s", getbytes_stdin());
 
   return 0;
 }
