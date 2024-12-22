@@ -20,7 +20,7 @@ util-linux/nologin: if /etc/nologin.txt exists, print its contents
 lib/util base64 encoding/decoding
 coretuils/base64
 customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
-customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL) and pad ints with zeros (a -> 0a, 1 -> 01, ...)
+customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 coreutils/uniq: store file into buf, split into lines, then for each line looks if all other lines are the same, then optimize
 customtools/at
 customtools/bg
