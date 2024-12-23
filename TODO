@@ -4,6 +4,8 @@ coreutils/tac: actually work like tac (detailled methode in source)
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: also check for [path].exe and [path] on windows, not just [path]
 make programs that take options and filenames extract filenames in between options (wc,ls,..)
+coreutils/wc: take multiple files like cat, if multiple files are provided, print total number of lines/chars/words as well
+coreutils/wc: fix word counting
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
 coreutils/mktemp: -t needs an argument
@@ -41,7 +43,6 @@ coreutils/mktemp potential memory safety issues ?
 sharutils/{uuencode,uudecode}
 customtools/strings todos
 coretuils/pwd todos (test on real Windows, not Wine)
-coreutils/wc todos
 coreutils/which Windows-specific fixes
 coreutils/mkfifo
 findutils/xargs
