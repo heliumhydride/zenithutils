@@ -17,7 +17,7 @@ size_t count_lines(const char* str) {
 }
 
 size_t count_words(const char* str) {
-  return find_n_of_char_in_str(' ', str) + 1;
+  return find_n_of_char_in_str(' ', str) + count_lines(str);
 }
 
 int main(int argc, char* argv[]){
