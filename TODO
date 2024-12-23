@@ -1,6 +1,7 @@
 -- CODE GOALS --
 
-use new util.c file functions for base64
+coreutils/tac: actually work like tac (detailled methode in source)
+reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: also check for [path].exe and [path] on windows, not just [path]
 make programs that take options and filenames extract filenames in between options (wc,ls,..)
 remove as much warnings as possible
@@ -18,7 +19,7 @@ coreutils/users
 procutils/w
 util-linux/nologin: if /etc/nologin.txt exists, print its contents
 lib/util base64 encoding/decoding
-coretuils/base64
+coretuils/base64 (work from ground up, work like cat but take only one file)
 customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
 customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 coreutils/uniq: store file into buf, split into lines, then for each line looks if all other lines are the same, then optimize
