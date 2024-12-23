@@ -50,6 +50,12 @@ int main(int argc, char* argv[]) {
         break;
       case 'n':
         nflag = 1;
+        break;
+      case '?':
+        print_error("%s: invalid option -- '%c'", program, optopt);
+        print_usage(program);
+        return 1;
+        break;
     }
   }
   optind--;
@@ -59,7 +65,7 @@ int main(int argc, char* argv[]) {
     print_usage(program);
   }
 
-  size_t filesize;
+  ssize_t filesize;
   FILE* fileptr;
   size_t line_counter = 1;
   char* minibuf = malloc(3);
@@ -70,8 +76,9 @@ int main(int argc, char* argv[]) {
       fileptr = stdin;
     } else { // We read from file
       fileptr = fopen(*argv, "r");
+      filesize = get_filesize(fileptr);
       if(NULL == fileptr) {
-        print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
+        print_error("%s: could not open file \"%s\"", program, *argv);
         return 1;
       }
     }
@@ -82,15 +89,11 @@ int main(int argc, char* argv[]) {
       if(nflag)
         printf("%6zu  ", line_counter);
       for(size_t i = 0; i <= strlen(line); i++) {
-        if(vflag) {
-          if(is_printable_ch(line[i])) {
-            printf("%c", line[i]);
-          } else {
-            // TODO wrong cat output for test file with all non-print characters
-            // eg. with -vE, I get ^@$ instead of just $ sometimes
-            nonprint_alt(minibuf, line[i]);
-            printf("%s", minibuf);
-          }
+        if(vflag && !is_printable_ch(line[i])) {
+          // TODO wrong cat output for test file with all non-print characters
+          // eg. with -vE, I get ^@$ instead of just $ sometimes
+          nonprint_alt(minibuf, line[i]);
+          printf("%s", minibuf);
         } else {
           printf("%c", line[i]);
         }
@@ -100,10 +103,10 @@ int main(int argc, char* argv[]) {
       printf("\n");
       line_counter++;
     }
+    fclose(fileptr);
     free(line);
   }
 
-  fclose(fileptr);
   free(minibuf);
   return 0;
 }

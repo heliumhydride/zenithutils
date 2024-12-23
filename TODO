@@ -1,8 +1,8 @@
 -- CODE GOALS --
 
-use new util.c file functions for tac exedump strings base64
+use new util.c file functions for base64
 which: also check for [path].exe and [path] on windows, not just [path]
-make programs that take options and filenames extract filenames in between options
+make programs that take options and filenames extract filenames in between options (wc,ls,..)
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
 coreutils/mktemp: -t needs an argument

@@ -53,38 +53,21 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  FILE* fileptr;
-  fileptr = fopen(argv[optind], "r");
+  FILE* fileptr = fopen(argv[optind], "r");
 
-  if(fileptr == NULL) {
-    print_error("%s: could not open file '%s'", argv[0], argv[optind]);
+  if(NULL == fileptr) {
+    print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
     return 1;
   }
 
-  ssize_t filesize;
-  if(fseek(fileptr, 0L, SEEK_END) == 0) {
-    filesize = ftell(fileptr);
-    if(filesize == -1) {
-      print_error("%s: ftell() failed", argv[0]);
-      return 1;
-    }
-  }
+  size_t filesize = get_filesize(fileptr);
 
-  char* buf = malloc(sizeof(char) * (filesize + 1));
-
-  if(fseek(fileptr, 0L, SEEK_SET) != 0) {
-    print_error("%s: fseek() failed\n");
-  }
-
-  size_t newlen = fread(buf, sizeof(char), filesize, fileptr);
-  if(ferror(fileptr) != 0) {
-    print_error("%s: reading file \"%s\" failed", argv[0], argv[optind]);
-  } else {
-    buf[newlen++] = '\0';
+  char* buf = malloc(filesize);
+  if(readfile(fileptr, buf) == -1) {
+    print_error("%s: read error", argv[0]);
   }
 
   fclose(fileptr);
-
 
   // TODO: Split each string, not characters (to put filename before each line/string via -f option)
   char* tmp_str;

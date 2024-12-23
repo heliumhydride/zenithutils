@@ -189,8 +189,8 @@ o/usr/bin/read: init_outdir lib/prettyprint.o customtools/read.o
 customtools/strings.o: customtools/strings.c
 	$(CC) $(CFLAGS) -c -o customtools/strings.o customtools/strings.c
 
-o/usr/bin/strings: init_outdir lib/prettyprint.o customtools/strings.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/strings lib/prettyprint.o customtools/strings.o
+o/usr/bin/strings: init_outdir lib/prettyprint.o lib/util.o customtools/strings.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/strings lib/prettyprint.o lib/util.o customtools/strings.o
 
 o/usr/bin/ascii: init_outdir customtools/ascii.c
 	$(CC) $(CFLAGS) -o o/usr/bin/ascii customtools/ascii.c
@@ -227,8 +227,8 @@ o/usr/bin/rng: init_outdir lib/prettyprint.o lib/util.o customtools/rng.o
 customtools/exedump.o: customtools/exedump.c config.h
 	$(CC) $(CFLAGS) -c -o customtools/exedump.o customtools/exedump.c
 
-o/usr/bin/exedump: init_outdir lib/prettyprint.o customtools/exedump.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/exedump lib/prettyprint.o customtools/exedump.o
+o/usr/bin/exedump: init_outdir lib/prettyprint.o lib/util.o customtools/exedump.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/exedump lib/prettyprint.o lib/util.o customtools/exedump.o
 
 customtools/usleep.o: customtools/usleep.c
 	$(CC) $(CFLAGS) -c -o customtools/usleep.o customtools/usleep.c

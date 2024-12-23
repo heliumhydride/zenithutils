@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "../include/prettyprint.h"
+#include "../include/util.h"
 #include "../config.h"
 
 typedef struct elf_header_struct {
@@ -34,14 +35,14 @@ int main(int argc, char* argv[]){
   char* c2 = ""; // Default to no colors
 
   int opt;
-  int cflag = 0;
+  // int cflag = 0;
   while((opt = getopt(argc, argv, ":f:c")) != -1) {
     switch(opt) {
       case 'f': // Specify executable format
         exefmt = optarg;
         break;
       case 'c': // Color output
-        cflag = 1;
+        // cflag = 1;
         c1 = exedump_col1;
         c2 = exedump_col2;
         break;
@@ -59,35 +60,16 @@ int main(int argc, char* argv[]){
   }
 
   // LOAD FILE INTO MEM
-  FILE* fileptr;
-  fileptr = fopen(argv[optind], "r");
-
-  if(fileptr == NULL) {
-    print_error("%s: could not open file '%s'", argv[0], argv[optind]);
+  FILE* fileptr = fopen(argv[optind], "r");
+  if(NULL == fileptr) {
+    print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
     return 1;
   }
-
-  size_t filesize;
-  if(fseek(fileptr, 0L, SEEK_END) == 0) {
-    filesize = ftell(fileptr);
-    if(filesize == -1) {
-      print_error("%s: ftell() failed", argv[0]);
-      return 1;
-    }
-  }
-
-  // unsigned because we will just deal with bytes, not necessarily displayed characters
-  unsigned char* buf = malloc(sizeof(char) * (filesize + 1));
-
-  if(fseek(fileptr, 0L, SEEK_SET) != 0) {
-    print_error("%s: fseek() failed\n");
-  }
-
-  size_t newlen = fread(buf, sizeof(char), filesize, fileptr);
-  if(ferror(fileptr) != 0) {
-    print_error("%s: reading file \"%s\" failed", argv[0], argv[optind]);
-  } else {
-    buf[newlen++] = '\0';
+  
+  //unsigned 
+  char* buf = malloc(get_filesize(fileptr));
+  if(readfile(fileptr, buf) == -1) {
+    print_error("%s: read error", argv[0]);
   }
 
   fclose(fileptr);
@@ -371,7 +353,7 @@ int main(int argc, char* argv[]){
 
     i = 0;
     for(i = 0; i < strlen(buf); i++) {
-      if(buf[i] == 'P' && buf[i+1] == 'E' && buf[i+2] == buf[i+3] == '\0')
+      if(buf[i] == 'P' && buf[i+1] == 'E' && (buf[i+2] == buf[i+3] == '\0'))
         break;
     }
     int pe_hdr_offset = i;
