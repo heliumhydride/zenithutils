@@ -10,7 +10,16 @@
 
 #include "../include/prettyprint.h"
 #include "../include/util.h"
-#include "../include/base64.h"
+
+static int _b32_err = 0;
+
+char* base32_encode(char* str) {
+  return "not implemented"; // TODO
+}
+
+char* base32_decode(char* str) {
+  return "not implemented"; // TODO
+}
 
 void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-di] [file]\n", argv0);
@@ -61,13 +70,13 @@ int main(int argc, char* argv[]) {
 
   char* result = malloc(strlen(buf)*2+2); // just to be safe
   if(dflag) { // decoding
-    result = base64_decode(buf);
+    result = base32_decode(buf);
   } else { // encoding
-    result = base64_encode(buf);
+    result = base32_encode(buf);
   }
 
-  if(NULL == result || _b64_err > 0) {
-    print_error("%s: base64 encoding/decoding failed", argv[0]);
+  if(NULL == result || _b32_err > 0) {
+    print_error("%s: base32 encoding/decoding failed", argv[0]);
     return 1;
   }
   
