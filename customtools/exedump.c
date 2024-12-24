@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -29,7 +30,7 @@ void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-c] [-f auto|elf|pe|ape] executable\n", argv0);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   char* exefmt = "auto"; // Default to autodetection
   char* c1 = ""; // Default to no colors
   char* c2 = ""; // Default to no colors

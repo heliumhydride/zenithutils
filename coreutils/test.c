@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -14,7 +15,7 @@ void print_usage(char* argv0) {
   fprintf(stderr, "       %s value1 comparator value2\n", argv0);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   // TODO implement -o, -a, multiple arguments for test
   // TODO implement -eq, -lt, ...
   // Do we use getopt() or do we use our own parser ? (for -eq, -lt, ...)

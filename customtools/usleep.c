@@ -9,10 +9,10 @@
 #include "../include/util.h"
 
 void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s µs\n", argv0);
+  fprintf(stderr, "usage: %s [time in µs]\n", argv0);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   if(argc <= 1) { // We have no argument
     print_usage(argv[0]);
     return 1;

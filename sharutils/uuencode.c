@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -15,7 +16,7 @@ char* uuencode(char* in) {
   return buf;
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   int opt;
   int mode = 1; // 1 = uuencode format; 2 = base64 format
 

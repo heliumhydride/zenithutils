@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 /// Useful includes
@@ -7,7 +8,7 @@
 #include <unistd.h>
 //#include <string.h>
 
-int main(void){
+int main(void) {
   #ifndef _WIN32 // On Unix
   char* tty_dev = ttyname(STDIN_FILENO);
   if(tty_dev == NULL) {

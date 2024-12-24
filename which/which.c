@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -60,7 +61,7 @@ int print_matches(char* path, char* filename) {
 	return (found ? 0 : -1);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   int opt;
 
   size_t pathlen;

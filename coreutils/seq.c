@@ -1,3 +1,6 @@
+#define _XOPEN_SOURCE   600
+#define _POSIX_C_SOURCE 200112L
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
@@ -10,7 +13,7 @@ void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s first [increment] [last]\n", argv0);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   ssize_t first;
   ssize_t last;
   ssize_t increment;

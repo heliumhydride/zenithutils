@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -27,7 +28,7 @@ void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-LP]", argv0);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   int opt;
 
   int Lflag = 0;

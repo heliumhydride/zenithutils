@@ -1,5 +1,6 @@
 // IMPORTANT: to make this only run on Windows and not redefine int uname(...) on Unix
 #ifdef _WIN32
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -35,7 +36,7 @@ int uname(struct utsname* uts) {
 
   strcpy(uts->sysname, "WinNT");
 
-
+  // TODO arm32 ?
   switch (sys_info.wProcessorArchitecture) {
   	case PROCESSOR_ARCHITECTURE_AMD64:
   		strcpy(uts->machine, "x86_64");

@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -20,7 +21,7 @@ size_t count_words(const char* str) {
   return find_n_of_char_in_str(' ', str) + count_lines(str);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   int opt;
 
   char mode = 'a'; // a = all (lines, words, bytes)

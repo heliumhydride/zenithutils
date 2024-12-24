@@ -9,7 +9,7 @@ void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s time\n", argv0);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   double time;
   if(argc <= 1) {
     print_usage(argv[0]);

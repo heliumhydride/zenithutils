@@ -1,8 +1,9 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   char* expletive = "y";
 
   if(argc >= 2)

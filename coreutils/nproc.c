@@ -1,16 +1,17 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
 
+#ifndef _WIN32 // On Unix
+  #include <unistd.h>
+#endif
 #ifdef _WIN32
   #include <sysinfoapi.h>
 #endif
 
-#ifndef _WIN32
-  #include <unistd.h>
-#endif
-
-int main(int argc, char* argv[]) {
+//int main(int argc, char* argv[]) {
+int main(void) {
   #ifdef _WIN32
     SYSTEM_INFO info;
     GetSystemInfo(&info);

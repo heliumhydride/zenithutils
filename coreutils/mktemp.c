@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -34,7 +35,7 @@ char* replace_all_x(char* template) {
   return template;
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
 
   if (sodium_init() == -1) {
     print_error("%s: sodium_init() failed", argv[0]);

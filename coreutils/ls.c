@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -18,7 +19,7 @@ void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-1AaCFLlhrRst] [path1] ...\n", argv0);
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   int opt;
   int use_cwd = 0;
 

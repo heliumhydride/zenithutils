@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
@@ -30,7 +31,7 @@ void print_version() {
   fprintf(stderr, "w/uptime from zenithutils " VERSION "\n");
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   int uptime_mode = 0;
   int opt;
 

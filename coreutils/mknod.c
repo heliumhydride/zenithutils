@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 /// Useful includes
@@ -19,7 +20,7 @@ void print_usage(char* argv0) {
   fprintf(stderr, "where type is b|c|u|p\n");
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
   #ifdef _WIN32
   fprintf(stderr, "Does not apply to windows\n");
   return 1;

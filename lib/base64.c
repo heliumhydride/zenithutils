@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
 #include "../include/base64.h"
@@ -19,9 +20,9 @@ char get_base64_ch(size_t index_ch) {
 }
 
 char* base64_encode(char* str) {
-
+  return "not implemented"; // TODO
 }
 
 char* base64_decode(char* str) {
-
+  return "not implemented"; // TODO
 }
