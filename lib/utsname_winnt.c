@@ -36,7 +36,6 @@ int uname(struct utsname* uts) {
 
   strcpy(uts->sysname, "WinNT");
 
-  // TODO arm32 ?
   switch (sys_info.wProcessorArchitecture) {
   	case PROCESSOR_ARCHITECTURE_AMD64:
   		strcpy(uts->machine, "x86_64");
@@ -50,6 +49,12 @@ int uname(struct utsname* uts) {
   	case PROCESSOR_ARCHITECTURE_ARM64:
   		strcpy(uts->machine, "aarch64");
   		break;
+    case PROCESSOR_ARCHITECTURE_ARM: // arm32
+  		strcpy(uts->machine, "armv7");
+      break;
+    case PROCESSOR_ARCHITECTURE_IA64: // itanium
+  		strcpy(uts->machine, "ia64");
+      break;
   	default:
   		strcpy(uts->machine, "unknown");
   		break;

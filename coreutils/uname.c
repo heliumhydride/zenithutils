@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
   int opt;
 
   // opts: -asnrvmpio
-  int aflag = 0;
+  //int aflag = 0;
   int sflag = 0;
   int nflag = 0;
   int rflag = 0;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
   while((opt = getopt(argc, argv, ":asnrvmpio")) != -1) {
     switch(opt) {
       case 'a':
-        aflag = 1; // if needed
+        //aflag = 1; // if needed
         sflag = nflag = rflag = vflag = mflag = oflag = 1;
         //sflag = nflag = rflag = vflag = mflag = pflag = iflag = oflag = 1; // in case we want -p and -i to be set with -a
         break;
