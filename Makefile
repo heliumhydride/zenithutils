@@ -95,8 +95,8 @@ coreutils/seq.o: coreutils/seq.c
 o/usr/bin/seq: init_outdir lib/prettyprint.o lib/util.o coreutils/seq.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/seq lib/prettyprint.o lib/util.o coreutils/seq.o 
 
-o/bin/pwd: init_outdir lib/prettyprint.o coreutils/pwd.o
-	$(LD) $(LDFLAGS) -o o/bin/pwd lib/prettyprint.o coreutils/pwd.o 
+o/bin/pwd: init_outdir lib/prettyprint.o lib/util.o coreutils/pwd.o
+	$(LD) $(LDFLAGS) -o o/bin/pwd lib/prettyprint.o lib/util.o coreutils/pwd.o 
 
 o/usr/bin/true: init_outdir coreutils/true.c
 	$(CC) $(CFLAGS) -o o/usr/bin/true coreutils/true.c

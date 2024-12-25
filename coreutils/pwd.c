@@ -9,20 +9,12 @@
 #include <string.h>
 
 #include "../include/prettyprint.h"
+#include "../include/util.h"
 #include "../config.h"
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
-
-void mingw_path(char* out, char* path) {
-  size_t pathlen = strlen(path);
-  for(size_t i = 0; i < pathlen; i++) {
-    out[i] = path[i];
-    if(path[i] == '\\')
-      out[i] = '/';
-  }
-}
 
 void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-LP]", argv0);

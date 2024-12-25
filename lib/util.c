@@ -107,3 +107,13 @@ int is_printable_ch(char c) {
   // if checks fail return 0
   return 0;
 }
+
+void mingw_path(char* out, char* path) {
+  size_t pathlen = strlen(path);
+  for(size_t i = 0; i < pathlen; i++) {
+    out[i] = path[i];
+    if(path[i] == '\\')
+      out[i] = '/';
+  }
+}
+
