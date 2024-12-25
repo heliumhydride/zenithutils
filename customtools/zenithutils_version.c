@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "../config.h"
 
-int main(int argc, char* argv[]) {
+int main(void) {
   printf("                 _  _    _          _    _  _     \n");
   printf("  ___ ___  _ _  (_)| |_ | |_  _  _ | |_ (_)| | ___\n");
   printf(" |_ // -_)| ' \\ | ||  _|| ' \\| || ||  _|| || |(_-<\n");
