@@ -3,11 +3,10 @@
 
 #include <stdio.h>
 
-#ifndef _WIN32 // On Unix
-  #include <unistd.h>
-#endif
 #ifdef _WIN32
   #include <sysinfoapi.h>
+#else // On Unix
+  #include <unistd.h>
 #endif
 
 //int main(int argc, char* argv[]) {
@@ -16,10 +15,8 @@ int main(void) {
     SYSTEM_INFO info;
     GetSystemInfo(&info);
     unsigned int nproc = info.dwNumberOfProcessors;
-  #endif
-
+  #else // On Unix
   // As always, coding for *nix is always easier than for MS/Windows 
-  #ifndef _WIN32
     unsigned int nproc = sysconf(_SC_NPROCESSORS_ONLN);
   #endif
 

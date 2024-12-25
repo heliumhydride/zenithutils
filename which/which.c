@@ -55,11 +55,10 @@ int print_matches(char* path, char* filename) {
   found = 0;
   // TODO: if compiling for Windows, accept both ':' and ';' as separator, but not mixed
   // TODO: check in current directory on Windows
-  #ifndef _WIN32 // On Unix
-  char* path_env_sep = ":";
-  #endif
   #ifdef _WIN32
   char* path_env_sep = ";";
+  #else // On Unix
+  char* path_env_sep = ":";
   #endif
   while((d = strsep(&path, path_env_sep)) != NULL) {
 	  if (*d == '\0')

@@ -7,12 +7,10 @@
 #include "../include/prettyprint.h"
 
 #ifdef _WIN32
-//#include <sysinfoapi.h>
-#include "../include/utsname_winnt.h"
-#endif
-
-#ifndef _WIN32 // On Unix
-#include <sys/utsname.h>
+  // #include <sysinfoapi.h>
+  #include "../include/utsname_winnt.h"
+#else // On Unix
+  #include <sys/utsname.h>
 #endif
 
 void print_usage(char* argv0) {
@@ -40,12 +38,10 @@ void print_machine(struct utsname u) {
 }
 
 void print_os(struct utsname u) {
-  #ifndef _WIN32 // On Unix
-    print_sysname(u);
-  #endif
-
   #ifdef _WIN32
     printf("Windows ");
+  #else // On Unix
+    print_sysname(u);
   #endif
 }
 

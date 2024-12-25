@@ -10,15 +10,22 @@
 #include "../include/prettyprint.h"
 #include <sodium.h>
 
-#ifndef _WIN32 // On Unix
-#include <sys/stat.h>
-#endif
-
 #ifdef _WIN32
-#include <windows.h>
+  #include <windows.h>
+#else // On Unix
+  #include <sys/stat.h>
 #endif
 
 char* xreplacer = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyz0123456789";
+
+int my_mkdir(const char* pathname, mode_t mode) {
+  #ifdef _WIN32
+  (void)mode; // Ignore mode parameter
+  return mkdir(pathname);
+  #else // On Unix
+  return mkdir(pathname, mode);
+  #endif
+}
 
 void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-dqu] [-p tmpdir] [-t prefix | template]\n", argv0);
@@ -36,7 +43,6 @@ char* replace_all_x(char* template) {
 }
 
 int main(int argc, char* argv[]) {
-
   if (sodium_init() == -1) {
     print_error("%s: sodium_init() failed", argv[0]);
     return 1;
@@ -52,12 +58,10 @@ int main(int argc, char* argv[]) {
 
   char* tmpdir;
 
-  #ifndef _WIN32 // On Unix
-  tmpdir = "/tmp";
-  #endif
-
   #ifdef _WIN32
   tmpdir = getenv("TEMP");
+  #else // On Unix
+  tmpdir = "/tmp";
   #endif
 
   char* template;
@@ -106,21 +110,11 @@ int main(int argc, char* argv[]) {
 
   if(!uflag) {
     if(dflag) { // we create a directory
-      #ifndef _WIN32 // On Unix
-      if(mkdir(fullpath, 0700) != 0) {
+      if(my_mkdir(fullpath, 0700) != 0) {
         if(!qflag)
           print_error("%s: creating directory '%s' failed", fullpath);
         return 1;
       }
-      #endif
-
-      #ifdef _WIN32
-      if(mkdir(fullpath) != 0) {
-        if(!qflag)
-          print_error("%s: creating directory '%s' failed", fullpath);
-        return 1;
-      }
-      #endif
     } else { // we create a file
       // TODO: make permission 0600 (u+rw) on Unix
       FILE *fileptr;

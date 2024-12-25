@@ -9,7 +9,9 @@
 //#include <string.h>
 
 int main(void) {
-  #ifndef _WIN32 // On Unix
+  #ifdef _WIN32
+  printf("CON\n"); // assume con device on windows
+  #else // On Unix
   char* tty_dev = ttyname(STDIN_FILENO);
   if(tty_dev == NULL) {
     printf("not a tty\n");
@@ -17,10 +19,7 @@ int main(void) {
   }
 
   printf("%s\n", tty_dev);
-  return 0;
   #endif
 
-  #ifdef _WIN32
-  printf("CON\n"); // assume con device on windows
-  #endif
+  return 0;
 }

@@ -16,11 +16,9 @@
 #include "../config.h"
 
 #ifdef _WIN32
-#include <windows.h>
-#endif
-
-#ifndef _WIN32 // On Unix
-#include <utmp.h>
+  #include <windows.h>
+#else // On Unix
+  #include <utmp.h>
 #endif
 
 void print_usage(char* argv0) {
