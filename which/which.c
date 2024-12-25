@@ -22,12 +22,19 @@ void print_usage(char* argv0) {
 
 int is_there(char* candidate) {
   char* new_candidate;
+
+  #ifdef _WIN32
   if(FORCE_MINGW_PATHS) {
-    new_candidate = malloc(strlen(candidate)+1);
+    new_candidate = malloc(strlen(candidate) + 1);
     mingw_path(new_candidate, candidate);
   } else {
     new_candidate = candidate;
   }
+  #endif
+
+  #ifndef _WIN32 // On Unix
+  new_candidate = candidate;
+  #endif
 
   if(!access(candidate, X_OK)) {
     if(!sflag){
@@ -57,7 +64,11 @@ int print_matches(char* path, char* filename) {
   #endif
 		if (*d == '\0')
 			d = ".";
-		if (snprintf(candidate, sizeof(candidate), "%s\\%s", d,
+    char my_sep = '/';
+    #ifdef _WIN32
+    my_sep = '\\';
+    #endif
+		if (snprintf(candidate, sizeof(candidate), "%s%c%s", d, my_sep,
 		    filename) >= (int)sizeof(candidate))
 			continue;
 		if (is_there(candidate)) {
