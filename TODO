@@ -1,7 +1,5 @@
 -- CODE GOALS --
 
-mktemp unused vars tflag, pflag
-mktemp comparing int i and size_t strlen
 mktemp enforce FORCE_MINGW_PATH
 fix garbeled output for uuidgen and which
 fix slightly off values for wc

@@ -32,7 +32,7 @@ void print_usage(char* argv0) {
 }
 
 char* replace_all_x(char* template) {
-  for(int i = 0; i < strlen(template); i++) {
+  for(size_t i = 0; i < strlen(template); i++) {
     if(template[i] == 'X') { // if the ith character of template is X
       // replace ith character of template by a random character from 'xreplacer'
       template[i] = xreplacer[randombytes_uniform(strlen(xreplacer))];
@@ -53,8 +53,7 @@ int main(int argc, char* argv[]) {
   int dflag = 0;
   int uflag = 0;
   int qflag = 0;
-  int tflag = 0;
-  int pflag = 0;
+  // int pflag = 0;
 
   char* tmpdir;
 
@@ -82,7 +81,7 @@ int main(int argc, char* argv[]) {
         template_begin = optarg;
         break;
       case 'p': // create temp files in dir
-        pflag = 1;
+        // pflag = 1;
         tmpdir = optarg;
         break;
       case '?':
