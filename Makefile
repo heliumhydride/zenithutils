@@ -166,7 +166,7 @@ coreutils/mktemp.o: coreutils/mktemp.c
 
 # requires libsodium
 o/usr/bin/mktemp: init_outdir lib/prettyprint.o coreutils/mktemp.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/mktemp lib/prettyprint.o -lsodium coreutils/mktemp.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/mktemp lib/prettyprint.o coreutils/mktemp.o -lsodium
 
 coreutils/mknod.o: coreutils/mknod.c
 	$(CC) $(CFLAGS) -c -o coreutils/mknod.o coreutils/mknod.c
@@ -209,7 +209,7 @@ util-linux/uuidgen.o: util-linux/uuidgen.c
 
 # requires libsodium
 o/usr/bin/uuidgen: init_outdir lib/prettyprint.o lib/util.o util-linux/uuidgen.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/uuidgen lib/prettyprint.o lib/util.o -lsodium util-linux/uuidgen.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/uuidgen lib/prettyprint.o lib/util.o util-linux/uuidgen.o -lsodium
 
 findutils/xargs.o: findutils/xargs.c
 	$(CC) $(CFLAGS) -c -o findutils/xargs.o findutils/xargs.c
@@ -222,7 +222,7 @@ customtools/rng.o: customtools/rng.c
 
 # requires libsodium
 o/usr/bin/rng: init_outdir lib/prettyprint.o lib/util.o customtools/rng.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/rng lib/prettyprint.o lib/util.o -lsodium customtools/rng.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/rng lib/prettyprint.o lib/util.o customtools/rng.o -lsodium
 
 customtools/exedump.o: customtools/exedump.c config.h
 	$(CC) $(CFLAGS) -c -o customtools/exedump.o customtools/exedump.c
