@@ -90,6 +90,11 @@ int main(int argc, char* argv[]) {
         print_usage(argv[0]);
         return 1;
         break;
+      case ':':
+        print_error("%s: option '%c' needs an argument", argv[0], optopt);
+        print_usage(argv[0]);
+        return 1;
+        break;
     }
   }
 

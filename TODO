@@ -14,7 +14,6 @@ make programs that take options and filenames extract filenames in between optio
 coreutils/wc: take multiple files like cat, if multiple files are provided, print total number of lines/chars/words as well
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
-coreutils/mktemp: -t needs an argument
 coreutils/tail
 coreutils/printf
 coreutils/tee
