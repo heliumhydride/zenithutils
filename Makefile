@@ -278,6 +278,12 @@ coreutils/rmdir.o: coreutils/rmdir.c
 o/bin/rmdir: init_outdir lib/prettyprint.o coreutils/rmdir.o
 	$(LD) $(LDFLAGS) -o o/bin/rmdir lib/prettyprint.o coreutils/rmdir.o
 
+coreutils/head.o: coreutils/head.c
+	$(CC) $(CFLAGS) -c -o coreutils/head.o coreutils/head.c
+
+o/usr/bin/head: init_outdir lib/prettyprint.o lib/util.o coreutils/head.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/head lib/prettyprint.o lib/util.o coreutils/head.o
+
 clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
 
