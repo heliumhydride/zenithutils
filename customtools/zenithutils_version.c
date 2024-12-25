@@ -12,7 +12,8 @@ int main(void) {
   printf("\nversion " VERSION "\n\n");
                                                   
   printf("-----------------------------------------------\n");
-  printf("|          portability above all !!!          |\n");
+  printf("|          simple, portable, robust.          |\n");
+  // printf("|          portability above all !!!          |\n");
   printf("|       made with love by heliumhydride       |\n");
   printf("-----------------------------------------------\n\n");
 
