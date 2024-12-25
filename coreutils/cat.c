@@ -76,11 +76,11 @@ int main(int argc, char* argv[]) {
       fileptr = stdin;
     } else { // We read from file
       fileptr = fopen(*argv, "r");
-      filesize = get_filesize(fileptr);
       if(NULL == fileptr) {
         print_error("%s: could not open file \"%s\"", program, *argv);
         return 1;
       }
+      filesize = get_filesize(fileptr);
     }
   
     char* line = malloc(filesize);
