@@ -1,5 +1,12 @@
 -- CODE GOALS --
 
+reorder compilation order for libsodium (would refuse to compile for mingw otherwise for some reason)
+mktemp unused vars tflag, pflag
+mktemp comparing int i and size_t strlen
+mktemp enforce FORCE_MINGW_PATH
+fix garbeled output for uuidgen and which
+fix slightly off values for wc
+
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
 coreutils/tac: actually work like tac (detailled methode in source)
