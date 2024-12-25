@@ -1,8 +1,8 @@
 -- CODE GOALS --
 
-mktemp enforce FORCE_MINGW_PATH
-fix garbeled output for uuidgen and which
-fix slightly off values for wc
+the following two bugs only seem to happen on win7 x86 ??
+  fix garbeled output for uuidgen and which
+  fix slightly off values for wc
 
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
