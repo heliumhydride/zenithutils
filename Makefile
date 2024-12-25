@@ -266,6 +266,18 @@ coreutils/uniq.o: coreutils/uniq.c
 o/usr/bin/uniq: init_outdir lib/prettyprint.o lib/util.o coreutils/uniq.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/uniq lib/prettyprint.o lib/util.o coreutils/uniq.o
 
+coreutils/mkdir.o: coreutils/mkdir.c
+	$(CC) $(CFLAGS) -c -o coreutils/mkdir.o coreutils/mkdir.c
+
+o/bin/mkdir: init_outdir lib/prettyprint.o lib/util.o coreutils/mkdir.o
+	$(LD) $(LDFLAGS) -o o/bin/mkdir lib/prettyprint.o lib/util.o coreutils/mkdir.o
+
+coreutils/rmdir.o: coreutils/rmdir.c
+	$(CC) $(CFLAGS) -c -o coreutils/rmdir.o coreutils/rmdir.c
+
+o/bin/rmdir: init_outdir lib/prettyprint.o coreutils/rmdir.o
+	$(LD) $(LDFLAGS) -o o/bin/rmdir lib/prettyprint.o coreutils/rmdir.o
+
 clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
 

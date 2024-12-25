@@ -1,5 +1,7 @@
 -- CODE GOALS --
 
+coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
+coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
 coreutils/tac: actually work like tac (detailled methode in source)
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
@@ -8,7 +10,6 @@ coreutils/wc: take multiple files like cat, if multiple files are provided, prin
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
 coreutils/mktemp: -t needs an argument
-coreutils/{mkdir,rmdir}
 coreutils/printf
 coreutils/tee
 coreutils/head

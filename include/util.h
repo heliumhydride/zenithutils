@@ -16,4 +16,5 @@ size_t find_n_of_char_in_str(const char c, const char* str);
 int str_is_nan(char* str);
 int is_printable_ch(char ch);
 void mingw_path(char* out, char* path);
+int is_mode_t(char* mode_str);
 #endif

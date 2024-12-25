@@ -117,3 +117,25 @@ void mingw_path(char* out, char* path) {
   }
 }
 
+int is_mode_t(char* mode_str) {
+  // Conditions: must not be over 3 digits long and must be in positive octal (digits 1 to 7)
+  if(strlen(mode_str) > 3)
+    return 1;
+  int state = 0;
+  for(size_t i = 0; i < strlen(mode_str); i++) {
+    switch(mode_str[i]) {
+      case '0': // fallthrough
+      case '1': // fallthrough
+      case '2': // fallthrough
+      case '3': // fallthrough
+      case '4': // fallthrough
+      case '5': // fallthrough
+      case '6': // fallthrough
+      case '7': // fallthrough
+        break;
+      default:
+        state = 1;
+    }
+  }
+  return state;
+}
