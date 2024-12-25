@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
   #endif
 
   char* template;
-  char* template_begin = "mktemp";
+  char* template_begin = "tmp";
 
   while((opt = getopt(argc, argv, ":pt:dqu")) != -1) {
     switch(opt) {
@@ -130,6 +130,6 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  printf("%s\n", filename);
+  printf("%s\n", fullpath);
   return 0;
 }
