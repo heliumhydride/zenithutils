@@ -7,14 +7,14 @@
   global options
 */
 
-// recommended values are either 4096 or 65535
+// recommended values are either 4096 or 65535 (default 4096)
 #define STDIN_MAX 4096 // Maximum buffer for stdin input
 
 /*
   coreutils options
 */
 
-// If 1, print 'c:/path/to/dir' instead of 'c:\path\to\dir'
+// If 1, print 'c:/path/to/dir' instead of 'c:\path\to\dir' (default 1)
 #define FORCE_MINGW_PATHS 1
 
 /*
