@@ -8,6 +8,7 @@
 #include <getopt.h>
 
 #include "../include/prettyprint.h"
+#include "../include/util.h"
 #include <sodium.h>
 
 #ifdef _WIN32
@@ -105,7 +106,11 @@ int main(int argc, char* argv[]) {
 
   char* filename = replace_all_x(template);
   char* fullpath = malloc(strlen(tmpdir) + strlen(filename) + 2);
-  snprintf(fullpath, strlen(tmpdir) + strlen(filename) + 2, "%s/%s", tmpdir, filename);
+  char dir_sep = '/';
+  #ifdef _WIN32
+  dir_sep = '\\';
+  #endif
+  snprintf(fullpath, strlen(tmpdir) + strlen(filename) + 2, "%s%c%s", tmpdir, dir_sep, filename);
 
   if(!uflag) {
     if(dflag) { // we create a directory
@@ -129,6 +134,11 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  printf("%s\n", fullpath);
+  char* fullpath_new = fullpath;
+  #ifdef _WIN32
+  if(FORCE_MINGW_PATHS)
+    mingw_path(fullpath_new, fullpath);
+  #endif
+  printf("%s\n", fullpath_new);
   return 0;
 }

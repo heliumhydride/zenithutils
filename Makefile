@@ -165,8 +165,8 @@ coreutils/mktemp.o: coreutils/mktemp.c
 	$(CC) $(CFLAGS) -c -o coreutils/mktemp.o coreutils/mktemp.c
 
 # requires libsodium
-o/usr/bin/mktemp: init_outdir lib/prettyprint.o coreutils/mktemp.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/mktemp lib/prettyprint.o coreutils/mktemp.o -lsodium
+o/usr/bin/mktemp: init_outdir lib/prettyprint.o lib/util.o coreutils/mktemp.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/mktemp lib/prettyprint.o lib/util.o coreutils/mktemp.o -lsodium
 
 coreutils/mknod.o: coreutils/mknod.c
 	$(CC) $(CFLAGS) -c -o coreutils/mknod.o coreutils/mknod.c
