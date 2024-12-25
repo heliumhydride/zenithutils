@@ -51,33 +51,39 @@ int print_matches(char* path, char* filename) {
   int found;
 
   if (strchr(filename, '/') != NULL)
-		return (is_there(filename) ? 0 : -1);
-	found = 0;
+    return (is_there(filename) ? 0 : -1);
+  found = 0;
   // TODO: if compiling for Windows, accept both ':' and ';' as separator, but not mixed
-  // TODO: autoadd .exe at end of 'candidate' if needed for Windows
   // TODO: check in current directory on Windows
   #ifndef _WIN32 // On Unix
-	while ((d = strsep(&path, ":")) != NULL) {
+  char* path_env_sep = ":";
   #endif
   #ifdef _WIN32
-	while ((d = strsep(&path, ";")) != NULL) {
+  char* path_env_sep = ";";
   #endif
-		if (*d == '\0')
-			d = ".";
-    char my_sep = '/';
+  while((d = strsep(&path, path_env_sep)) != NULL) {
+	  if (*d == '\0')
+      d = ".";
+    char dir_sep = '/';
     #ifdef _WIN32
-    my_sep = '\\';
+    dir_sep = '\\';
     #endif
-		if (snprintf(candidate, sizeof(candidate), "%s%c%s", d, my_sep,
-		    filename) >= (int)sizeof(candidate))
-			continue;
-		if (is_there(candidate)) {
-			found = 1;
-			if (!aflag)
-				break;
-		}
-	}
-	return (found ? 0 : -1);
+    if(snprintf(candidate, sizeof(candidate), "%s%c%s", d, dir_sep, filename) >= (int)sizeof(candidate))
+      continue;
+    if(is_there(candidate)) {
+      found = 1;
+      if(!aflag)
+        break;
+    } else {
+      strcat(candidate, ".exe");
+      if(is_there(candidate)) {
+        found = 1;
+        if(!aflag)
+          break;
+      }
+    }
+ 	}
+  return (found ? 0 : -1);
 }
 
 int main(int argc, char* argv[]) {
