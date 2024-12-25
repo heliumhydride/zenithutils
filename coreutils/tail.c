@@ -13,7 +13,7 @@
 #include "../config.h"
 
 void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-n int] [-v|-q]\n", argv0);
+  fprintf(stderr, "usage: %s [-f] [-n int] [-v|-q]\n", argv0);
 }
 
 int main(int argc, char* argv[]) {
@@ -21,15 +21,19 @@ int main(int argc, char* argv[]) {
   size_t n_lines = 10; // default: -n10
   int verbosity = 1; // quiet:0 normal:1 full:2
   char* program = argv[0];
+  int fflag = 0; // follow file output
 
   // If -q is used in conjuction with -v, -v takes the upper hand. (that's what you get for using both options!)
-  while((opt = getopt(argc, argv, ":n:qv")) != -1) {
+  while((opt = getopt(argc, argv, ":n:fqv")) != -1) {
     switch(opt) {
       case 'n':
         if(str_is_nan(optarg)) {
           print_error("%s: invalid integer '%s'", program, optarg);
         }
         n_lines = (size_t)atol(optarg);
+        break;
+      case 'f':
+        fflag = 1;
         break;
       case 'q':
         verbosity = 0;
@@ -80,7 +84,7 @@ int main(int argc, char* argv[]) {
     line_counter = 1;
     if((verbosity >= 2) && (fileptr != stdin))
       printf("==> %s <==\n", *argv);
-    while(((line = fgets(line, filesize, fileptr)) != NULL) && (line_counter <= n_lines)) {
+    while(((line = fgets(line, filesize, fileptr)) != NULL) && (line_counter > n_lines)) {
       line[strlen(line)-1] = '\0'; // strip '\n' off the string
       for(size_t i = 0; i <= strlen(line); i++) {
         printf("%c", line[i]);

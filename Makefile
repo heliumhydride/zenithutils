@@ -284,6 +284,12 @@ coreutils/head.o: coreutils/head.c
 o/usr/bin/head: init_outdir lib/prettyprint.o lib/util.o coreutils/head.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/head lib/prettyprint.o lib/util.o coreutils/head.o
 
+coreutils/tail.o: coreutils/tail.c
+	$(CC) $(CFLAGS) -c -o coreutils/tail.o coreutils/tail.c
+
+o/usr/bin/tail: init_outdir lib/prettyprint.o lib/util.o coreutils/tail.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/tail lib/prettyprint.o lib/util.o coreutils/tail.o
+
 clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
 

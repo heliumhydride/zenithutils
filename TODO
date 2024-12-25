@@ -4,6 +4,7 @@ the following two bugs only seem to happen on win7 x86 ??
   fix garbeled output for uuidgen and which
   fix slightly off values for wc
 
+coreutils/head and coreutils/cat: read from stdin correctly (with no arg and with '-' as file)
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
 coreutils/tac: actually work like tac (detailled methode in source)
@@ -14,9 +15,9 @@ coreutils/wc: take multiple files like cat, if multiple files are provided, prin
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
 coreutils/mktemp: -t needs an argument
+coreutils/tail
 coreutils/printf
 coreutils/tee
-coreutils/head
 coreutils/groups
 coreutils/test
 customtools/read: check if variable was set correctly (check if input == getenv(variable))
