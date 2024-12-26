@@ -10,7 +10,7 @@
 #include "../include/util.h"
 
 void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s first [increment] [last]\n", argv0);
+  fprintf(stderr, "usage: %s [first [increment]] last\n", argv0);
 }
 
 int main(int argc, char* argv[]) {
@@ -58,14 +58,6 @@ int main(int argc, char* argv[]) {
     print_error("%s: too many arguments", argv[0]);
     return 1;
   }
-
-  /*
-  if(increment == '\0')
-    increment = 1;
-
-  if(last == '\0')
-    last = 1;
-  */
 
   for(int i = first; i <= last; i+=increment) {
     printf("%d\n", i);
