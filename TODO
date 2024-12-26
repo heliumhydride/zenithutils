@@ -1,9 +1,10 @@
 -- CODE GOALS --
 
-the following two bugs only seem to happen on win7 x86 ??
-  fix garbeled output for uuidgen and which
-  fix slightly off values for wc
+the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
+fix slightly off values for wc (fix word counting method)
+fix rev behaviour
+seq work with negative numbers (eg. '$ seq 1 -1 10')
 coreutils/head and coreutils/cat: read from stdin correctly (with no arg and with '-' as file)
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
