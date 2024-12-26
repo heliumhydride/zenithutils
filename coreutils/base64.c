@@ -3,10 +3,10 @@
 
 /// Useful includes
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <getopt.h>
 #include <unistd.h>
-//#include <string.h>
+#include <string.h>
 
 #include "../include/prettyprint.h"
 #include "../include/util.h"
