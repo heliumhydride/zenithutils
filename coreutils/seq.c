@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
   ssize_t last;
   ssize_t first = 1;
   ssize_t increment = 1;
-  char separator = '\n'; // default separator to newline
+  char* separator = "\n"; // default separator to newline
 
   if(argc < 2) {
     print_usage(argv[0]);
@@ -65,11 +65,13 @@ int main(int argc, char* argv[]) {
 
   if(increment >= 1) {
     for(ssize_t i = first; i <= last; i += increment)
-      printf("%zd%c", i, separator);
+      printf("%zd%s", i, separator);
   } else {
     for(ssize_t i = first; i >= last; i += increment)
-      printf("%zd%c", i, separator);
+      printf("%zd%s", i, separator);
   }
 
+  if(separator != "\n")
+    printf("\n");
   return 0;
 }
