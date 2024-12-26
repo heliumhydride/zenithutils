@@ -5,7 +5,6 @@ the following bug only seem to happen on win7 x86 ?: fix garbeled output for uui
 fix slightly off values for wc (fix word counting method)
 fix rev behaviour
 seq implement -s -w -f (reimplement with getopt), support floating point numbers (use strtod)
-customtools/rng: support floating point numbers (strtod)
 coreutils/head and coreutils/cat: read from stdin correctly (with no arg and with '-' as file)
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
@@ -65,4 +64,5 @@ test building on netbsd
 -- NON CODE GOALS --
 improve readme a bit
 create man pages for all utilities included
+  rng: how to do floating point number generation using '$ bc -l <<< "$(o/usr/bin/rng 1000 6000)/1000"'
 create a logo maybe ?
