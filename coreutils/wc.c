@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    input_buffer = malloc(get_filesize(fileptr));
+    input_buffer = malloc(get_filesize(fileptr)+1);
     if(readfile(fileptr, input_buffer) == -1) {
       print_error("%s: read error", argv[0]);
     }

@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
   }
   
   //unsigned 
-  char* buf = malloc(get_filesize(fileptr));
+  char* buf = malloc(get_filesize(fileptr)+1);
   if(readfile(fileptr, buf) == -1) {
     print_error("%s: read error", argv[0]);
   }
