@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <unistd.h>
+#include <inttypes.h>
 
 #include "../include/prettyprint.h"
 #include "../include/util.h"
@@ -28,7 +29,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  last = atol(argv[1]);
+  last = (ssize_t)strtoimax(argv[1], NULL, 10);
   increment = 1;
   first = 1;
 
@@ -38,8 +39,8 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    first = atol(argv[1]);
-    last = atol(argv[2]);
+    first = (ssize_t)strtoimax(argv[1], NULL, 10);
+    last = (ssize_t)strtoimax(argv[2], NULL, 10);
     increment = 1;
   }
 
@@ -49,9 +50,9 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    first = atol(argv[1]);
-    increment = atol(argv[2]);
-    last = atol(argv[3]);
+    first = (ssize_t)strtoimax(argv[1], NULL, 10);
+    increment = (ssize_t)strtoimax(argv[2], NULL, 10);
+    last = (ssize_t)strtoimax(argv[3], NULL, 10);
   }
 
   if(argc > 4) {
