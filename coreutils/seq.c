@@ -15,9 +15,10 @@ void print_usage(char* argv0) {
 }
 
 int main(int argc, char* argv[]) {
-  ssize_t first;
   ssize_t last;
-  ssize_t increment;
+  ssize_t first = 1;
+  ssize_t increment = 1;
+  char separator = '\n'; // default separator to newline
 
   if(argc < 2) {
     print_usage(argv[0]);
@@ -30,8 +31,6 @@ int main(int argc, char* argv[]) {
   }
 
   last = (ssize_t)strtoimax(argv[1], NULL, 10);
-  increment = 1;
-  first = 1;
 
   if(argc == 3) {
     if(str_is_nan(argv[1]) || str_is_nan(argv[2])) {
@@ -41,7 +40,6 @@ int main(int argc, char* argv[]) {
 
     first = (ssize_t)strtoimax(argv[1], NULL, 10);
     last = (ssize_t)strtoimax(argv[2], NULL, 10);
-    increment = 1;
   }
 
   if(argc == 4) {
@@ -60,8 +58,17 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  for(int i = first; i <= last; i+=increment) {
-    printf("%d\n", i);
+  if(increment == 0) {
+    print_error("%s: increment cannot equal zero", argv[0]);
+    return 1;
+  }
+
+  if(increment >= 1) {
+    for(ssize_t i = first; i <= last; i += increment)
+      printf("%zd%c", i, separator);
+  } else {
+    for(ssize_t i = first; i >= last; i += increment)
+      printf("%zd%c", i, separator);
   }
 
   return 0;
