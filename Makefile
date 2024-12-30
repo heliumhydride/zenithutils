@@ -300,7 +300,7 @@ clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
 
 check:
-	find -name *.c | xargs cppcheck --std=c99 --check-level=exhaustive
+	find -name '*.c' -or -name '*.h' | xargs cppcheck --std=c99 --check-level=exhaustive
 
 init_outdir: o/bin o/sbin o/usr/bin o/usr/sbin
 
