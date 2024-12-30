@@ -3,7 +3,7 @@ include config.mk
 all: coreutils customtools diffutils findutils grep gzip iconv patch procutils sed sharutils su util-linux which passwdutils
 
 # yes read, like the shellscript read (with -r, and all that good stuff)
-customtools: o/usr/bin/zenithutils_version o/usr/bin/ascii o/usr/bin/rng o/usr/bin/read o/usr/bin/strings o/usr/bin/exedump o/usr/bin/usleep o/usr/bin/time
+customtools: o/usr/bin/zenithutils_version o/usr/bin/ascii o/usr/bin/rng o/usr/bin/read o/usr/bin/strings o/usr/bin/exedump o/usr/bin/usleep o/usr/bin/clear o/usr/bin/time
 
 # logname is a link to whoami
 # md5sum is a link to md5
@@ -289,6 +289,12 @@ coreutils/tail.o: coreutils/tail.c
 
 o/usr/bin/tail: init_outdir lib/prettyprint.o lib/util.o coreutils/tail.o
 	$(LD) $(LDFLAGS) -o o/usr/bin/tail lib/prettyprint.o lib/util.o coreutils/tail.o
+
+customtools/clear.o: customtools/clear.c
+	$(CC) $(CFLAGS) -c -o customtools/clear.o customtools/clear.c
+
+o/usr/bin/clear: init_outdir customtools/clear.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/clear customtools/clear.o
 
 clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
