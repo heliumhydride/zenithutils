@@ -4,6 +4,7 @@ the following bug only seem to happen on win7 x86 ?: fix garbeled output for uui
 
 fix slightly off values for wc (fix word counting method)
 fix rev behaviour
+use openbsd pledge everywhere (#ifdef __OpenBSD__ pledge(...,NULL); #endif)
 seq implement -s -w -f (reimplement with getopt), support floating point numbers (use strtod)
 coreutils/head and coreutils/cat: read from stdin correctly (with no arg and with '-' as file)
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
@@ -16,6 +17,10 @@ coreutils/wc: take multiple files like cat, if multiple files are provided, prin
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
 coreutils/tail
+util-linux/column
+procutils/kill
+procutils/pkill
+util-linux/hexdump
 coreutils/printf
 coreutils/tee
 coreutils/groups

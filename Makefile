@@ -17,7 +17,7 @@ coreutils: o/bin/cat o/usr/bin/nproc o/bin/ls o/usr/bin/uname o/usr/bin/seq o/bi
 # for mkswap/swapon/swapoff on windows: do we have functions in the win32 api to change pagefile settings ?
 # for login on windows: use as a frontend to LogonUI/runas.exe maybe ? kind of a strech but I don't see what else login.exe would do...
 # fsck on windows: do we just 'execvp("chkdsk.exe", ...);' ?
-util-linux: o/usr/bin/rev o/usr/sbin/nologin o/usr/bin/uuidgen o/usr/bin/lscpu o/bin/kill o/usr/bin/blkid o/usr/bin/cal o/usr/bin/cfdisk o/usr/bin/chsh o/usr/bin/col o/usr/bin/dmesg o/usr/bin/eject o/usr/bin/fallocate o/sbin/fdisk o/usr/bin/findfs o/sbin/fsck o/usr/bin/getopt o/usr/bin/hexdump o/usr/bin/ionice o/usr/bin/last o/usr/bin/login o/usr/sbin/losetup o/usr/bin/lsblk o/usr/bin/lslogins o/usr/bin/mcookie o/sbin/mkfs o/sbin/mkswap o/bin/more o/sbin/mount o/usr/bin/mountpoint o/usr/sbin/pivot_root o/usr/bin/renice o/usr/bin/write o/usr/bin/whereis o/usr/bin/swapon o/usr/bin/swapoff
+util-linux: o/usr/bin/rev o/usr/sbin/nologin o/usr/bin/uuidgen o/bin/kill o/usr/bin/lscpu o/usr/bin/column o/usr/bin/blkid o/usr/bin/cal o/usr/bin/cfdisk o/usr/bin/chsh o/usr/bin/col o/usr/bin/dmesg o/usr/bin/eject o/usr/bin/fallocate o/sbin/fdisk o/usr/bin/findfs o/sbin/fsck o/usr/bin/getopt o/usr/bin/hexdump o/usr/bin/ionice o/usr/bin/last o/usr/bin/login o/usr/sbin/losetup o/usr/bin/lsblk o/usr/bin/lslogins o/usr/bin/mcookie o/sbin/mkfs o/sbin/mkswap o/bin/more o/sbin/mount o/usr/bin/mountpoint o/usr/sbin/pivot_root o/usr/bin/renice o/usr/bin/write o/usr/bin/whereis o/usr/bin/swapon o/usr/bin/swapoff
 
 findutils: o/usr/bin/xargs o/usr/bin/find 
 
