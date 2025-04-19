@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "../include/prettyprint.h"
 #include "../include/util.h"
@@ -76,12 +77,15 @@ int main(int argc, char* argv[]) {
   fclose(fileptr);
   // DONE LOADING FILE INTO MEM
 
-  if(exefmt == "auto") { // Autodetect format
-    if(buf[0] == 0x7f && buf[1] == 'E' && buf[2] == 'L' && buf[3] == 'F')
-      exefmt == "elf";
+  if(!(strcmp(exefmt, "auto"))) { // Autodetect format
+    if(buf[0] == 0x7f && buf[1] == 'E' && buf[2] == 'L' && buf[3] == 'F') {
+      exefmt = "elf";
+    } else if(buf[0] == 0x4d && buf[1] == 0x5a && buf[2] == 0x90) {
+      exefmt = "pe";
+    }
   }
 
-  if(exefmt == "auto") { // Autodetect failed
+  if(!(strcmp(exefmt, "auto"))) { // Autodetect failed
     print_error("%s: unable to identify executable type", argv[0]);
     return 1;
   }
@@ -90,7 +94,7 @@ int main(int argc, char* argv[]) {
   // TODO: implement actually portable executable support
   printf("| %sformat         %s| %s%s%s\n", c1, ANSI_NORM, c2, exefmt, ANSI_NORM);
 
-  int i = 0; // we need this later
+  size_t i = 0; // we need this later
   if(!strcmp("elf", exefmt)) {
     // see https://wiki.osdev.org/ELF#ELF_Header for much easier to read details
     // see also https://www.sco.com/developers/gabi/latest/ch4.eheader.html
@@ -112,12 +116,11 @@ int main(int argc, char* argv[]) {
     // printf("| %sbitness        %s| %s%d bit%s\n", c1, ANSI_NORM, c2, buf[4]*32, ANSI_NORM);
     elf.bitness = (unsigned int)buf[4];
     printf("| %sbitness        %s| %s", c1, ANSI_NORM, c2);
-    if(elf.bitness == 1 || elf.bitness == 2) {
-      printf("%d bit", elf.bitness*32);
-    } else if(elf.bitness == 3) {
-      printf("128 bit"); // Cursed, but actually exists. see https://github.com/fpetrot/riscv-gnu-toolchain/blob/docker-128-bit/elf128-spec.md
+    if(elf.bitness <= 3) {
+      printf("%d bit", (int)pow(2, 4 + elf.bitness)); // Given that 2^(4+1) = 32, 2^(4+2) = 64, 2^(4+3) = 128
+      // yes, 128-bit is cursed, but apparently it actually exists. see https://github.com/fpetrot/riscv-gnu-toolchain/blob/docker-128-bit/elf128-spec.md
     } else {
-      printf("invalid bitness");
+      printf("invalid bitness!");
     }
     printf("%s\n", ANSI_NORM);
 
@@ -242,6 +245,7 @@ int main(int argc, char* argv[]) {
     switch(elf.type) {
       case 0:
         printf("none");
+        break;
       case 1:
         printf("relocatable");
         break;
@@ -354,14 +358,14 @@ int main(int argc, char* argv[]) {
 
     i = 0;
     for(i = 0; i < strlen(buf); i++) {
-      if(buf[i] == 'P' && buf[i+1] == 'E' && (buf[i+2] == buf[i+3] == '\0'))
+      if(buf[i] == 'P' && buf[i+1] == 'E' && ((buf[i+2] == buf[i+3]) == '\0'))
         break;
     }
     int pe_hdr_offset = i;
     printf("%s\n", ANSI_NORM);
 
     printf("| %ssubsystems     %s| %s", c1, ANSI_NORM, c2);
-    // TODO: detect subsystems (win32 console, win32 gui, native, efi, dll console, dll gui, ...)
+    // TODO: detect subsystems (win32 console, win32 gui, native(nt mode / driver), efi, dll console, dll gui, ...)
     printf("%s\n", ANSI_NORM);
 
   }

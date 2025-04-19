@@ -228,7 +228,7 @@ customtools/exedump.o: customtools/exedump.c config.h
 	$(CC) $(CFLAGS) -c -o customtools/exedump.o customtools/exedump.c
 
 o/usr/bin/exedump: init_outdir lib/prettyprint.o lib/util.o customtools/exedump.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/exedump lib/prettyprint.o lib/util.o customtools/exedump.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/exedump lib/prettyprint.o lib/util.o customtools/exedump.o -lm
 
 customtools/usleep.o: customtools/usleep.c
 	$(CC) $(CFLAGS) -c -o customtools/usleep.o customtools/usleep.c
