@@ -5,6 +5,7 @@ the following bug only seem to happen on win7 x86 ?: fix garbeled output for uui
 fix slightly off values for wc (fix word counting method)
 fix rev behaviour
 seq implement -s -w -f (reimplement with getopt), support floating point numbers (use strtod)
+allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
 coreutils/head and coreutils/cat: read from stdin correctly (with no arg and with '-' as file)
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
@@ -59,7 +60,9 @@ coreutils/dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/rando
 procutils/sysctl (On Windows, do we provide the same linux interface translated to windows or do we create a command-line alternative to the control panel ?)
 coreutils/env
 iconv/iconv (use libicu ?)
-make install target
+
+make install-bin; make install-man targets
+make install target (install: install-bin install-man)
 allow to change installation prefix and destdir
 
 create a test suite shell script
