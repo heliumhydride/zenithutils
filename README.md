@@ -34,10 +34,10 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
 
 ### recommended to go along with zenithutils:
   - for a more feature-packed environment:
-    - [onetrueawk](https://github.com/onetrueawk/awk) (build fails for Windows)
+    - [onetrueawk](https://github.com/onetrueawk/awk) (requires small modifs to compile for Windows)
     - [bc-gh](https://github.com/gavinhoward/bc) (build fails for Windows)
     - [nq](https://github.com/leahneukirchen/nq) (useful when building large software) (not supported on Windows)
-    - [libarchive](https://libarchive.de) // [paxmirabilis](http://www.mirbsd.org/pax.htm) (aka. mircpio) (not supported on Windows)
+    - [libarchive](https://libarchive.de) (fun fact: libarchive tar is already installed on Windows 10/11) // [paxmirabilis](http://www.mirbsd.org/pax.htm) (aka. mircpio) (not supported on Windows)
     - [mksh](http://www.mirbsd.org/mksh.html) (not supported on Windows) // [mksh/win32](http://www.mirbsd.org/permalinks/wlog-10_e20130718-tg.htm)
     - [yash](https://magicant.github.io/yash/) (not supported on Windows)
 
