@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "../include/prettyprint.h"
 #include "../include/util.h"
@@ -18,7 +19,13 @@ size_t count_lines(const char* str) {
 }
 
 size_t count_words(const char* str) {
-  return find_n_of_char_in_str(' ', str) + count_lines(str);
+  size_t count = 0;
+  for(size_t i = 0; i <= strlen(str); i++) {
+    if(isspace(str[i]) && !isspace(str[i+1])) { // If we are on a whitespace, and the next character is not a whitespace
+      count++;
+    }
+  }
+  return count;
 }
 
 int main(int argc, char* argv[]) {
@@ -88,7 +95,7 @@ int main(int argc, char* argv[]) {
         printf(" %s", argv[optind]);
       break;
     case 'm': // count characters
-      // TODO: for now, same as -c
+      // TODO: for now, same as -c, until I can figure out how to deal with multi-byte chars
       printf("%zu", strlen(input_buffer));
       if(argc > optind) // If we have a filename as an argument
         printf(" %s", argv[optind]);

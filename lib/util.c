@@ -57,7 +57,7 @@ int readfile(FILE* fileptr, char* buf) {
 
 size_t find_n_of_char_in_str(const char c, const char* str) {
   size_t count = 0;
-  for(size_t i = 0; i < strlen(str); i++) {
+  for(size_t i = 0; i <= strlen(str); i++) {
     if(str[i] == c) 
       count++;
   }
