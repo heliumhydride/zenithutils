@@ -2,6 +2,7 @@
 
 the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
+split makefile into multiple makefiles in each subfolder
 fix slightly off values for wc (fix word counting method)
 fix rev behaviour
 seq implement -s -w -f (reimplement with getopt), support floating point numbers (use strtod)
