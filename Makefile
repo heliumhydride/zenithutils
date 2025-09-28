@@ -8,7 +8,8 @@ customtools: o/usr/bin/zenithutils_version o/usr/bin/ascii o/usr/bin/rng o/usr/b
 # logname is a link to whoami
 # md5sum is a link to md5
 # [ is a link to test
-coreutils: o/bin/cat o/usr/bin/nproc o/bin/ls o/usr/bin/uname o/usr/bin/seq o/bin/pwd o/usr/bin/true o/usr/bin/false o/usr/bin/yes o/usr/bin/dirname o/usr/bin/basename o/usr/bin/tac o/usr/bin/sleep o/usr/bin/wc o/usr/bin/mktemp o/usr/bin/tty  o/usr/bin/base64 o/usr/bin/base32 o/bin/mkdir o/bin/rmdir o/bin/test o/sbin/mknod o/usr/bin/whoami o/usr/bin/mkfifo o/bin/cp o/bin/mv o/bin/rm o/usr/bin/readlink o/bin/sync o/usr/bin/tee o/usr/bin/tail o/usr/bin/head o/usr/bin/sort o/usr/bin/shred o/bin/touch o/usr/bin/timeout o/usr/bin/truncate o/usr/bin/uniq o/usr/bin/users o/usr/bin/nice o/bin/ln o/usr/bin/install o/usr/bin/id o/usr/bin/hostname o/usr/bin/groups o/usr/bin/df o/usr/sbin/chroot o/bin/chmod o/bin/chown o/bin/cut o/bin/date o/bin/dd o/usr/bin/fmt o/usr/bin/fold o/usr/bin/md5 o/usr/bin/sha1sum o/usr/bin/sha224sum o/usr/bin/sha256sum o/usr/bin/sha384sum o/usr/bin/sha512sum o/usr/bin/pr o/usr/bin/tr o/bin/chgrp o/bin/echo o/usr/bin/comm o/usr/bin/du o/usr/bin/env o/usr/bin/expand o/usr/bin/expr o/usr/bin/join o/usr/bin/od o/usr/bin/printf o/usr/bin/split o/usr/bin/stty o/usr/bin/tsorto/usr/bin/unexpand o/usr/bin/who o/usr/bin/nl o/usr/bin/dos2unix o/usr/bin/unix2dos o/usr/bin/ed o/usr/bin/printenv
+# how would 'nohup' work on Windows?
+coreutils: o/bin/cat o/usr/bin/nproc o/bin/ls o/usr/bin/uname o/usr/bin/seq o/bin/pwd o/usr/bin/true o/usr/bin/false o/usr/bin/yes o/usr/bin/dirname o/usr/bin/basename o/usr/bin/tac o/usr/bin/sleep o/usr/bin/wc o/usr/bin/mktemp o/usr/bin/tty  o/usr/bin/base64 o/usr/bin/base32 o/bin/mkdir o/bin/rmdir o/bin/test o/sbin/mknod o/usr/bin/whoami o/usr/bin/mkfifo o/bin/cp o/bin/mv o/bin/rm o/usr/bin/readlink o/bin/sync o/usr/bin/tee o/usr/bin/tail o/usr/bin/head o/usr/bin/sort o/usr/bin/shred o/bin/touch o/usr/bin/timeout o/usr/bin/truncate o/usr/bin/uniq o/usr/bin/users o/usr/bin/nice o/bin/ln o/usr/bin/install o/usr/bin/id o/usr/bin/hostname o/usr/bin/groups o/usr/bin/df o/usr/sbin/chroot o/bin/chmod o/bin/chown o/bin/cut o/bin/date o/bin/dd o/usr/bin/fmt o/usr/bin/fold o/usr/bin/md5 o/usr/bin/sha1sum o/usr/bin/sha224sum o/usr/bin/sha256sum o/usr/bin/sha384sum o/usr/bin/sha512sum o/usr/bin/pr o/usr/bin/tr o/bin/chgrp o/bin/echo o/usr/bin/comm o/usr/bin/du o/usr/bin/env o/usr/bin/expand o/usr/bin/expr o/usr/bin/join o/usr/bin/od o/usr/bin/printf o/usr/bin/split o/usr/bin/stty o/usr/bin/tsort o/usr/bin/unexpand o/usr/bin/who o/usr/bin/nl o/usr/bin/dos2unix o/usr/bin/unix2dos o/usr/bin/ed o/usr/bin/printenv o/usr/bin/factor o/usr/bin/nohup o/usr/bin/numfmt o/usr/bin/paste o/usr/bin/pathchk o/usr/bin/finger o/usr/bin/realpath o/usr/bin/stat o/usr/bin/shuf
 
 # do we really need 'rename' and 'hardlink' ? (see 'mv' and 'ln')
 # agetty not implemented, see nyagetty from chimera linux
@@ -39,13 +40,13 @@ gzip: o/usr/bin/gzip
 
 # sysctl will either show a "does not apply to windows" or will implement some kind of command line windows control panel
 # uptime is a link to w
-procutils: o/usr/bin/w o/usr/bin/top o/usr/bin/pstree o/usr/bin/fuser o/usr/bin/killall o/usr/bin/ps o/usr/bin/pkill o/sbin/sysctl o/usr/bin/pidof o/usr/bin/free o/usr/bin/pgrep
+procutils: o/usr/bin/w o/usr/bin/top o/usr/bin/pstree o/usr/bin/fuser o/usr/bin/killall o/usr/bin/ps o/usr/bin/pkill o/sbin/sysctl o/usr/bin/pidof o/usr/bin/free o/usr/bin/pgrep o/usr/bin/vmstat
 
 sharutils: o/usr/bin/shar o/usr/bin/uuencode o/usr/bin/uudecode
 
 iconv: o/usr/bin/iconv
 
-passwdutils: o/usr/bin/passwd o/usr/sbin/chage o/usr/sbin/useradd o/usr/sbin/userdel o/usr/sbin/usermod o/usr/sbin/groupadd o/usr/sbin/groupdel o/usr/sbin/groupmod
+passwdutils: o/usr/bin/passwd o/usr/sbin/chage o/usr/sbin/useradd o/usr/sbin/userdel o/usr/sbin/usermod o/usr/sbin/groupadd o/usr/sbin/groupdel o/usr/sbin/groupmod o/usr/sbin/sg
 
 o/usr/bin/zenithutils_version: init_outdir customtools/zenithutils_version.c
 	$(CC) $(CFLAGS) -o o/usr/bin/zenithutils_version customtools/zenithutils_version.c
