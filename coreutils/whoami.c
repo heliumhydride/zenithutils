@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
   // that's right we're gonna cheat (using the environment variable USERNAME)
   username = getenv("USERNAME");
   #else // On Unix
-  // TODO when i run "su root" and then run o/usr/bin/whoami, it shows my username before running su instead of "root"...
+  // TODO when i run "su root" and then run o/usr/bin/whoami, it shows my username before running su instead of "root"... [probably because this acts like logname and not whoami]
   username = getlogin();
   #endif
 
