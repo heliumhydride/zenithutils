@@ -34,6 +34,9 @@ int main(int argc, char* argv[]) {
   int vflag = 0; // show operations / verbose mode
   char* mode_str; // default permission on unix: drwxr-xr-x
   mode_t mode = 0755; // ----^^^^^^^^^^^^^^^^^^
+  #ifndef _WIN32 // On Unix
+  mode_t mask = get_umask();
+  #endif
   char* program = argv[0];
 
   while((opt = getopt(argc, argv, ":m:pv")) != -1) {
@@ -77,9 +80,10 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  mode_t true_mode = mode & ~mask;
   while(*++argv) {
     // TODO implement mkdir -p
-    if(my_mkdir(*argv, mode, 0) == -1) {
+    if(my_mkdir(*argv, true_mode, pflag) == -1) {
       switch(errno) { // UGLY ERROR HANDLING
         case EACCES:
           print_error("%s: cannot create directory '%s': access denied", program, *argv);
@@ -125,7 +129,7 @@ int main(int argc, char* argv[]) {
       return 1;
     }
     if(vflag)
-      printf("%s: created directory %s\n", program, *argv);
+      printf("%s: created directory '%s'\n", program, *argv);
   }
   return 0;
 }

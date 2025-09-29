@@ -119,7 +119,7 @@ void mingw_path(char* out, char* path) {
 
 int is_mode_t(char* mode_str) {
   // Conditions: must not be over 3 digits long and must be in positive octal (digits 1 to 7)
-  if(strlen(mode_str) > 3)
+  if(strlen(mode_str) >= 3)
     return 1;
   int state = 0;
   for(size_t i = 0; i < strlen(mode_str); i++) {
@@ -138,4 +138,16 @@ int is_mode_t(char* mode_str) {
     }
   }
   return state;
+}
+
+mode_t get_umask(void) {
+  #ifdef _WIN32
+  return 0; // no mask on win32
+  #endif // _WIN32
+
+  #ifndef _WIN32 // On Unix
+  mode_t mask = umask(0);
+  umask(mask);
+  return mask;
+  #endif  
 }
