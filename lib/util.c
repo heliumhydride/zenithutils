@@ -140,14 +140,3 @@ int is_mode_t(char* mode_str) {
   return state;
 }
 
-mode_t get_umask(void) {
-  #ifdef _WIN32
-  return 0; // no mask on win32
-  #endif // _WIN32
-
-  #ifndef _WIN32 // On Unix
-  mode_t mask = umask(0);
-  umask(mask);
-  return mask;
-  #endif  
-}

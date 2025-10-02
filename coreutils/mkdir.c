@@ -3,7 +3,7 @@
 
 /// Useful includes
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <getopt.h>
 #include <unistd.h>
 //#include <string.h>
@@ -32,10 +32,10 @@ int main(int argc, char* argv[]) {
   int opt;
   int pflag = 0; // create directories recursively
   int vflag = 0; // show operations / verbose mode
-  char* mode_str; // default permission on unix: drwxr-xr-x
-  mode_t mode = 0755; // ----^^^^^^^^^^^^^^^^^^
+  int mflag = 0; // using mode flag to set mode
+  mode_t mode = 0755;
   #ifndef _WIN32 // On Unix
-  mode_t mask = get_umask();
+  mode_t process_umask = 0;
   #endif
   char* program = argv[0];
 
@@ -48,12 +48,15 @@ int main(int argc, char* argv[]) {
         pflag = 1;
         break;
       case 'm':
-        mode_str = optarg;
-        if(!is_mode_t(mode_str)) {
-          print_error("%s: invalid mode '%s'", mode_str);
+        mflag = 1;
+        if(!is_mode_t(optarg)) {
+          print_error("%s: invalid mode '%s'", optarg);
           return 1;
         }
-        mode = (mode_t)atoi(mode_str); // TODO fix bad permission stuff (need to go from decimal to octal? 755 -> 0755 ?)
+        mode = (mode_t)strtol(optarg, NULL, 8);
+        #ifndef _WIN32 // On Unix
+        process_umask = umask(0);
+        #endif
         break;
       case '?': // fallthrough
         print_error("%s: option error: unknown option \"-%c\"", program, optopt);
@@ -80,10 +83,9 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  mode_t true_mode = mode & ~mask;
   while(*++argv) {
     // TODO implement mkdir -p
-    if(my_mkdir(*argv, true_mode, pflag) == -1) {
+    if(my_mkdir(*argv, mode, pflag) == -1) {
       switch(errno) { // UGLY ERROR HANDLING
         case EACCES:
           print_error("%s: cannot create directory '%s': access denied", program, *argv);
@@ -131,5 +133,10 @@ int main(int argc, char* argv[]) {
     if(vflag)
       printf("%s: created directory '%s'\n", program, *argv);
   }
+
+  #ifndef _WIN32 // On Unix
+  if(mflag)
+    (void)umask(process_umask);
+  #endif // _WIN32
   return 0;
 }
