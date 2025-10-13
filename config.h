@@ -16,6 +16,7 @@
 
 // If 1, print 'c:/path/to/dir' instead of 'c:\path\to\dir' (default 1)
 #define FORCE_MINGW_PATHS 1
+#define MAX_LINK_LENGTH 1024 // for readlink
 
 /*
   Base32 and Base64 alphabets
