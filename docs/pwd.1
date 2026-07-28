@@ -1,0 +1,24 @@
+.TH YES 1 "28th of July 2027" zenithutils "User Commands"
+
+.SH NAME
+pwd - repeated output of a string
+
+.SH SYNPOSIS
+.B pwd [-LP]
+
+.SH DESCRIPTION
+\fBpwd\fP prints full path the current working directory
+
+.SH OPTIONS
+.TP
+\fB-L\fP
+use PWD environment variable instead of libc functions
+
+.TP
+\fB-P\fP
+dereference any symlinks
+
+.PP
+Note: \fB-P\fP is the default
+.PP
+Note: This program may possibly never run, given it is usually built into the shell
