@@ -4,6 +4,7 @@ the following bug only seem to happen on win7 x86 ?: fix garbeled output for uui
 
 cat -n
 wc total if multiple files + column alignment
+wc.1 manpage
 
 split makefile into multiple makefiles in each subfolder
 fix rev behaviour
