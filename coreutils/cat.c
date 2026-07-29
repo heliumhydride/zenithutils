@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
         vflag = 1;
         break;
       case '?':
-        fprintf(stderr, "%s: option error: unknown option \"-%c\"\n", program, optopt);
+        print_error("%s: option error: unknown option \"-%c\"\n", program, optopt);
         print_usage(program);
         return 1;
         break;
@@ -65,7 +65,8 @@ int main(int argc, char* argv[]) {
 
   argv += optind - 1;
 
-  if(optind == argc) { // probably very sketchy and unsafe ?
+  if(optind == argc) {
+    argv--; // see coreutils/wc.c
     argv[1] = "-";
   }
 
@@ -95,7 +96,8 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    fclose(fp);
+    if(strcmp(*argv,"-"))
+      fclose(fp);
   }
   return 0;
 }
