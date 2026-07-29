@@ -1,0 +1,37 @@
+.TH CAT 1 "29th of July 2026" zenithutils "User Commands"
+
+.SH NAME
+\fBcat\fP \fI[-AEenTtv] [file1] [file2] ...\fP
+
+.SH DESCRIPTION
+\fBcat\fP concatenates each file passed as argument, character by character.
+If no argument is provided or argument is '-', cat will read from standard input
+
+.SH OPTIONS
+.TP
+\fB-A\fP alias for -vET
+
+.TP
+\fB-E\fP show \\n, denoted by '$'
+
+.TP
+\fB-e\fP alias for -vE
+
+.TP
+\fB-n\fP number lines
+
+.TP
+\fB-T\fP show TAB, denoted by '^I'
+
+.TP
+\fB-t\fP alias for -vT
+
+.TP
+\fB-v\fP show special non-printing characters, except for \\n and TAB
+
+.SH EXAMPLES
+.PP
+Concatenate file1, standard input (which reads xyz), and file2 in order:
+.EX
+  $ echo xyz | cat file1 - file2
+.EE

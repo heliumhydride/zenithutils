@@ -1,112 +1,101 @@
 #define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
-#include <unistd.h>
 #include <string.h>
-
+#include <getopt.h>
 #include "../include/prettyprint.h"
-#include "../include/util.h"
 
-void nonprint_alt(char* buf, char c) {
-  // Give a two character alternative to a non-printable character
-  /* N.B: if you put all non printable chars from NULL(0x00) to US(0x1F)
-    you can see that cat prints out ^@^A...
-    And in the ascii table, @ = 64, A = 65...
-    And 0 is mapped to 64, 1 to 65, ...
-    So we can deduce a pattern here, it is that we
-    print '^' and then (c+64)
-  */
-  
-  buf[0] = '^';
-  buf[1] = c+64; // see note
-  buf[2] = '\0'; // null-terminate string
+void print_usage(char* program) {
+  fprintf(stderr, "usage: %s [-AEenTtv] [file1] [file2] ...\n", program);
 }
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-beElnstuv] [file ...]\n", argv0);
+void vfilter(char* out, char c) {
+  // takes a non printable character and returns a string representing it
+  if(c == '\0') { // NUL
+    out[0] = '^'; out[1] = '@';
+  } else if(c == 0x7F) { // DEL
+    out[0] = '^'; out[1] = '?';
+  } else if(c >= 0x01 && c <= 0x1F && c != '\t' && c != '\n') {
+    out[0] = '^'; out[1] = c+64;
+  } else {
+    out[0] = c;
+    out[1] = '\0';
+  }
 }
 
 int main(int argc, char* argv[]) {
-  // TODO implement cat -v, -n and -E
-  int opt;
-  int vflag,Eflag,nflag;
-  vflag = Eflag = nflag = 0;
   char* program = argv[0];
 
-  while((opt = getopt(argc, argv, ":veEn")) != -1) {
+  int Eflag = 0;
+  int Tflag = 0;
+  int vflag = 0;
+  int nflag = 0;
+  int opt;
+  while((opt = getopt(argc, argv, ":AEenTtv")) != -1) {
     switch(opt) {
-      case 'v': // Show non-printing
-        vflag = 1;
+      case 'A':
+        vflag = Eflag = Tflag = 1;
         break;
-      case 'E': // Show end of lines '$'
+      case 'E':
         Eflag = 1;
         break;
-      case 'e': // equivalent to -vE
+      case 'e':
         vflag = Eflag = 1;
         break;
-      case 'n':
+      case 'n': // TODO cat -n
         nflag = 1;
         break;
+      case 'T':
+        Tflag = 1;
+        break;
+      case 't':
+        vflag = Tflag = 1;
+        break;
+      case 'v':
+        vflag = 1;
+        break;
       case '?':
-        print_error("%s: invalid option -- '%c'", program, optopt);
+        fprintf(stderr, "%s: option error: unknown option \"-%c\"\n", program, optopt);
         print_usage(program);
         return 1;
         break;
     }
   }
-  optind--;
 
-  argv += optind;
-  if(!argv[0]) {
-    print_usage(program);
+  argv += optind - 1;
+
+  if(optind == argc) { // probably very sketchy and unsafe ?
+    argv[1] = "-";
   }
 
-  ssize_t filesize;
-  FILE* fileptr;
-  size_t line_counter = 1;
-  char* minibuf = malloc(3);
-
+  FILE* fp;
   while(*++argv) {
-    if(argc == optind) { // Read from stdin if no argument other than opts is provided
-      filesize = STDIN_MAX;
-      fileptr = stdin;
-    } else { // We read from file
-      fileptr = fopen(*argv, "r");
-      if(NULL == fileptr) {
-        print_error("%s: could not open file \"%s\"", program, *argv);
-        return 1;
-      }
-      filesize = get_filesize(fileptr);
+    fp = stdin;
+    if(strcmp(*argv,"-"))
+      fp = fopen(*argv, "rb");
+    
+    if(fp == NULL) {
+      print_error("%s: %s: File not found\n", program, *argv);
+      return 1;
     }
-  
-    char* line = malloc(filesize);
-    while((line = fgets(line, filesize, fileptr)) != NULL) {
-      line[strlen(line)-1] = '\0'; // strip '\n' off the string
-      if(nflag)
-        printf("%6zu  ", line_counter);
-      for(size_t i = 0; i <= strlen(line); i++) {
-        if(vflag && !is_printable_ch(line[i])) {
-          // TODO wrong cat output for test file with all non-print characters
-          // eg. with -vE, I get ^@$ instead of just $ sometimes
-          nonprint_alt(minibuf, line[i]);
-          printf("%s", minibuf);
-        } else {
-          printf("%c", line[i]);
-        }
-      }
-      if(Eflag)
-        printf("$");
-      printf("\n");
-      line_counter++;
-    }
-    fclose(fileptr);
-    free(line);
-  }
 
-  free(minibuf);
+    int c;
+    while((c = fgetc(fp)) != EOF) {
+      if(Tflag && c == '\t') {
+        printf("^I");
+      } else if(Eflag && c == '\n') {
+        printf("$\n");
+      } else if(vflag) {
+        char s[2];
+        vfilter(s,c);
+        printf("%s", s);
+      } else {
+        printf("%c", c);
+      }
+    }
+
+    fclose(fp);
+  }
   return 0;
 }

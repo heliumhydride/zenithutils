@@ -57,8 +57,8 @@ lib/prettyprint.o: lib/prettyprint.c
 coreutils/cat.o: coreutils/cat.c
 	$(CC) $(CFLAGS) -c -o coreutils/cat.o coreutils/cat.c
 
-o/bin/cat: init_outdir lib/prettyprint.o lib/util.o coreutils/cat.o
-	$(LD) $(LDFLAGS) -o o/bin/cat lib/prettyprint.o lib/util.o coreutils/cat.o
+o/bin/cat: init_outdir lib/prettyprint.o coreutils/cat.o
+	$(LD) $(LDFLAGS) -o o/bin/cat lib/prettyprint.o coreutils/cat.o
 
 o/usr/bin/nproc: init_outdir coreutils/nproc.c
 	$(CC) $(CFLAGS) -o o/usr/bin/nproc coreutils/nproc.c
