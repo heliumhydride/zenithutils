@@ -2,114 +2,131 @@
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
-#include <unistd.h>
 #include <getopt.h>
 #include <string.h>
 #include <ctype.h>
-
 #include "../include/prettyprint.h"
-#include "../include/util.h"
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-clmw] [file]\n", argv0);
+// TODO if multiple arguments then show total
+// TODO format output columns correctly
+
+void print_usage(char* program) {
+  fprintf(stderr, "usage: %s [-lwcm] [file1] [file2] ...\n", program);
 }
 
-size_t count_lines(const char* str) {
-  return find_n_of_char_in_str('\n', str);
+int is_continuation(char byte) {
+  // in utf-8, 2nd, 3rd and 4th bytes start with 10xxxxxx
+  return (byte & 0xC0) == 0x80;
 }
 
-size_t count_words(const char* str) {
-  size_t count = 0;
-  for(size_t i = 0; i <= strlen(str); i++) {
-    if(isspace(str[i]) && !isspace(str[i+1])) { // If we are on a whitespace, and the next character is not a whitespace
-      count++;
+void do_counts(FILE* fp, size_t* lines, size_t* words, size_t* bytes, size_t* chars) {
+  int inside_word = 0;
+  int c;
+  while((c = fgetc(fp)) != EOF) {
+    bytes[0]++;
+
+    if(c == '\n')
+      lines[0]++;
+
+    if(!is_continuation(c))
+      chars[0]++;
+
+    if(isspace(c)) {
+      inside_word = 0;
+    } else {
+      if (!inside_word) {
+        words[0]++;
+        inside_word = 1;
+      }
     }
   }
+}
+
+size_t count_words(FILE* fp) {
+  size_t count = 0;
+  int c;
+  int inside_word = 0;
+  while((c = fgetc(fp)) != EOF) {
+    if(isspace(c)) {
+      inside_word = 0;
+    } else {
+      if (!inside_word) {
+        count++;
+        inside_word = 1;
+      }
+    }
+  }
+  fseek(fp, 0L, SEEK_SET);
   return count;
 }
 
 int main(int argc, char* argv[]) {
+  char* program = argv[0];
+
+  int lflag = 0;
+  int wflag = 0;
+  int cflag = 0;
+  int mflag = 0;
+
+  int use_option = 0;
   int opt;
-
-  char mode = 'a'; // a = all (lines, words, bytes)
-
-  while((opt = getopt(argc, argv, ":clmw")) != -1) {
+  while((opt = getopt(argc, argv, ":lwcm")) != -1) {
+    use_option = 1;
     switch(opt) {
-      case 'c': // fallthrough; count bytes/chars
-      case 'l': // fallthrough; count lines (== count linebreaks)
-      case 'm': // fallthrough; count characters
-      case 'w': //              count words (count spaces+1)
-        mode = opt;
+      case 'l': // count lines (== count linebreaks)
+        lflag = 1;
+        break;
+      case 'w': // count words (count spaces+1)
+        wflag = 1;
+        break;
+      case 'c': // count bytes
+        cflag = 1;
+        break;
+      case 'm': // count characters
+        mflag = 1;
         break;
       case '?':
-        print_error("%s: invalid option -- '%c'", argv[0], optopt);
-        print_usage(argv[0]);
+        print_error("%s: invalid option -- '%c'\n", program, optopt);
+        print_usage(program);
         return 1;
         break;
     }
   }
+  
+  argv += optind - 1;
+  if(!use_option) // default for wc is -lwc
+    lflag = wflag = cflag = 1;
 
-  char* input_buffer;
-
-  // Read from stdin if no file
   if(argc == optind) {
-    // No file argument
-    input_buffer = getbytes_stdin();
-    if(NULL == input_buffer) {
-      print_error("%s: getbytes_stdin() failed", argv[0]);
-      return 1;
+    argv--; // To avoid trying to wc 'SHELL=/bin/bash', was trying to pull beyond argv
+    argv[1] = "-";
+  }
+
+  FILE* fp;
+  while(*++argv) {
+    fp = stdin;
+    if(strcmp(*argv, "-"))
+      fp = fopen(*argv, "rb");
+
+    if(fp == NULL) {
+      print_error("%s: %s: File not found\n", program, *argv);
     }
-  } else {
-    // We read from a file
-    FILE* fileptr = fopen(argv[optind], "r");
+
+    size_t lines, words, chars, bytes;
+    lines = words = chars = bytes = 0;
+    do_counts(fp, &lines, &words, &chars, &bytes);
+    if(lflag)
+      printf(" %zu ", lines);
+    if(wflag)
+      printf(" %zu ", words);
+    if(mflag)
+      printf(" %zu ", chars);
+    if(cflag)
+      printf(" %zu ", bytes);
+    printf("%s\n", *argv);
     
-    if(NULL == fileptr) {
-      print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
-      return 1;
-    }
-
-    input_buffer = malloc(get_filesize(fileptr)+1);
-    if(readfile(fileptr, input_buffer) == -1) {
-      print_error("%s: read error", argv[0]);
-    }
-
-    fclose(fileptr);
+    if(strcmp(*argv, "-"))
+      fclose(fp);
   }
-
-  switch(mode) {
-    case 'a': // count lines, words, bytes
-      printf("%6zu", count_lines(input_buffer));
-      printf("%6zu", count_words(input_buffer));
-      printf("%6zu", strlen(input_buffer));
-      if(argc > optind) // If we have a filename as an argument
-        printf(" %s", argv[optind]);
-      break;
-    case 'c': // count bytes
-      printf("%zu", strlen(input_buffer));
-      if(argc > optind) // If we have a filename as an argument
-        printf(" %s", argv[optind]);
-      break;
-    case 'l': // count lines (= count linebreaks)
-      printf("%zu", count_lines(input_buffer));
-      if(argc > optind) // If we have a filename as an argument
-        printf(" %s", argv[optind]);
-      break;
-    case 'm': // count characters
-      // TODO: for now, same as -c, until I can figure out how to deal with multi-byte chars
-      printf("%zu", strlen(input_buffer));
-      if(argc > optind) // If we have a filename as an argument
-        printf(" %s", argv[optind]);
-      break;
-    case 'w': // count words (= amount of spaces + 1)
-      printf("%zu", count_words(input_buffer));
-      if(argc > optind) // If we have a filename as an argument
-        printf(" %s", argv[optind]);
-      break;
-    default:
-      return 1;
-      break;
-  }
-
-  printf("\n");
   return 0;
 }

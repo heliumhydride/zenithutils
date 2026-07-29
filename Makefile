@@ -126,8 +126,8 @@ o/usr/bin/sleep: init_outdir coreutils/sleep.c
 coreutils/wc.o: coreutils/wc.c
 	$(CC) $(CFLAGS) -c -o coreutils/wc.o coreutils/wc.c
 
-o/usr/bin/wc: init_outdir lib/prettyprint.o lib/util.o coreutils/wc.o
-	$(LD) $(LDFLAGS) -o o/usr/bin/wc lib/prettyprint.o lib/util.o coreutils/wc.o
+o/usr/bin/wc: init_outdir lib/prettyprint.o coreutils/wc.o
+	$(LD) $(LDFLAGS) -o o/usr/bin/wc lib/prettyprint.o coreutils/wc.o
 
 coreutils/tr.o: coreutils/tr.c
 	$(CC) $(CFLAGS) -c -o coreutils/tr.o coreutils/tr.c
