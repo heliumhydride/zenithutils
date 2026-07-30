@@ -2,8 +2,9 @@
 
 the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
+procutils/kill: finish unix version and do windows version
 printf
-man pages for dos2unix, unix2dos, printf
+man pages for dos2unix, unix2dos, printf, kill
 cat -n
 wc total if multiple files + column alignment
 seq -w
