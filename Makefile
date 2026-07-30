@@ -18,7 +18,7 @@ coreutils: o/bin/cat o/bin/nproc o/bin/ls o/bin/uname o/bin/seq o/bin/pwd o/bin/
 # for mkswap/swapon/swapoff on windows: do we have functions in the win32 api to change pagefile settings ?
 # for login on windows: use as a frontend to LogonUI/runas.exe maybe ? kind of a strech but I don't see what else login.exe would do...
 # fsck on windows: do we just 'execvp("chkdsk.exe", ...);' ?
-util-linux: o/bin/rev o/sbin/nologin o/bin/uuidgen o/bin/kill o/bin/lscpu o/bin/column o/bin/blkid o/bin/cal o/bin/cfdisk o/bin/chsh o/bin/col o/bin/dmesg o/bin/eject o/bin/fallocate o/sbin/fdisk o/bin/findfs o/sbin/fsck o/bin/getopt o/bin/hexdump o/bin/ionice o/bin/last o/bin/login o/sbin/losetup o/bin/lsblk o/bin/lslogins o/bin/mcookie o/sbin/mkfs o/sbin/mkswap o/bin/more o/sbin/mount o/bin/mountpoint o/sbin/pivot_root o/bin/renice o/bin/write o/bin/whereis o/bin/swapon o/bin/swapoff
+util-linux: o/bin/rev o/sbin/nologin o/bin/uuidgen o/bin/lscpu o/bin/column o/bin/blkid o/bin/cal o/bin/cfdisk o/bin/chsh o/bin/col o/bin/dmesg o/bin/eject o/bin/fallocate o/sbin/fdisk o/bin/findfs o/sbin/fsck o/bin/getopt o/bin/hexdump o/bin/ionice o/bin/last o/bin/login o/sbin/losetup o/bin/lsblk o/bin/lslogins o/bin/mcookie o/sbin/mkfs o/sbin/mkswap o/bin/more o/sbin/mount o/bin/mountpoint o/sbin/pivot_root o/bin/renice o/bin/write o/bin/whereis o/bin/swapon o/bin/swapoff
 
 findutils: o/bin/xargs o/bin/find 
 
@@ -40,7 +40,7 @@ gzip: o/bin/gzip
 
 # sysctl will either show a "does not apply to windows" or will implement some kind of command line windows control panel
 # uptime is a link to w
-procutils: o/bin/w o/bin/top o/bin/pstree o/bin/fuser o/bin/killall o/bin/ps o/bin/pkill o/sbin/sysctl o/bin/pidof o/bin/free o/bin/pgrep o/bin/vmstat
+procutils: o/bin/kill o/bin/w o/bin/top o/bin/pstree o/bin/fuser o/bin/killall o/bin/ps o/bin/pkill o/sbin/sysctl o/bin/pidof o/bin/free o/bin/pgrep o/bin/vmstat
 
 sharutils: o/bin/shar o/bin/uuencode o/bin/uudecode
 
@@ -311,6 +311,12 @@ o/bin/dos2unix: init_outdir lib/prettyprint.o coreutils/dos2unix.o
 
 o/bin/unix2dos: init_outdir o/bin/dos2unix
 	cp o/bin/dos2unix o/bin/unix2dos
+
+procutils/kill.o: procutils/kill.c
+	$(CC) $(CFLAGS) -c -o procutils/kill.o procutils/kill.c
+
+o/bin/kill: init_outdir procutils/kill.o
+	$(LD) $(LDFLAGS) -o o/bin/kill procutils/kill.o
 
 clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
