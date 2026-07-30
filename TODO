@@ -7,6 +7,8 @@ printf + printf manpage
 cat -n
 wc total if multiple files + column alignment
 seq -w
+customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
+rng manpage: how to do floating point number generation using '$ bc -l <<< "$(o/usr/bin/rng 1000 6000)/1000"'
 
 split makefile into multiple makefiles in each subfolder
 allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
@@ -19,8 +21,6 @@ make programs that take options and filenames extract filenames in between optio
 remove as much warnings as possible
 coreutils/tail
 util-linux/column
-procutils/kill
-procutils/pkill
 util-linux/hexdump
 coreutils/tee
 coreutils/groups
@@ -33,7 +33,6 @@ util-linux/nologin: if /etc/nologin.txt exists, print its contents
 lib/util base64 encoding/decoding
 coreutils/base32 encoding/decoding
 customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
-customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 coreutils/uniq: store file into buf, split into lines, then for each line looks if all other lines are the same, then optimize
 customtools/at
 customtools/bg
@@ -65,9 +64,5 @@ make install target (install: install-bin install-man)
 
 create a test suite shell script
 test building on netbsd
-
--- NON CODE GOALS --
 improve readme a bit
-create man pages for all utilities included
-  rng: how to do floating point number generation using '$ bc -l <<< "$(o/usr/bin/rng 1000 6000)/1000"'
 create a logo maybe ?
