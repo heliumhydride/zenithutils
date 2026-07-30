@@ -3,6 +3,55 @@
 
 #include "../include/util.h"
 
+#undef getdelim // just in case
+ssize_t getdelim(char** lineptr, size_t* n, int delim, FILE* fp) {
+  if(fp == NULL || n == NULL)
+    return -1;
+
+  size_t size = *n;
+
+  char* buf = *lineptr;
+  if(buf == NULL) {
+    size = 128;
+    buf = malloc(size);
+    if(buf == NULL)
+      return -1;
+  }
+
+  size_t len = 0;
+  int c;
+  while((c = fgetc(fp)) != EOF) {
+    if(len + 1 >= size) {
+      size += 128;
+      char *newptr = realloc(buf, size);
+      if(newptr == NULL) {
+        free(buf);
+        return -1;
+      }
+      buf = newptr;
+    }
+    buf[len++] = (char)c;
+    if(c == delim)
+      break;
+  }
+
+  if(len == 0) {
+    free(buf);
+    return -1;
+  }
+
+  buf[len] = '\0';
+  *lineptr = buf;
+  *n = size;
+  return (ssize_t)len;
+}
+
+#undef getline
+ssize_t getline(char** lineptr, size_t* n, FILE* fp) {
+  return getdelim(lineptr, n, (int)'\n', fp);
+}
+
+
 char* strsep(char** stringp, const char* delim) {
   char *rv = *stringp;
   if(rv) {

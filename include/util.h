@@ -8,6 +8,8 @@
 #include <sys/stat.h> // umask()
 #include "../config.h"
 
+ssize_t getdelim(char** lineptr, size_t* n, int delim, FILE* fp);
+ssize_t getline(char** lineptr, size_t* n, FILE* fp);
 char* strsep(char** stringp, const char* delim);
 char* getbytes_stdin();
 void getline_stdin(char* buf);

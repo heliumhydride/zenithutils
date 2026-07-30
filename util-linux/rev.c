@@ -1,57 +1,60 @@
 #define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
 #include <stdlib.h>
-//#include <getopt.h>
-//#include <unistd.h>
 #include <string.h>
-
+#include "../include/util.h"
 #include "../include/prettyprint.h"
 
+void rev(char* out, char* in) {  
+  size_t size = strlen(in);
+  int had_newline = 0;
+  if(in[size-1] == '\n') {
+    had_newline = 1;
+    in--;
+  }
+
+  for(size_t i = 0; i < size; i++)
+    out[i] = in[size-1-i];
+  
+  if(had_newline)
+    out[size-1] = '\n';
+}
+
+void print_usage(const char* program) {
+  fprintf(stderr, "usage: %s [file] [file2] ...\n", program);
+}
+
 int main(int argc, char* argv[]) {
-  int use_stdin = 0;
-  if(argc <= 1) {
-    use_stdin = 1;
+  char* program = argv[0];
+  FILE* fp = stdin;
+  if(argc < 2) {
+    argv--;
+    argv[1] = "-";
   }
 
-  FILE* fileptr;
-  if(use_stdin) {
-    fileptr = stdin;
-  } else {
-    fileptr = fopen(argv[1], "r");
-  }
+  while(*++argv) {
+    if(strcmp(*argv, "-"))
+      fp = fopen(*argv, "r");
 
-  // get filesize here
-  size_t filesize;
-  if(use_stdin) {
-    filesize = 4096; // today i realized nobody puts more than 4096 characters into stdin, tested with rev from util-linux
-  } else {
-    if(fseek(fileptr, 0L, SEEK_END) != 0) {
-      print_error("%s: fseek() failed", argv[0]);
-      return 2;
+    if(fp == NULL) {
+      print_error("%s: %s: no such file\n", program, *argv);
+      return 1;
     }
-    if((filesize = ftell(fileptr)) == -1) {
-      print_error("%s: ftell() failed", argv[0]);
-      return 2;
-    }
-    if(fseek(fileptr, 0L, SEEK_SET) != 0) {
-      print_error("%s: fseek() failed", argv[0]);
-      return 2;
-    }
-  }
 
-  char* line = malloc(filesize);
-  while((line = fgets(line, filesize, fileptr)) != NULL) {
-    line[strlen(line)-1] = '\0'; // strip '\n' off the string
-    for(int i = strlen(line)-1; i >= 0; i--) { // print each character of the line, from last to first
-      printf("%c", line[i]);
+    char* line = NULL;
+    size_t cap = 0;
+    while(getline(&line, &cap, fp) != -1) {
+      char* line_rev = malloc(strlen(line)+1);
+      if(line_rev == NULL)
+        return 2;
+      rev(line_rev, line);
+      printf("%s", line_rev);
     }
-    printf("\n"); // print newline at the end still
+
+    if(fp != stdin)
+      fclose(fp);
   }
-  if(!use_stdin)
-    fclose(fileptr);
-  free(line);
   return 0;
 }
