@@ -93,8 +93,8 @@ o/bin/which: init_outdir lib/prettyprint.o lib/util.o which/which.o
 coreutils/seq.o: coreutils/seq.c
 	$(CC) $(CFLAGS) -c -o coreutils/seq.o coreutils/seq.c
 
-o/bin/seq: init_outdir lib/prettyprint.o lib/util.o coreutils/seq.o
-	$(LD) $(LDFLAGS) -o o/bin/seq lib/prettyprint.o lib/util.o coreutils/seq.o 
+o/bin/seq: init_outdir lib/prettyprint.o coreutils/seq.o
+	$(LD) $(LDFLAGS) -o o/bin/seq lib/prettyprint.o coreutils/seq.o 
 
 o/bin/pwd: init_outdir lib/prettyprint.o lib/util.o coreutils/pwd.o
 	$(LD) $(LDFLAGS) -o o/bin/pwd lib/prettyprint.o lib/util.o coreutils/pwd.o 

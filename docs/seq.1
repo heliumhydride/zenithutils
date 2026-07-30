@@ -1,0 +1,21 @@
+.TH SEQ 1 "30th of July 2026" zenithutils "User Commands"
+
+.SH NAME
+\fBseq\fP - print a sequence of numbers
+
+.SH SYNOPSIS
+.EX
+\fBseq\fP \fI[-f fmt] [-s sep] last\fP
+\fBseq\fP \fI[-f fmt] [-s sep] first last\fP
+\fBseq\fP \fI[-f fmt] [-s sep] first increment last\fP
+.EE
+
+.SH DESCRIPION
+seq prints a sequence of numbers
+
+.SH OPTIONS
+.TP
+\fB-f fmt\fP use fmt to tell printf how to display numbers. default is "%g"
+
+.TP
+\fB-s sep\fP use sep as a separator between numbers. default is newline "\\n"

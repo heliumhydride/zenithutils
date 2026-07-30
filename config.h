@@ -14,6 +14,15 @@
   coreutils options
 */
 
+// Explanation:
+//   by default, seq only strictly allows printf formats that have a directive, eg "hello(%g)"
+//   if STRICT_SEQ is disabled, it would allow multiple printing using seq:
+//     $ seq -f "hello" -s " " 1 2
+//     hello hello
+//   however, this is NON STANDARD behaviour and therefore STRICT_SEQ is on by default
+// Comment to disable
+#define STRICT_SEQ 1
+
 // If 1, print 'c:/path/to/dir' instead of 'c:\path\to\dir' (default 1)
 #define FORCE_MINGW_PATHS 1
 #define MAX_LINK_LENGTH 1024 // for readlink

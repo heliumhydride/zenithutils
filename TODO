@@ -2,12 +2,12 @@
 
 the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
-new seq (already in the works)
 dos2unix, unix2dos
 printf
 man pages for seq dos2unix, unix2dos, printf
 cat -n
 wc total if multiple files + column alignment
+seq -w
 
 split makefile into multiple makefiles in each subfolder
 allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
