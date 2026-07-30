@@ -1,18 +1,13 @@
 #!/bin/sh
 
-if [ -z "$1" ]; then
-  PREFIX="/"
-else
-  PREFIX="$1"
-fi
-
-[ -z "$2" ] || DESTDIR="$2"
+[ -z "$PREFIX" ] && PREFIX="/usr/local"
+[ -z "$DESTDIR" ] && DESTDIR=""
 
 set +x 
-mkdir -pv o/usr/share/man/man1
-cp -v docs/*.1 o/usr/share/man/man1/
-# mkdir -pv o/usr/share/man/man8
-# cp -v docs/*.8 o/usr/share/man/man8/
+mkdir -pv o/share/man/man1
+cp -v docs/*.1 o/share/man/man1/
+# mkdir -pv o/share/man/man8
+# cp -v docs/*.8 o/share/man/man8/
 
 _dest_dir="$DESTDIR"/"$PREFIX"
 [ -e "$_destdir" ] || mkdir -pv $_dest_dir
