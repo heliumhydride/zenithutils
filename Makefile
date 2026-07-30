@@ -39,8 +39,9 @@ patch: o/bin/patch
 gzip: o/bin/gzip
 
 # sysctl will either show a "does not apply to windows" or will implement some kind of command line windows control panel
+# pkill is a link to kill
 # uptime is a link to w
-procutils: o/bin/kill o/bin/w o/bin/top o/bin/pstree o/bin/fuser o/bin/killall o/bin/ps o/bin/pkill o/sbin/sysctl o/bin/pidof o/bin/free o/bin/pgrep o/bin/vmstat
+procutils: o/bin/kill o/bin/pkill o/bin/w o/bin/top o/bin/pstree o/bin/fuser o/bin/killall o/bin/ps  o/sbin/sysctl o/bin/pidof o/bin/free o/bin/pgrep o/bin/vmstat
 
 sharutils: o/bin/shar o/bin/uuencode o/bin/uudecode
 
@@ -316,11 +317,23 @@ else
 		cp o/bin/dos2unix o/bin/unix2dos
 endif
 
+ifeq ($(WIN32), 1)
+procutils/kill.o: procutils/kill_win32.c
+	$(CC) $(CFLAGS) -c -o procutils/kill.o procutils/kill_win32.c
+else
 procutils/kill.o: procutils/kill.c
 	$(CC) $(CFLAGS) -c -o procutils/kill.o procutils/kill.c
+endif
 
-o/bin/kill: init_outdir procutils/kill.o
-	$(LD) $(LDFLAGS) -o o/bin/kill procutils/kill.o
+o/bin/kill: init_outdir lib/prettyprint.o lib/util.o procutils/kill.o
+	$(LD) $(LDFLAGS) -o o/bin/kill lib/prettyprint.o lib/util.o procutils/kill.o
+
+o/bin/pkill: init_outdir o/bin/kill
+ifeq ($(WIN32), 1)
+		cp o/bin/kill.exe o/bin/pkill.exe
+else
+		cp o/bin/kill o/bin/pkill
+endif
 
 clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
