@@ -9,7 +9,7 @@ customtools: o/bin/zenithutils_version o/bin/ascii o/bin/rng o/bin/read o/bin/st
 # md5sum is a link to md5
 # [ is a link to test
 # how would 'nohup' work on Windows?
-coreutils: o/bin/cat o/bin/nproc o/bin/ls o/bin/uname o/bin/seq o/bin/pwd o/bin/true o/bin/false o/bin/yes o/bin/dirname o/bin/basename o/bin/tac o/bin/sleep o/bin/wc o/bin/mktemp o/bin/tty  o/bin/base64 o/bin/base32 o/bin/mkdir o/bin/rmdir o/bin/test o/sbin/mknod o/bin/whoami o/bin/readlink o/bin/mkfifo o/bin/cp o/bin/mv o/bin/rm o/bin/sync o/bin/tee o/bin/tail o/bin/head o/bin/sort o/bin/shred o/bin/touch o/bin/timeout o/bin/truncate o/bin/uniq o/bin/users o/bin/nice o/bin/ln o/bin/install o/bin/id o/bin/hostname o/bin/groups o/bin/df o/sbin/chroot o/bin/chmod o/bin/chown o/bin/cut o/bin/date o/bin/dd o/bin/fmt o/bin/fold o/bin/md5 o/bin/sha1sum o/bin/sha224sum o/bin/sha256sum o/bin/sha384sum o/bin/sha512sum o/bin/pr o/bin/tr o/bin/chgrp o/bin/echo o/bin/comm o/bin/du o/bin/env o/bin/expand o/bin/expr o/bin/join o/bin/od o/bin/printf o/bin/split o/bin/stty o/bin/tsort o/bin/unexpand o/bin/who o/bin/nl o/bin/dos2unix o/bin/unix2dos o/bin/ed o/bin/printenv o/bin/factor o/bin/nohup o/bin/numfmt o/bin/paste o/bin/pathchk o/bin/finger o/bin/realpath o/bin/stat o/bin/shuf
+coreutils: o/bin/cat o/bin/nproc o/bin/ls o/bin/uname o/bin/seq o/bin/pwd o/bin/true o/bin/false o/bin/yes o/bin/dirname o/bin/basename o/bin/tac o/bin/sleep o/bin/wc o/bin/mktemp o/bin/tty  o/bin/base64 o/bin/base32 o/bin/mkdir o/bin/rmdir o/bin/test o/sbin/mknod o/bin/whoami o/bin/readlink o/bin/dos2unix o/bin/unix2dos o/bin/mkfifo o/bin/cp o/bin/mv o/bin/rm o/bin/sync o/bin/tee o/bin/tail o/bin/head o/bin/sort o/bin/shred o/bin/touch o/bin/timeout o/bin/truncate o/bin/uniq o/bin/users o/bin/nice o/bin/ln o/bin/install o/bin/id o/bin/hostname o/bin/groups o/bin/df o/sbin/chroot o/bin/chmod o/bin/chown o/bin/cut o/bin/date o/bin/dd o/bin/fmt o/bin/fold o/bin/md5 o/bin/sha1sum o/bin/sha224sum o/bin/sha256sum o/bin/sha384sum o/bin/sha512sum o/bin/pr o/bin/tr o/bin/chgrp o/bin/echo o/bin/comm o/bin/du o/bin/env o/bin/expand o/bin/expr o/bin/join o/bin/od o/bin/printf o/bin/split o/bin/stty o/bin/tsort o/bin/unexpand o/bin/who o/bin/nl o/bin/ed o/bin/printenv o/bin/factor o/bin/nohup o/bin/numfmt o/bin/paste o/bin/pathchk o/bin/finger o/bin/realpath o/bin/stat o/bin/shuf
 
 # do we really need 'rename' and 'hardlink' ? (see 'mv' and 'ln')
 # agetty not implemented, see nyagetty from chimera linux
@@ -302,6 +302,15 @@ coreutils/readlink.o: coreutils/readlink.c
 
 o/bin/readlink: init_outdir lib/prettyprint.o coreutils/readlink.o
 	$(LD) $(LDFLAGS) -o o/bin/readlink lib/prettyprint.o coreutils/readlink.o
+
+coreutils/dos2unix.o: coreutils/dos2unix.c
+	$(CC) $(CFLAGS) -c -o coreutils/dos2unix.o coreutils/dos2unix.c
+
+o/bin/dos2unix: init_outdir lib/prettyprint.o coreutils/dos2unix.o
+	$(LD) $(LDFLAGS) -o o/bin/dos2unix lib/prettyprint.o coreutils/dos2unix.o
+
+o/bin/unix2dos: init_outdir o/bin/dos2unix
+	cp o/bin/dos2unix o/bin/unix2dos
 
 clean:
 	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
