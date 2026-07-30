@@ -2,12 +2,14 @@
 
 the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
+new seq (already in the works)
+dos2unix, unix2dos
+printf
+man pages for seq dos2unix, unix2dos, printf
 cat -n
 wc total if multiple files + column alignment
-wc.1 manpage
 
 split makefile into multiple makefiles in each subfolder
-seq implement -s -w -f (reimplement with getopt), support floating point numbers (use strtod)
 allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
@@ -16,13 +18,11 @@ reconsider implementing read,bg,fg (time will be implemented as dash shell doesn
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
 make programs that take options and filenames extract filenames in between options (wc,ls,..)
 remove as much warnings as possible
-coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
 coreutils/tail
 util-linux/column
 procutils/kill
 procutils/pkill
 util-linux/hexdump
-coreutils/printf
 coreutils/tee
 coreutils/groups
 coreutils/test
@@ -45,7 +45,6 @@ coreutils/mknod
 coreutils/id
 util-linux/{mount,umount,mountpoint} (on Windows, use \\Device\Harddisk0\... or emulate /dev/sdXY)
 customtools/time (use the portable posix format)
-coreutils/cat fixes
 coreutils/mv
 coreutils/cp
 coreutils/ls
@@ -64,7 +63,6 @@ iconv/iconv (use libicu ?)
 
 make install-bin; make install-man targets
 make install target (install: install-bin install-man)
-allow to change installation prefix and destdir
 
 create a test suite shell script
 test building on netbsd
