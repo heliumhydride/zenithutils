@@ -1,0 +1,27 @@
+.TH WC 1 "30th of July 2026" zenithutils "User Commands"
+
+.SH NAME
+\fBwc\fP - count lines, words, bytes and/or characters in a file
+
+.SH SYNOPSIS
+\fBwc\fP \fI[-lwcm] [file1] [file2] ...\fP
+
+.SH DESCRIPTION
+Count lines, words, bytes and/or characters in a file
+A word is a sequence of characters delimited by white space
+If no option is provided, assume '-lwc'
+If there's no file1, etc... or file is '-', assume stdin
+
+.SH OPTIONS
+
+.TP
+\fB-l\fP Count lines (newline chars)
+
+.TP
+\fB-w\fP Count words
+
+.TP
+\fB-c\fP Count bytes
+
+.TP
+\fB-m\fP Count characters, differs from -c if unicode characters are involved
