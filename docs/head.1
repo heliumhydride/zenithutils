@@ -1,0 +1,19 @@
+.TH HEAD 1 "30th of July 2026" zenithutils "User Commands"
+
+.SH NAME
+\fBhead\fP - print the first n bytes/lines of file
+
+.SH SYNOPSIS
+\fBhead\fP \fI[-c num | -n num] [file] [file2] ...\fP
+
+.SH DESCRIPTION
+Print the first n bytes or lines of a file.
+If no option specified, assume -n 10
+If no file specified or is '-' assume stdin.
+
+.SH OPTIONS
+.TP
+\fB-c num\fP Print the first num bytes
+
+.TP
+\fB-n num\fP Print the first num lines

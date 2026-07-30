@@ -1,95 +1,79 @@
 #define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
-#include <stdlib.h>
 #include <getopt.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
-
 #include "../include/prettyprint.h"
 #include "../include/util.h"
-#include "../config.h"
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-n int] [-v|-q]\n", argv0);
+void print_usage(char* program) {
+  fprintf(stderr, "usage: %s [-c num | -n num] [file] [file2] ...", program);
 }
 
 int main(int argc, char* argv[]) {
-  int opt;
-  size_t n_lines = 10; // default: -n10
-  int verbosity = 1; // quiet:0 normal:1 full:2
   char* program = argv[0];
-
-  // If -q is used in conjuction with -v, -v takes the upper hand. (that's what you get for using both options!)
-  while((opt = getopt(argc, argv, ":n:qv")) != -1) {
+  long num = 10;
+  char mode = 'n';
+  int opt;
+  while((opt = getopt(argc, argv, "c:n:")) != -1) {
     switch(opt) {
-      case 'n':
-        if(str_is_nan(optarg)) {
-          print_error("%s: invalid integer '%s'", program, optarg);
-        }
-        n_lines = (size_t)atol(optarg);
-        break;
-      case 'q':
-        verbosity = 0;
-        break;
-      case 'v':
-        verbosity = 2;
-        break;
-      case '?':
-        print_error("%s: invalid option -- '%c'", program, optopt);
-        print_usage(program);
-        return 1;
+      case 'c': // fallthrough; first n bytes
+      case 'n': //              first n lines
+        mode = (char)opt;
+        num = strtol(optarg, NULL, 10);
         break;
       case ':':
-        print_error("%s: option '%c' needs an argument", program, optopt);
+        print_error("%s: option '-%c' needs an argument\n", program, optopt);
+        print_usage(program);
+        return 1;
+        break;
+      case '?':
+        print_error("%s: invalid option -- '-%c'\n", program, optopt);
         print_usage(program);
         return 1;
         break;
     }
   }
-  optind--;
-
-  argv += optind;
-  if(!argv[0]) {
-    print_usage(program);
+  
+  argv += optind - 1;
+  if(argc == optind) {
+    argv--;
+    argv[1] = "-";
   }
 
-  ssize_t filesize;
-  FILE* fileptr;
-  char* line;
-  size_t line_counter;
-
+  FILE* fp;
   while(*++argv) {
-    if((argc == optind) || strcmp(*argv, "-")) { // Read from stdin if no argument other than opts are provided / file is -
-      filesize = STDIN_MAX;
-      fileptr = stdin;
-      if(verbosity >= 2)
-        printf("==> standard input <==\n");
-    } else { // We read from a file
-      fileptr = fopen(*argv, "r");
-      if(NULL == fileptr) {
-        print_error("%s: could not open file \"%s\"", program, *argv);
-        return 1;
-      }
-      filesize = get_filesize(fileptr);
+    fp = stdin;
+    if(strcmp(*argv, "-"))
+      fp = fopen(*argv, "r");
+
+    if(fp == NULL) {
+      fprintf(stderr, "%s: %s: no such file", program, *argv);
+      return 1;
     }
 
-    line = malloc(filesize);
-    line_counter = 1;
-    if((verbosity >= 2) && (fileptr != stdin))
-      printf("==> %s <==\n", *argv);
-    while(((line = fgets(line, filesize, fileptr)) != NULL) && (line_counter <= n_lines)) {
-      line[strlen(line)-1] = '\0'; // strip '\n' off the string
-      for(size_t i = 0; i <= strlen(line); i++) {
-        printf("%c", line[i]);
+    if(mode == 'c') {
+      long i = 0;
+      int c;
+      while((c = fgetc(fp)) != EOF && i < num) {
+        printf("%c", c);
+        i++;
       }
-      printf("\n");
-      line_counter++;
+    } else {
+      size_t cap = 0;
+      long i = 0;
+      char* line = NULL;
+      while(getline(&line, &cap, fp) != -1 && i < num) {
+        printf("%s", line);
+        i++;
+      }
     }
-    fclose(fileptr);
-    free(line);
+
+    if(fp != stdin)
+      fclose(fp);
   }
+
   return 0;
 }
