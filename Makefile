@@ -310,7 +310,11 @@ o/bin/dos2unix: init_outdir lib/prettyprint.o coreutils/dos2unix.o
 	$(LD) $(LDFLAGS) -o o/bin/dos2unix lib/prettyprint.o coreutils/dos2unix.o
 
 o/bin/unix2dos: init_outdir o/bin/dos2unix
-	cp o/bin/dos2unix o/bin/unix2dos
+ifeq ($(WIN32), 1)
+		cp o/bin/dos2unix.exe o/bin/unix2dos.exe
+else
+		cp o/bin/dos2unix o/bin/unix2dos
+endif
 
 procutils/kill.o: procutils/kill.c
 	$(CC) $(CFLAGS) -c -o procutils/kill.o procutils/kill.c

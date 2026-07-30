@@ -16,8 +16,12 @@ int main(int argc, char* argv[]) {
   char convert_to = 'u'; // default, u=dos2unix, d=unix2dos
 
   // if called as unix2dos, switch to unix2dos mode
-  if(!strcmp(basename(program), "unix2dos") || !strcmp(basename(program), "z_unix2dos"))
-    convert_to = 'd';
+  if(
+    !strcmp(basename(program), "unix2dos") ||
+    !strcmp(basename(program), "z_unix2dos") ||
+    !strcmp(basename(program), "unix2dos.exe") ||
+    !strcmp(basename(program), "z_unix2dos.exe")
+  ) convert_to = 'd';
 
   if(argc == 1) {
     argv--;
