@@ -323,4 +323,7 @@ o/usr/bin:
 o/usr/sbin:
 	mkdir -p $@
 
+install: init_outdir
+	scripts/install.sh $(PREFIX) $(DESTDIR)
+
 .PHONY: clean all init_outdir install check
