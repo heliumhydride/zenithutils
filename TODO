@@ -7,17 +7,14 @@ wc total if multiple files + column alignment
 wc.1 manpage
 
 split makefile into multiple makefiles in each subfolder
-fix rev behaviour
 seq implement -s -w -f (reimplement with getopt), support floating point numbers (use strtod)
 allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
-coreutils/head and coreutils/cat: read from stdin correctly (with no arg and with '-' as file)
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
 coreutils/tac: actually work like tac (detailled methode in source)
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
 make programs that take options and filenames extract filenames in between options (wc,ls,..)
-coreutils/wc: take multiple files like cat, if multiple files are provided, print total number of lines/chars/words as well
 remove as much warnings as possible
 coreutils/{dos2unix,unix2dos} (read stream of data and replace '\r\n' to '\n' and vice versa)
 coreutils/tail
