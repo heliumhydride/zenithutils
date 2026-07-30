@@ -51,7 +51,6 @@ ssize_t getline(char** lineptr, size_t* n, FILE* fp) {
   return getdelim(lineptr, n, (int)'\n', fp);
 }
 
-
 char* strsep(char** stringp, const char* delim) {
   char *rv = *stringp;
   if(rv) {
@@ -70,11 +69,6 @@ char* getbytes_stdin() {
   while(-1 != (pipe[i++] = getchar()));
     pipe[i-1] = '\0';
   return pipe;
-}
-
-void getline_stdin(char* buf) {
-  // TODO multiline stdin ?
-  fgets(buf, STDIN_MAX, stdin);
 }
 
 ssize_t get_filesize(FILE* fileptr) {
@@ -102,15 +96,6 @@ int readfile(FILE* fileptr, char* buf) {
 
   buf[bytes_read++] = '\0'; // terminate buffer string
   return 0;
-}
-
-size_t find_n_of_char_in_str(const char c, const char* str) {
-  size_t count = 0;
-  for(size_t i = 0; i <= strlen(str); i++) {
-    if(str[i] == c) 
-      count++;
-  }
-  return count;
 }
 
 int str_is_nan(char* str) {
