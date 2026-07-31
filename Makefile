@@ -322,7 +322,7 @@ procutils/kill.o: procutils/kill_win32.c
 	$(CC) $(CFLAGS) -c -o procutils/kill.o procutils/kill_win32.c
 else
 procutils/kill.o: procutils/kill.c
-	$(CC) $(CFLAGS) -c -o procutils/kill.o procutils/kill.c
+	$(CC) $(CFLAGS) -c -o procutils/kill.o procutils/kill.c -D__BSD_VISIBLE=1
 endif
 
 o/bin/kill: init_outdir lib/prettyprint.o lib/util.o procutils/kill.o

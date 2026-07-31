@@ -40,7 +40,6 @@ const sigmap_t sigmap[] = {
 #else
 #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
 #include <sys/signal.h>
-// I have to use numbers for some of these signals because FreeBSD won't expose them, even if I defined __BSD_VISIBLE to 1, so stupid...
 const sigmap_t sigmap[] = {
   {"-SIGHUP",   SIGHUP},   {"-HUP",   SIGHUP},   {"-1",  SIGHUP},
   {"-SIGINT",   SIGINT},   {"-INT",   SIGINT},   {"-2",  SIGINT},
@@ -48,7 +47,7 @@ const sigmap_t sigmap[] = {
   {"-SIGILL",   SIGILL},   {"-ILL",   SIGILL},   {"-4",  SIGILL},
   {"-SIGTRAP",  SIGTRAP},  {"-TRAP",  SIGTRAP},  {"-5",  SIGTRAP},
   {"-SIGABRT",  SIGABRT},  {"-ABRT",  SIGABRT},  {"-6",  SIGABRT},
-  {"-SIGEMT",   7}     ,   {"-EMT",   7},        {"-7",  7},
+  {"-SIGEMT",   SIGEMT},   {"-EMT",   SIGEMT},   {"-7",  SIGEMT},
   {"-SIGFPE",   SIGFPE},   {"-FPE",   SIGFPE},   {"-8",  SIGFPE},
   {"-SIGKILL",  SIGKILL},  {"-KILL",  SIGKILL},  {"-9",  SIGKILL},
   {"-SIGBUS",   SIGBUS},   {"-BUS",   SIGBUS},   {"-10", SIGBUS},
@@ -64,13 +63,13 @@ const sigmap_t sigmap[] = {
   {"-SIGCHLD",  SIGCHLD},  {"-CHLD",  SIGCHLD},  {"-20", SIGCHLD},
   {"-SIGTTIN",  SIGTTIN},  {"-TTIN",  SIGTTIN},  {"-21", SIGTTIN},
   {"-SIGTTOU",  SIGTTOU},  {"-TTOU",  SIGTTOU},  {"-22", SIGTTOU},
-  {"-SIGIO",    23},       {"-IO",    23},       {"-23", 23},
+  {"-SIGIO",    SIGIO},    {"-IO",    SIGIO},    {"-23", SIGIO},
   {"-SIGXCPU",  SIGXCPU},  {"-XCPU",  SIGXCPU},  {"-24", SIGXCPU},
   {"-SIGXFSZ",  SIGXFSZ},  {"-XFSZ",  SIGXFSZ},  {"-25", SIGXFSZ},
   {"-SIGVTALRM", SIGVTALRM},{"-VTALRM", SIGVTALRM},{"-26", SIGVTALRM},
   {"-SIGPROF",  SIGPROF},  {"-PROF",  SIGPROF},  {"-27", SIGPROF},
-  {"-SIGWINCH", 28},       {"-WINCH", 28},       {"-28", 28},
-  {"-SIGINFO",  29},       {"-INFO",  29},       {"-29", 29},
+  {"-SIGWINCH", SIGWINCH}, {"-WINCH", SIGWINCH}, {"-28", SIGWINCH},
+  {"-SIGINFO",  SIGINFO},  {"-INFO",  SIGINFO},  {"-29", SIGINFO},
   {"-SIGUSR1",  SIGUSR1},  {"-USR1",  SIGUSR1},  {"-30", SIGUSR1},
   {"-SIGUSR2",  SIGUSR2},  {"-USR2",  SIGUSR2},  {"-31", SIGUSR2},
 };
