@@ -67,7 +67,7 @@ int is_sane_fmt(const char* fmt) {
     if(!in_directive) // not in a directive = nothing to see here, keep going
       fmt2++;
   }
-  #ifdef STRICT_SEQ
+  #if STRICT_SEQ
   if(!has_directive) // see config.h
     return 0;
   #endif // STRICT_SEQ
