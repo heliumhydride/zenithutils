@@ -2,14 +2,14 @@
 
 the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
-printf + printf manpage
-cat -n
+split makefile into multiple makefiles in each subfolder (rework building in general)
 wc total if multiple files + column alignment
+cat -n
 seq -w
+allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
+printf + printf manpage
 coreutils/ls: basic options like -A
 
-split makefile into multiple makefiles in each subfolder
-allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
 coreutils/tac: actually work like tac (detailled methode in source)
