@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
       }
 
       if(kill(pid, sig) == -1) {
-        print_error("%s: killing process of PID %s failed\n", program, *argv);
+        print_error("%s: killing process of PID %d failed\n", program, pid);
         return 1;
       }
     }
