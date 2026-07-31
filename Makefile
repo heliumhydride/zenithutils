@@ -1,6 +1,6 @@
 include config.mk
 
-all: coreutils customtools diffutils findutils grep gzip iconv patch procutils sed sharutils su util-linux which passwdutils
+all: config.h coreutils customtools diffutils findutils grep gzip iconv patch procutils sed sharutils su util-linux which passwdutils
 
 # yes read, like the shellscript read (with -r, and all that good stuff)
 customtools: o/bin/zenithutils_version o/bin/ascii o/bin/rng o/bin/read o/bin/strings o/bin/exedump o/bin/usleep o/bin/clear o/bin/time
@@ -48,6 +48,9 @@ sharutils: o/bin/shar o/bin/uuencode o/bin/uudecode
 iconv: o/bin/iconv
 
 passwdutils: o/bin/passwd o/sbin/chage o/sbin/useradd o/sbin/userdel o/sbin/usermod o/sbin/groupadd o/sbin/groupdel o/sbin/groupmod o/sbin/sg
+
+config.h: config.def.h
+	cp config.def.h config.h
 
 o/bin/zenithutils_version: init_outdir customtools/zenithutils_version.c
 	$(CC) $(CFLAGS) -o o/bin/zenithutils_version customtools/zenithutils_version.c
@@ -336,7 +339,7 @@ else
 endif
 
 clean:
-	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
+	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o config.h
 
 check:
 	find -name '*.c' -or -name '*.h' | xargs cppcheck --std=c99 --check-level=exhaustive
