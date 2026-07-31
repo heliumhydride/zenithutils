@@ -63,8 +63,7 @@ pid_t getpid_ext(const char* comm) {
 }
 #endif
 
-#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
-
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
 // Should work on FreeBSD, remains to be tested on OpenBSD, NetBSD and MacOS
 // Theoretically all use sysctl, however the implementation could differ
 // TODO test on other *BSD systems
