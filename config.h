@@ -9,7 +9,6 @@
 
 // recommended values are either 4096 or 65535 (default 4096)
 #define STDIN_MAX 4096 // Maximum buffer for stdin input
-
 #define PATHNAME_MAX 512
 
 /*
@@ -39,9 +38,10 @@
 #define base64ab "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 /*
-  exedump output colors (uses ANSI escape color codes)
+  customtools options
 */
 
+#define ASCII_SHOW_OCTAL 0 // 1 to enable
 #define exedump_col1 "\033[1;34m"
 #define exedump_col2 "\033[1;31m"
 

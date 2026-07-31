@@ -6,7 +6,6 @@ printf + printf manpage
 cat -n
 wc total if multiple files + column alignment
 seq -w
-customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 coreutils/ls: basic options like -A
 
 split makefile into multiple makefiles in each subfolder
