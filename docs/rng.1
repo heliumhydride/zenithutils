@@ -11,4 +11,16 @@ rng - generate a random number
 Default \fBmin\fP is 0
 
 .SH OPTIONS
-No options
+Not applicable
+
+.SH ADDITIONAL NOTES
+.EX
+A note on floating point numbers:
+Using rng, you can generate floting point numbers with a precision of \fIn\fP by multiplying \fImin\fP and \fImax\fP by 10^n, then dividing the result by 10^n
+
+This oneliner can help:
+    $ bc -l <<< "$(rng 1000 6000)/1000"
+    2.42700000000000000000
+ 
+Assuming you have the bc calculator installed and bc and rng are both in PATH
+.EE

@@ -1,0 +1,17 @@
+.TH UNIX2DOS 1 "31st of July 2026" zenithutils "User Commands"
+
+.SH NAME
+unix2dos - convert LF (Unix) line endings into CRLF (DOS/Windows) line endings
+
+.SH SYNOPSIS
+\fBunix2dos\fP \fI[file] [file2] ...\fP
+
+.SH DESCRIPTION
+Convert LF line endings into CRLF line endings, by prepending a carriage return CR byte to every newline LF byte
+If no file is provided, assume standard input and output
+
+.SH OPTIONS
+Not applicable
+
+.SH SEE ALSO
+dos2unix(1)

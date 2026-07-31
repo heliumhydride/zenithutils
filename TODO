@@ -2,13 +2,11 @@
 
 the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
-man pages for dos2unix, unix2dos, kill
 printf + printf manpage
 cat -n
 wc total if multiple files + column alignment
 seq -w
 customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
-rng manpage: how to do floating point number generation using '$ bc -l <<< "$(o/usr/bin/rng 1000 6000)/1000"'
 coreutils/ls: basic options like -A
 
 split makefile into multiple makefiles in each subfolder

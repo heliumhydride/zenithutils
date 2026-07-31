@@ -1,0 +1,26 @@
+.TH KILL 1 "31st of July 2026" zenithutils "User Commands"
+
+.SH NAME
+kill - terminate one or multiple processes
+
+.SH SYNOPSIS
+.EX
+On Unix:
+    \fBkill\fP \fI[-signal] pid|name [pid2|name2] ...\fP
+
+On Windows:
+    \fBkill\fP \fIpid|name [pid2|name2] ...\fP
+.EE
+
+.SH DESCRIPTION
+Takes one or multiple pids or process names and terminates them
+On Unix, a signal can be specified with the following syntaxes:
+.EX
+    kill -SIGKILL
+    kill -KILL
+    kill -9
+.EE
+
+.SH OPTIONS (unix only)
+
+  \fB-SIGNAL\fP  signal used to terminate the process, can be provided numerically, or via the name of the signal, or via the name of the signal prepended with "SIG"
