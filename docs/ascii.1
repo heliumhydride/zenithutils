@@ -8,8 +8,8 @@ ascii - print the ascii table
 
 .SH DESCRIPTION
 .PP
-\fBascii\fP prints the 128 characters of the ascii table on 4 (17-char wide) columns and 33 lines.
+\fBascii\fP prints the 128 characters of the ascii table on 8 (11 to 16 char wide) columns and 17 lines.
 This is not unlike busybox's version of ascii
 
 .SH OPTIONS
-No options
+At build time, in 'config.h', you can enable the display of octal codes by setting \fBASCII_SHOW_OCTAL\fP to 1
