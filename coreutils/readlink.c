@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
         qflag = 1;
         break;
       case '?':
-        print_error("%s: option error: unknown option \"-%c\"", program, optopt);
+        print_error("%s: option error: unknown option '-%c'", program, optopt);
         return 1;
         break;
     }
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 
   argv += optind;
   if(!argv[0]) { // no non-opt argument is provided
-    print_error("%s: path expected\n", argv[0]);
+    print_error("%s: path expected", argv[0]);
     print_usage(program);
     return 1;
   }

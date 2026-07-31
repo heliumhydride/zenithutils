@@ -25,12 +25,12 @@ int main(int argc, char* argv[]) {
         num = strtol(optarg, NULL, 10);
         break;
       case ':':
-        print_error("%s: option '-%c' needs an argument\n", program, optopt);
+        print_error("%s: option '-%c' needs an argument", program, optopt);
         print_usage(program);
         return 1;
         break;
       case '?':
-        print_error("%s: invalid option -- '-%c'\n", program, optopt);
+        print_error("%s: invalid option -- '-%c'", program, optopt);
         print_usage(program);
         return 1;
         break;

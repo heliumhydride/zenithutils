@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
         vflag = 1;
         break;
       case '?':
-        print_error("%s: option error: unknown option \"-%c\"\n", program, optopt);
+        print_error("%s: option error: unknown option '-%c'", program, optopt);
         print_usage(program);
         return 1;
         break;
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
       fp = fopen(*argv, "rb");
     
     if(fp == NULL) {
-      print_error("%s: %s: File not found\n", program, *argv);
+      print_error("%s: %s: File not found", program, *argv);
       return 1;
     }
 

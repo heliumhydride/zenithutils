@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
       fp = fopen(*argv, "r");
 
     if(fp == NULL) {
-      print_error("%s: %s: no such file\n", program, *argv);
+      print_error("%s: %s: no such file", program, *argv);
       return 1;
     }
 

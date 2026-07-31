@@ -110,12 +110,12 @@ int main(int argc, char* argv[]) {
         wflag = 1;
         break;
       case ':':
-        print_error("%s: option '-%c' needs an argument\n", program, optopt);
+        print_error("%s: option '-%c' needs an argument", program, optopt);
         print_usage(program);
         return 1;
         break;
       case '?':
-        print_error("%s: option error: unknown option '-%c'\n", program, optopt);
+        print_error("%s: option error: unknown option '-%c'", program, optopt);
         print_usage(program);
         return 1;
         break;
@@ -128,61 +128,61 @@ int main(int argc, char* argv[]) {
   char* endptr;
   switch(argc) {
     case 0: // no arg
-      print_error("%s: missing operand\n", program);
+      print_error("%s: missing operand", program);
       print_usage(program);
       return 1;
       break;
     case 1: // just last
       last = strtof(argv[1], &endptr);
       if(endptr == argv[1]) {
-        print_error("%s: %s: not a number\n", program, argv[1]);
+        print_error("%s: %s: not a number", program, argv[1]);
         return 1;
       }
       break;
     case 2: // first last
       first = strtof(argv[1], &endptr);
       if(endptr == argv[1]) {
-        print_error("%s: %s: not a number\n", program, argv[1]);
+        print_error("%s: %s: not a number", program, argv[1]);
         return 1;
       }
 
       last = strtof(argv[2], &endptr);
       if(endptr == argv[2]) {
-        print_error("%s: %s: not a number\n", program, argv[2]);
+        print_error("%s: %s: not a number", program, argv[2]);
         return 1;
       }
       break;
     case 3: // first increment last
       first = strtof(argv[1], &endptr);
       if(endptr == argv[1]) {
-        print_error("%s: %s: not a number\n", program, argv[1]);
+        print_error("%s: %s: not a number", program, argv[1]);
         return 1;
       }
 
       increment = strtof(argv[2], &endptr);
       if(endptr == argv[2]) {
-        print_error("%s: %s: not a number\n", program, argv[2]);
+        print_error("%s: %s: not a number", program, argv[2]);
         return 1;
       }
 
       last = strtof(argv[3], &endptr);
       if(endptr == argv[3]) {
-        print_error("%s: %s: not a number\n", program, argv[3]);
+        print_error("%s: %s: not a number", program, argv[3]);
         return 1;
       }
       break;
     default:
-      print_error("%s: trailing arguments\n", program);
+      print_error("%s: trailing arguments", program);
       return 1;
   }
 
   // sanity checks
   if(increment == 0) {
-    print_error("%s: refusing zero increment\n", program);
+    print_error("%s: refusing zero increment", program);
     return 1;
   }
   if(!is_sane_fmt(fmt)) {
-    print_error("%s: insane fmt '%s', incorrect for a single floating point numbers\n", program, fmt);
+    print_error("%s: insane fmt '%s', incorrect for a single floating point numbers", program, fmt);
     return 1;
   }
 

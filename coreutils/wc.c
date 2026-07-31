@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
         mflag = 1;
         break;
       case '?':
-        print_error("%s: invalid option -- '%c'\n", program, optopt);
+        print_error("%s: invalid option -- '%c'", program, optopt);
         print_usage(program);
         return 1;
         break;
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
       fp = fopen(*argv, "rb");
 
     if(fp == NULL) {
-      print_error("%s: %s: File not found\n", program, *argv);
+      print_error("%s: %s: File not found", program, *argv);
     }
 
     size_t lines, words, chars, bytes;

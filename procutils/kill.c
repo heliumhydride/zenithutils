@@ -122,18 +122,18 @@ int main(int argc, char* argv[]) {
 
       if(pid == 0) {
         if(!strcmp(*argv, "0")) {
-          print_error("%s: cannot kill pid 0\n", program);
+          print_error("%s: cannot kill pid 0", program);
           return 1;
         }
         pid = getpid_ext(*argv);
         if(!pid) {
-          print_error("%s: '%s': no such process\n", program, *argv);
+          print_error("%s: '%s': no such process", program, *argv);
           return 1;
         }
       }
 
       if(kill(pid, sig) == -1) {
-        print_error("%s: killing process of PID %d failed\n", program, pid);
+        print_error("%s: killing process of PID %d failed", program, pid);
         return 1;
       }
     }

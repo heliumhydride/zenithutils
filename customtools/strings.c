@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         tmode = "o";
         break;
       case '?':
-        print_error("%s: invalid option -- '%c'\n", argv[0], optopt);
+        print_error("%s: invalid option -- '%c'", argv[0], optopt);
         print_usage(argv[0]);
         return 1;
         break;

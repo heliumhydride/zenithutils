@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
       fp_in = fopen(*argv, "r+");
 
     if(fp_in == NULL) {
-      print_error("%s: %s: file not found\n", program, *argv);
+      print_error("%s: %s: file not found", program, *argv);
       return 1;
     }
 

@@ -31,7 +31,7 @@ int getpid_ext(const char* image) {
 }
 
 void print_usage(char* program) {
-  fprintf(stderr, "usage: %s pid|name [pid2|name2]", program);
+  fprintf(stderr, "usage: %s pid|name [pid2|name2]\n", program);
 }
 
 int main(int argc, char* argv[]) {
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 
     if(pid == 0) {
       if(!strcmp(*argv, "0")) {
-        print_error("%s: cannot kill pid 0\n", program);
+        print_error("%s: cannot kill pid 0", program);
         return 1;
       }
 
@@ -61,19 +61,19 @@ int main(int argc, char* argv[]) {
       }
 
       if(!pid) {
-        print_error("%s: '%s': no such process\n", program, *argv);
+        print_error("%s: '%s': no such process", program, *argv);
         return 1;
       }
     }
 
     HANDLE hProc = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
     if(hProc == NULL) {
-      print_error("%s: unable to get handle for process of pid %d\n", program, pid);
+      print_error("%s: unable to get handle for process of pid %d", program, pid);
       return 1;
     }
 
     if(!TerminateProcess(hProc, 1)) {
-      print_error("%s: unable to terminate process of pid %d\n", program, pid);
+      print_error("%s: unable to terminate process of pid %d", program, pid);
       return 1;
     }
 

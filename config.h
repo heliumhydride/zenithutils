@@ -10,6 +10,7 @@
 // recommended values are either 4096 or 65535 (default 4096)
 #define STDIN_MAX 4096 // Maximum buffer for stdin input
 #define PATHNAME_MAX 512
+#define COLORED_ERRORS 1
 
 /*
   coreutils options
