@@ -67,8 +67,8 @@ o/bin/nproc: init_outdir coreutils/nproc.c
 coreutils/ls.o: coreutils/ls.c
 	$(CC) $(CFLAGS) -c -o coreutils/ls.o coreutils/ls.c
 
-o/bin/ls: init_outdir lib/prettyprint.o lib/util.o coreutils/ls.o
-	$(LD) $(LDFLAGS) -o o/bin/ls lib/prettyprint.o lib/util.o coreutils/ls.o
+o/bin/ls: init_outdir lib/prettyprint.o coreutils/ls.o
+	$(LD) $(LDFLAGS) -o o/bin/ls lib/prettyprint.o coreutils/ls.o
 
 lib/utsname_winnt.o: lib/utsname_winnt.c
 	$(CC) $(CFLAGS) -c -o lib/utsname_winnt.o lib/utsname_winnt.c
