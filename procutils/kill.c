@@ -4,48 +4,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 #include <getopt.h>
 #include <signal.h>
 #include "../include/prettyprint.h"
 #include "../include/util.h"
+#include "../include/sigmap.h"
 #include "../config.h"
-
-typedef struct {
-  const char *opt;
-  int sig;
-} sigmap_t;
-
-const sigmap_t sigmap[] = {
-  {"-SIGHUP",   SIGHUP},   {"-HUP",   SIGHUP},   {"-1",  SIGHUP},
-  {"-SIGINT",   SIGINT},   {"-INT",   SIGINT},   {"-2",  SIGINT},
-  {"-SIGQUIT",  SIGQUIT},  {"-QUIT",  SIGQUIT},  {"-3",  SIGQUIT},
-  {"-SIGILL",   SIGILL},   {"-ILL",   SIGILL},   {"-4",  SIGILL},
-  {"-SIGTRAP",  SIGTRAP},  {"-TRAP",  SIGTRAP},  {"-5",  SIGTRAP},
-  {"-SIGABRT",  SIGABRT},  {"-ABRT",  SIGABRT},  {"-6",  SIGABRT},
-  {"-SIGBUS",   SIGBUS},   {"-BUS",   SIGBUS},   {"-7",  SIGBUS},
-  {"-SIGFPE",   SIGFPE},   {"-FPE",   SIGFPE},   {"-8",  SIGFPE},
-  {"-SIGKILL",  SIGKILL},  {"-KILL",  SIGKILL},  {"-9",  SIGKILL},
-  {"-SIGUSR1",  SIGUSR1},  {"-USR1",  SIGUSR1},  {"-10", SIGUSR1},
-  {"-SIGSEGV",  SIGSEGV},  {"-SEGV",  SIGSEGV},  {"-11", SIGSEGV},
-  {"-SIGUSR2",  SIGUSR2},  {"-USR2",  SIGUSR2},  {"-12", SIGUSR2},
-  {"-SIGPIPE",  SIGPIPE},  {"-PIPE",  SIGPIPE},  {"-13", SIGPIPE},
-  {"-SIGALRM",  SIGALRM},  {"-ALRM",  SIGALRM},  {"-14", SIGALRM},
-  {"-SIGTERM",  SIGTERM},  {"-TERM",  SIGTERM},  {"-15", SIGTERM},
-  {"-SIGCHLD",  SIGCHLD},  {"-CHLD",  SIGCHLD},  {"-17", SIGCHLD},
-  {"-SIGCONT",  SIGCONT},  {"-CONT",  SIGCONT},  {"-18", SIGCONT},
-  {"-SIGSTOP",  SIGSTOP},  {"-STOP",  SIGSTOP},  {"-19", SIGSTOP},
-  {"-SIGTSTP",  SIGTSTP},  {"-TSTP",  SIGTSTP},  {"-20", SIGTSTP},
-  {"-SIGTTIN",  SIGTTIN},  {"-TTIN",  SIGTTIN},  {"-21", SIGTTIN},
-  {"-SIGTTOU",  SIGTTOU},  {"-TTOU",  SIGTTOU},  {"-22", SIGTTOU},
-  {"-SIGURG",   SIGURG},   {"-URG",   SIGURG},   {"-23", SIGURG},
-  {"-SIGXCPU",  SIGXCPU},  {"-XCPU",  SIGXCPU},  {"-24", SIGXCPU},
-  {"-SIGXFSZ",  SIGXFSZ},  {"-XFSZ",  SIGXFSZ},  {"-25", SIGXFSZ},
-  {"-SIGPROF",  SIGPROF},  {"-PROF",  SIGPROF},  {"-27", SIGPROF},
-  {"-SIGWINCH", SIGWINCH}, {"-WINCH", SIGWINCH}, {"-28", SIGWINCH},
-  {"-SIGIO",    SIGIO},    {"-IO",    SIGIO},    {"-29", SIGIO},
-  {"-SIGSYS",   SIGSYS},   {"-SYS",   SIGSYS},   {"-31", SIGSYS}
-};
+#ifdef __linux__
+#include <dirent.h>
+#else
+#include <sys/sysctl.h>
+#include <sys/types.h>
+#include <sys/user.h>
+#include <pwd.h>
+#endif // __linux__
 
 int parse_sigopt(const char* s) {
   if(s == NULL || s[0] != '-')
@@ -57,6 +29,7 @@ int parse_sigopt(const char* s) {
   return -1;
 }
 
+#ifdef __linux__
 pid_t getpid_ext(const char* comm) {
   pid_t pid = 0;
   DIR* d = opendir("/proc");
@@ -88,6 +61,41 @@ pid_t getpid_ext(const char* comm) {
   closedir(d);
   return 0;
 }
+#endif
+
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__APPLE__)
+// Should work on FreeBSD, remains to be tested on OpenBSD, NetBSD and MacOS
+// Theoretically all use sysctl, however the implementation could differ
+// TODO test on other *BSD systems
+
+pid_t getpid_ext(const char* comm) {
+  pid_t pid = 0;
+  struct kinfo_proc* proc_list = NULL;
+  size_t length = 0;
+  static const int name[] = {CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0};
+  if(sysctl((int*)name, (sizeof(name)/sizeof(*name)) - 1, NULL, &length, NULL, 0))
+    return 0;
+
+  proc_list = malloc(length);
+  if(proc_list == NULL)
+    return 0;
+
+  if(sysctl((int*)name, (sizeof(name)/sizeof(*name)) - 1, proc_list, &length, NULL, 0)) {
+    free(proc_list);
+    return 0;
+  }
+
+  int proc_count = length / KINFO_PROC_SIZE;
+  for(int i = 0; i < proc_count; i++) {
+    if(!strcmp(comm, proc_list[i].ki_comm))
+      pid = proc_list[i].ki_pid;
+  }
+
+  free(proc_list);
+  return pid;
+}
+
+#endif
 
 void print_usage(char* program) {
   fprintf(stderr, "usage: %s [-signal] pid|name [pid2|name2] ...\n", program);
@@ -131,7 +139,6 @@ int main(int argc, char* argv[]) {
       }
     }
   }
-
 
   return 0;
 }
