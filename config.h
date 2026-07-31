@@ -29,6 +29,8 @@
 #define FORCE_MINGW_PATHS 1
 #define MAX_LINK_LENGTH 1024 // for readlink
 
+#define LS_COLOR 1
+
 /*
   Base32 and Base64 alphabets
 */

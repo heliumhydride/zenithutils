@@ -2,144 +2,69 @@
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <time.h>
-#include <limits.h>
-
-#include "../include/prettyprint.h"
-#include "../include/util.h"
+#include <dirent.h>
+//#include <getopt.h>
 #include "../config.h"
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#define DT_UNKNOWN 0
+#define DT_FIFO 1
+#define DT_CHR 2
+#define DT_DIR 4
+#define DT_BLK 6
+#define DT_REG 8
+#define DT_LNK 10
+#define DT_SOCK 12
+#define DT_WHT 14
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-1AaCFLlhrRst] [path1] ...\n", argv0);
-}
+// TODO allow file as argument
+// TODO options
+// TODO formatting
 
 int main(int argc, char* argv[]) {
-  int opt;
-  int use_cwd = 0;
+  char* program = argv[0];
+  char* path = ".";
+  if(argc >= 2) {
+    path = argv[1];
+  }
 
-  int oneflag = 0;
-  int Aflag = 0;
-  int aflag = 0;
-  int Cflag = 0;
-  int Fflag = 0;
-  int Lflag = 0;
-  int lflag = 0;
-  int hflag = 0;
-  int rflag = 0;
-  int Rflag = 0;
-  int sflag = 0;
-  int tflag = 0;
+  DIR* d = opendir(path);
+  if(d == NULL) {
+    fprintf(stderr, "%s: %s :no such file or directory\n", program, path);
+    return 1;
+  }
 
-  while((opt = getopt(argc, argv, ":1AaCFLlhrRst")) != -1) {
-    switch(opt) {
-      case '1':
-        // 1 column listing
-        oneflag = 1;
+  struct dirent* ent;
+  while((ent = readdir(d))) {
+    #ifdef LS_COLOR
+    #ifndef _WIN32 // TODO
+    switch(ent->d_type) {
+      case DT_BLK: // fallthrough
+      case DT_CHR: // bright yellow
+        printf("\033[1;33m");
         break;
-      case 'A':
-        // List all but '.' and '..'
-        Aflag = 1;
+      case DT_DIR:
+        printf("\033[1;34m");
         break;
-      case 'a':
-        // List all
-        aflag = 1;
+      case DT_FIFO:
+      case DT_SOCK:
+        printf("\033[1;35m");
         break;
-      case 'C':
-        Cflag = 1;
-        break;
-      case 'F':
-        // display '/' after dir; display '*' after executable; display '@' after symlink; display '%' after whiteout (?); display '=' after socket; display '|' after FIFO
-        Fflag = 1;
-        break;
-      case 'L':
-        // Evaluate symlinks
-        Lflag = 1;
-        break;
-      case 'l':
-        // Long listing mode
-        lflag = 1;
-        break;
-      case 'r':
-        // Reverse sort
-        rflag = 1;
-        break;
-      case 'R':
-        // Recursive listing
-        Rflag = 1;
-        break;
-      case 's':
-        // Sort by size
-        sflag = 1;
-        break;
-      case 't':
-        // Sort by date/time modified
-        tflag = 1;
-        break;
-      case '?':
-        print_error("%s: invalid option -- '%c'", argv[0], optopt);
-        print_usage(argv[0]);
-        return 1;
+      case DT_LNK:
+        printf("\033[1;36m");
         break;
     }
+    #endif // _WIN32
+    #endif // LS_COLOR
+
+    printf("%s ", ent->d_name);
+
+    #ifdef LS_COLOR
+    #ifndef _WIN32
+    printf("\033[0m");
+    #endif // _WIN32
+    #endif // LS_COLOR
   }
 
-  if(optind >=argc)
-    use_cwd = 1;
-
-  char cwd[PATH_MAX];
-
-  for(; optind < argc; optind++) {
-    printf("path: %s\n", argv[optind]);
-  } 
-
-  // if no argument is provided other than parameters, assung current working directory
-  #ifndef _WIN32 // on Unix
-  if(use_cwd) {
-    if(getcwd(cwd, sizeof(cwd)) != NULL) {
-      printf("path: %s\n", cwd);
-    } else {
-      print_error("%s: getcwd() failed", argv[0]);
-      return 1;
-    }
-  }
-  
-  #endif
-
-  #ifdef _WIN32
-  if(use_cwd) {
-    GetCurrentDirectory(PATH_MAX, cwd);
-    printf("path: %s\n", cwd);
-  }
-  #endif
-
-  // TODO: get list of files and properties (timestamps, user, group, rwx perms, size, ...)
-  // NOTE: maybe spoof some data on Windows ?
-  // NOTE: do we use TrustedInstaller Ntauthority/SYSTEM or SYSTEM ?
-  // NOTE: when data comes from an unknown uid/gid, go we put the full SID?
-  // NOTE: when data comes from another computer, do we specify the computername ? (eg. pc1/core4) ?
-
-  // set to an arbitrary number for now
-  // gonna be a problem if we have 4,294,967,295+ files on 32-bit...
-  unsigned long nfiles = 1;
-
-  char* filenames[nfiles];
-  size_t timestamps[nfiles];
-  unsigned int uids[nfiles];
-  unsigned int gids[nfiles];
-  unsigned short perms[nfiles];
-
-  // TODO: display depending on parameters (-1, -t, -s, -l, -L, -F)
-  // lets not try colors yet
-  /* char* ls_colors = getenv("LS_COLORS");
-  if(ls_colors == NULL)
-    ls_colors = "di=";
-  */
-
+  putchar('\n');
   return 0;
 }

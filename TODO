@@ -9,6 +9,7 @@ wc total if multiple files + column alignment
 seq -w
 customtools/ascii check if a control code is provided as an argument (eg. ascii NUL -> dec 0 hex 0 oct 0 char NUL)
 rng manpage: how to do floating point number generation using '$ bc -l <<< "$(o/usr/bin/rng 1000 6000)/1000"'
+coreutils/ls: basic options like -A
 
 split makefile into multiple makefiles in each subfolder
 allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
@@ -45,7 +46,6 @@ util-linux/{mount,umount,mountpoint} (on Windows, use \\Device\Harddisk0\... or 
 customtools/time (use the portable posix format)
 coreutils/mv
 coreutils/cp
-coreutils/ls
 coreutils/tr
 coreutils/mktemp potential memory safety issues ?
 sharutils/{uuencode,uudecode}
