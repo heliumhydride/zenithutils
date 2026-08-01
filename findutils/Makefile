@@ -8,7 +8,7 @@ all: $(PROGS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 xargs: xargs.o ../lib/prettyprint.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 find: find.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@

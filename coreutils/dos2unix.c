@@ -17,10 +17,8 @@ int main(int argc, char* argv[]) {
 
   // if called as unix2dos, switch to unix2dos mode
   if(
-    !strcmp(basename(program), "unix2dos") ||
-    !strcmp(basename(program), "z_unix2dos") ||
-    !strcmp(basename(program), "unix2dos.exe") ||
-    !strcmp(basename(program), "z_unix2dos.exe")
+    !strcmp(basename(program), PROG_PREFIX "unix2dos") ||
+    !strcmp(basename(program), PROG_PREFIX "unix2dos.exe")
   ) convert_to = 'd';
 
   if(argc == 1) {

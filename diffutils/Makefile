@@ -8,11 +8,11 @@ all: $(PROGS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 diff: diff.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 cmp: cmp.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 sdiff: sdiff.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 

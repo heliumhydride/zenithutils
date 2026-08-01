@@ -19,14 +19,14 @@ else
 endif
 
 kill: kill.o ../lib/prettyprint.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 pkill: kill
 ifeq ($(WIN32), 1)
-	cp ../o/bin/kill.exe ../o/bin/pkill.exe
+	cp ../o/bin/$(PROG_PREFIX)kill.exe ../o/bin/$(PROG_PREFIX)pkill.exe
 else
-	cp ../o/bin/kill ../o/bin/pkill
+	cp ../o/bin/$(PROG_PREFIX)kill ../o/bin/$(PROG_PREFIX)pkill
 endif
 
 w: w.o ../lib/prettyprint.o ../lib/util.o ../lib/util_m.o
-	$(LD) $(LDFLAGS) $^ -lm -o ../o/bin/$@ 
+	$(LD) $(LDFLAGS) $^ -lm -o ../o/bin/$(PROG_PREFIX)$@ 

@@ -17,12 +17,12 @@ all: $(PROGS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 rev: rev.o ../lib/prettyprint.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 nologin: nologin.o
-	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$(PROG_PREFIX)$@
 
 # requires libsodium
 uuidgen: uuidgen.o ../lib/prettyprint.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
 

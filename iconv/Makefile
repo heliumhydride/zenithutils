@@ -8,5 +8,5 @@ all: $(PROGS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 iconv: iconv.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
