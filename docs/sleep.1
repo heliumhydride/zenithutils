@@ -1,0 +1,35 @@
+.TH SLEEP 1 "1st of August 2026" zenithutils "User Commands"
+
+.SH NAME
+sleep - wait for an arbitrary amount of time
+
+.SH SYNOPSIS
+\fBsleep\fP time
+
+.SH DESCRIPTION
+sleep waits for an arbitrary amount of time, which is the first and only argument.
+
+\fItime\fP is a floating point number, optionally followed by a suffix 's', 'm', 'h', 'd' (for seconds, minutes, hours, days respectively)
+
+.SH EXAMPLES
+Wait 10 seconds:
+.EX
+
+    $ sleep 10
+
+.EE
+Wait a year (on average)
+.EX
+
+    $ sleep 365.25d
+
+.EE
+Wait 10 milliseconds (not accounting for program loading time)
+.EX
+
+    $ sleep 0.01
+
+.EE
+
+.SH OPTIONS
+not applicable
