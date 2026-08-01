@@ -1,6 +1,9 @@
 -- CODE GOALS --
 
-the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
+on mingw: garbeled output for which, uuidgen, pwd, rev
+strip executables
+fix some things not in sbin (mknod, nologin)
+ascii not honoring config.h (remove '== 1')
 
 wc total if multiple files + column alignment
 cat -n
