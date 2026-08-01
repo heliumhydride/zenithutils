@@ -1,6 +1,61 @@
 # zenithutils
 An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase / ubase / plan9base / ...
 
+
+### building
+Create the config file:
+```sh
+$ make config.h
+```
+
+Edit the options in `config.mk` and `config.h`:
+```sh
+$ $EDITOR config.h
+```
+
+Then simply invoke make as usual:
+```sh
+$ make
+```
+**NOTE: if the target os is Windows, pass WIN32=1 (not just cross compiling, always)**
+
+
+If you want to build a specific directory, for example:
+```sh
+$ make customtools
+```
+
+To build an individual program, first initialize the config and the output directory
+```sh
+$ make init_outdir config.h
+```
+
+Then, for example:
+```sh
+$ make -C coreutils readlink
+```
+
+### installing
+The standard way
+```
+$ make install
+```
+It is configurable, for example if you need to package zenithutils for a distribution,
+```
+$ make install PREFIX=/ DESTDIR=/tmp/packaging
+```
+Man pages are always installed by default (this might change in the future)
+
+### required dependencies:
+  - a c99 toolchain such as gcc / mingw / Clang+LLVM / tcc... but not visual c
+  - GNU make (BSD make doesn't work)
+  - mkdir+cp commands from coreutils/busybox (yes quite ironic i know...)
+  - [libsodium](https://github.com/jedisct1/libsodium) for 'uuidgen', 'rng' and 'mktemp'
+  - [openpam](https://git.des.dev/openpam/openpam/wiki) / linux-pam for 'su'
+  - [zlib](https://zlib.net) / [zlib-ng](https://github.com/zlib-ng/zlib-ng) with zlib compat for 'gzip'
+  - [netbsd-curses](https://github.com/sabotage-linux/netbsd-curses) / [ncurses](https://invisible-island.net/ncurses/) for Linux/*BSD OR [pdcurses](https://github.com/wmcbrine/PDCurses) for Windows
+  - [libicu](https://icu.unicode.org/) for iconv
+
 ### implements:
   - coreutils (ls, cp, uname, ln, chmod, mv, rm, ...)
   - util-linux (fdisk, lsblk, lscpu, losetup, mount, ...)
@@ -22,15 +77,15 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
   - dos2unix/unix2dos (integrated in coreutils in Makefile)
   - portions of shadow (passwdutils in Makefile)
 
-### required dependencies:
-  - a c99 toolchain such as gcc / mingw / Clang+LLVM / tcc... but not visual c
-  - GNU make
-  - mkdir+cp commands from coreutils/busybox (yes quite ironic i know...)
-  - [libsodium](https://github.com/jedisct1/libsodium) for 'uuidgen', 'rng' and 'mktemp'
-  - [openpam](https://git.des.dev/openpam/openpam/wiki) / linux-pam for 'su'
-  - [zlib](https://zlib.net) / [zlib-ng](https://github.com/zlib-ng/zlib-ng) with zlib compat for 'gzip'
-  - [netbsd-curses](https://github.com/sabotage-linux/netbsd-curses) / [ncurses](https://invisible-island.net/ncurses/) for Linux/*BSD OR [pdcurses](https://github.com/wmcbrine/PDCurses) for Windows
-  - [libicu](https://icu.unicode.org/) for iconv
+### why ? the alternatives work pretty well.
+  - Because I wanted a replacement for chimerautils + util-linux on my custom distro im making
+  - I also wanted a userland that could compile for both Linux and Windows NT without needing Cygwin (akin to busybox-w32) but more complete and more BSD-like
+  - I learn stuff and I'm bored
+
+### compatibility goals (in order of priority):
+  - Linux with musl, glibc, other libcs
+  - Windows 2000+ (x86_64, x86, arm64, arm) (MinGW)
+  - *BSD + MacOS (x86_64, arm64)
 
 ### recommended to go along with zenithutils:
   - for a more feature-packed environment:
@@ -44,15 +99,4 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
   - for bootable linux systems:
     - [nyagetty](https://github.com/chimera-linux/nyagetty) (not supported on Windows)
 
-### why ? the alternatives work pretty well.
-  - Because I wanted a replacement for chimerautils + util-linux on my custom distro im making
-  - I also wanted a userland that could compile for both Linux and Windows NT without needing Cygwin (akin to busybox-w32) but more complete and more BSD-like
-  - I learn stuff and I'm bored
-
-### compatibility goals (in order of priority):
-  - Linux with musl, glibc, uclibc-ng, bionic libc (Android) and llvm libc
-  - Windows 2000+ (x86_64, x86, arm64, arm)
-  - *BSD
-  - MacOS (x86_64, arm64)
-  - Cosmopolitan libc
 
