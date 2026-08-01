@@ -14,7 +14,6 @@ coreutils/ls: basic options like -A
 coreutils/tac: actually work like tac (detailled method in source)
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
-make programs that take options and filenames extract filenames in between options (wc,ls,..)
 remove as much warnings as possible
 coreutils/tail
 util-linux/column
@@ -25,7 +24,6 @@ customtools/read: check if variable was set correctly (check if input == getenv(
 customtools/strings.c: look for all individual strings instead of just printable characters by checking null byte after each printable character
 coreutils/users
 procutils/w
-util-linux/nologin: if /etc/nologin.txt exists, print its contents
 lib/util base64 encoding/decoding
 coreutils/base32 encoding/decoding
 customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
