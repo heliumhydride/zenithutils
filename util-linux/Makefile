@@ -20,7 +20,7 @@ rev: rev.o ../lib/prettyprint.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
 
 nologin: nologin.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$@
 
 # requires libsodium
 uuidgen: uuidgen.o ../lib/prettyprint.o ../lib/util.o
