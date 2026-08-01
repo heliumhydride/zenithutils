@@ -33,7 +33,7 @@ const asciientry_t ascii_map[] = {
 int main(int argc, char* argv[]) {
   if(argc < 2) { // no argument, show whole ascii table
     char* fmt;
-    #if ASCII_SHOW_OCTAL == 1
+    #if ASCII_SHOW_OCTAL
     printf("Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct\n");
     fmt = "%3d %02X %03o %-3s ";
     #else
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
       for (int c = 0; c < 8; c++) {
         int i = r + 16*c;
         printf(fmt, ascii_map[i].code, ascii_map[i].code,
-          #if ASCII_SHOW_OCTAL == 1
+          #if ASCII_SHOW_OCTAL
           ascii_map[i].code,
           #endif
           ascii_map[i].representation
