@@ -1,9 +1,5 @@
 -- CODE GOALS --
 
-strip executables
-fix some things not in sbin (mknod, nologin)
-ascii not honoring config.h (remove '== 1')
-
 wc total if multiple files + column alignment
 cat -n
 seq -w
@@ -11,6 +7,8 @@ allow program name prefix (eg. z_ls instead of ls) for installation alongside ex
 printf + printf manpage
 coreutils/ls: basic options like -A
 
+strip executables
+coreutils/readlink: mingw: readlink() undeclared
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
 coreutils/tac: actually work like tac (detailled methode in source)
