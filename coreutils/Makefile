@@ -48,7 +48,7 @@ basename: basename.o
 tac: tac.o ../lib/prettyprint.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
 
-sleep: sleep.o
+sleep: sleep.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
 
 wc: wc.o ../lib/prettyprint.o
