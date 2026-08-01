@@ -3,9 +3,12 @@
 PROG_PREFIX=
 #PROG_PREFIX=z_
 
+# Root directory for zenithutils
+PREFIX=/usr/local
+
+# Toolchain setup
 CC = cc
 LD = $(CC)
-
 CFLAGS = -O2 -std=c99 -Wall -Wextra -Wpedantic
 LDFLAGS = $(CFLAGS)
 WIN32 = 0

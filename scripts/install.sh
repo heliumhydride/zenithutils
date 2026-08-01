@@ -1,7 +1,7 @@
 #!/bin/sh
 
-[ -z "$PREFIX" ] && PREFIX="/usr/local"
-[ -z "$DESTDIR" ] && DESTDIR=""
+[ -z "$PREFIX" ] && PREFIX="/usr/local" # safeguard in case PREFIX is not in config.mk
+[ -z "$DESTDIR" ] && DESTDIR="" # not needed, only for readability
 
 set +x 
 mkdir -pv o/share/man/man1
