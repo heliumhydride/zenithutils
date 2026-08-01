@@ -1,8 +1,6 @@
 -- CODE GOALS --
 
 cat -n
-seq -w
-allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
 printf + printf manpage
 
 wc column alignment
