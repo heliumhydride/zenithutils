@@ -5,9 +5,9 @@
 
 .SH SYNOPSIS
 .EX
-\fBseq\fP \fI[-f fmt] [-s sep] last\fP
-\fBseq\fP \fI[-f fmt] [-s sep] first last\fP
-\fBseq\fP \fI[-f fmt] [-s sep] first increment last\fP
+\fBseq\fP \fI[-f fmt | -w] [-s sep] last\fP
+\fBseq\fP \fI[-f fmt | -w] [-s sep] first last\fP
+\fBseq\fP \fI[-f fmt | -w] [-s sep] first increment last\fP
 .EE
 
 .SH DESCRIPION
@@ -15,7 +15,10 @@ seq prints a sequence of numbers
 
 .SH OPTIONS
 .TP
-\fB-f fmt\fP use fmt to tell printf how to display numbers. default is "%g"
+\fB-f fmt\fP use fmt to tell printf how to display numbers. Incompatible with '-w'
 
 .TP
 \fB-s sep\fP use sep as a separator between numbers. default is newline "\\n"
+
+.TP
+\fB-w\fP pad numbers with zeroes, using the largest number of the sequence to know how many zeros to use. Incompatible with '-f'
