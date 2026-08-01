@@ -2,7 +2,6 @@
 
 the following bug only seem to happen on win7 x86 ?: fix garbeled output for uuidgen and which
 
-split makefile into multiple makefiles in each subfolder (rework building in general)
 wc total if multiple files + column alignment
 cat -n
 seq -w
