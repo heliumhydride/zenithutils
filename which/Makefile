@@ -8,5 +8,5 @@ all: $(PROGS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 which: which.o ../lib/prettyprint.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
