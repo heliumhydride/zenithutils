@@ -17,27 +17,13 @@ void print_usage(char* argv0) {
   fprintf(stderr, "usage: %s [-C num] | [-h]\n", argv0);
 }
 
-char* uuidgen() {
-  char* uuid = malloc(36);
-
-  for(int i = 0; i < 8; i++)
+void uuidgen(char* uuid) {
+  for(int i = 0; i < 36; i++)
     uuid[i] = charset[randombytes_uniform(16)];
-
-  for(int i = 0; i < 4; i++)
-    uuid[i+9] = charset[randombytes_uniform(16)];
-
-  for(int i = 0; i < 4; i++)
-    uuid[i+14] = charset[randombytes_uniform(16)];
-
-  for(int i = 0; i < 4; i++)
-    uuid[i+19] = charset[randombytes_uniform(16)];
-
-  for(int i = 0; i < 12; i++)
-    uuid[i+24] = charset[randombytes_uniform(16)];
 
   // Add the separators
   uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
-  return uuid;
+  uuid[36] = '\0'; // null terminate also
 }
 
 int main(int argc, char* argv[]) {
@@ -70,8 +56,16 @@ int main(int argc, char* argv[]) {
     }
   }
   
-  for(size_t i = 0; i < count; i++)
-    printf("%s\n", uuidgen());
+  char* u = malloc(37);
+  if(u == NULL)
+    return 1;
+  for(size_t i = 0; i < count; i++) {
+    uuidgen(u);
+    if(u == NULL)
+      return 1;
+    printf("%s\n", u);
+  }
+  free(u);
 
   return 0;
 }

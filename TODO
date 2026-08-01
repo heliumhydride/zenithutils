@@ -1,6 +1,5 @@
 -- CODE GOALS --
 
-on mingw: garbeled output for which, uuidgen, pwd, rev
 strip executables
 fix some things not in sbin (mknod, nologin)
 ascii not honoring config.h (remove '== 1')

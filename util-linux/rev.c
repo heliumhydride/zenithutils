@@ -20,6 +20,7 @@ void rev(char* out, char* in) {
   
   if(had_newline)
     out[size-1] = '\n';
+  out[size] = '\0';
 }
 
 void print_usage(const char* program) {

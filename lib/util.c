@@ -149,6 +149,7 @@ void mingw_path(char* out, char* path) {
     if(path[i] == '\\')
       out[i] = '/';
   }
+  out[pathlen] = '\0';
 }
 
 int is_mode_t(char* mode_str) {
