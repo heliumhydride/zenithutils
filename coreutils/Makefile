@@ -70,7 +70,7 @@ mktemp: mktemp.o ../lib/prettyprint.o ../lib/util.o
 mknod: mknod.o ../lib/prettyprint.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$@
 
-whoami: whoami.o
+whoami: whoami.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
 
 tty: tty.o
