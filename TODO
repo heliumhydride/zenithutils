@@ -1,17 +1,17 @@
 -- CODE GOALS --
 
-wc total if multiple files + column alignment
 cat -n
 seq -w
 allow program name prefix (eg. z_ls instead of ls) for installation alongside existing utilities
 printf + printf manpage
-coreutils/ls: basic options like -A
 
+wc column alignment
 strip executables
 coreutils/readlink: mingw: readlink() undeclared
 coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
-coreutils/tac: actually work like tac (detailled methode in source)
+coreutils/ls: basic options like -A
+coreutils/tac: actually work like tac (detailled method in source)
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
 make programs that take options and filenames extract filenames in between options (wc,ls,..)

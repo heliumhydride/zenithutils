@@ -102,6 +102,10 @@ int main(int argc, char* argv[]) {
     argv[1] = "-";
   }
 
+  int n_files = argc - optind;
+  size_t total_lines, total_words, total_chars, total_bytes;
+  total_lines = total_words = total_chars = total_bytes = 0;
+
   FILE* fp;
   while(*++argv) {
     fp = stdin;
@@ -127,6 +131,22 @@ int main(int argc, char* argv[]) {
     
     if(strcmp(*argv, "-"))
       fclose(fp);
+
+    total_lines += lines;
+    total_words += words;
+    total_chars += chars;
+    total_bytes += bytes;
+  }
+  if(n_files >= 2) {
+    if(lflag)
+      printf(" %zu ", total_lines);
+    if(wflag)
+      printf(" %zu ", total_words);
+    if(mflag)
+      printf(" %zu ", total_chars);
+    if(cflag)
+      printf(" %zu ", total_bytes);
+    printf("total\n");
   }
   return 0;
 }
