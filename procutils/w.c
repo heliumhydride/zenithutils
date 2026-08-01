@@ -13,6 +13,7 @@
 
 #include "../include/prettyprint.h"
 #include "../include/util.h"
+#include "../include/util_m.h"
 #include "../config.h"
 
 #ifdef _WIN32
