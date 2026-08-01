@@ -5,7 +5,7 @@ include ../config.mk
 # [ is a link to test
 # how would 'nohup' work on Windows?
 
-PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty  base64 base32 mkdir rmdir test mknod whoami readlink dos2unix unix2dos mkfifo cp mv rm sync tee tail head sort shred touch timeout truncate uniq users nice ln install id hostname groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum sha512sum pr tr chgrp echo comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv factor nohup numfmt paste pathchk finger realpath stat shuf
+PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty  base64 base32 mkdir rmdir test mknod whoami readlink dos2unix unix2dos head mkfifo cp mv rm sync tee tail sort shred touch timeout truncate uniq users nice ln install id hostname groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum sha512sum pr tr chgrp echo comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv factor nohup numfmt paste pathchk finger realpath stat shuf
 
 all: $(PROGS)
 
