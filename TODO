@@ -3,6 +3,8 @@
 cat -n
 printf + printf manpage
 
+coreutils/tee: operate line by line
+coreutils/echo: implement -n, -e options
 wc column alignment
 strip executables
 coreutils/readlink: mingw: readlink() undeclared
@@ -17,7 +19,6 @@ remove as much warnings as possible
 coreutils/tail
 util-linux/column
 util-linux/hexdump
-coreutils/tee
 coreutils/groups
 coreutils/test
 customtools/read: check if variable was set correctly (check if input == getenv(variable))
