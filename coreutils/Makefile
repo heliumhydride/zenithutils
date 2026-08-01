@@ -107,15 +107,3 @@ else
 		cp ../o/bin/dos2unix ../o/bin/unix2dos
 endif
 
-readlink: readlink.o lib/prettyprint.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
-
-readlink: readlink.o lib/prettyprint.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
-
-readlink: readlink.o lib/prettyprint.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
-
-readlink: readlink.o lib/prettyprint.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$@
-
