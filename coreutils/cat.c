@@ -5,23 +5,110 @@
 #include <string.h>
 #include <getopt.h>
 #include "../include/prettyprint.h"
+#include "../include/util.h"
 
 void print_usage(char* program) {
   fprintf(stderr, "usage: %s [-AEenTtv] [file1] [file2] ...\n", program);
 }
 
-void vfilter(char* out, char c) {
-  // takes a non printable character and returns a string representing it
-  if(c == '\0') { // NUL
-    out[0] = '^'; out[1] = '@';
-  } else if(c == 0x7F) { // DEL
-    out[0] = '^'; out[1] = '?';
-  } else if(c >= 0x01 && c <= 0x1F && c != '\t' && c != '\n') {
-    out[0] = '^'; out[1] = c+64;
-  } else {
-    out[0] = c;
-    out[1] = '\0';
+// TODO unicode compat for *filter() ?
+
+char* Efilter(const char *s) {
+  if(s == NULL)
+    return NULL;
+
+  size_t extra = 0;
+  for(const char* p = s; *p != '\0'; p++) {
+    if(*p == '\n')
+      extra++;
   }
+
+  size_t len = strlen(s);
+  char* out = malloc(len + extra + 1);
+  if(out == NULL)
+    return NULL;
+
+  char* w = out;
+  for(const char* p = s; *p; p++) {
+    if (*p == '\n') {
+      *w++ = '$';
+      *w++ = '\n';
+    } else {
+      *w++ = *p;
+    }
+  }
+  *w = '\0'; // finish string
+  return out;
+}
+
+char* Tfilter(const char *s) {
+  if(s == NULL)
+    return NULL;
+
+  size_t extra = 0;
+  for(const char* p = s; *p != '\0'; p++) {
+    if(*p == '\n')
+      extra++;
+  }
+
+  size_t len = strlen(s);
+  char* out = malloc(len + extra + 1);
+  if(out == NULL)
+    return NULL;
+
+  char* w = out;
+  for(const char* p = s; *p; p++) {
+    if (*p == '\t') {
+      *w++ = '^';
+      *w++ = 'I';
+    } else {
+      *w++ = *p;
+    }
+  }
+  *w = '\0'; // finish string
+  return out;
+}
+
+int isnonprint(char c) {
+  if(c >= 0 && c < 0x20)
+    return 1;
+  if(c == 0x7f)
+    return 1;
+  return 0;
+}
+
+char* vfilter(const char *s) {
+  if(s == NULL)
+    return NULL;
+
+  size_t extra = 0;
+  for(const char* p = s; *p != '\0'; p++) {
+      if(isnonprint(*p))
+        extra++;
+  }
+
+  size_t len = strlen(s);
+  char* out = malloc(len + extra + 1);
+  if(out == NULL)
+    return NULL;
+
+  char* w = out;
+  for (const char* p = s; *p; p++) {
+    if (*p == '\0') { // NULL
+      *w++ = '^';
+      *w++ = '@';
+    } else if(*p == 0x7f) { // DEL
+      *w++ = '^';
+      *w++ = '?';
+    } else if(*p >= 0x01 && *p <= 0x1F && *p != '\t' && *p != '\n') {
+      *w++ = '^';
+      *w++ = *p+64;
+    } else {
+      *w++ = *p;
+    }
+  }
+  *w = '\0'; // finish string
+  return out;
 }
 
 int main(int argc, char* argv[]) {
@@ -43,7 +130,7 @@ int main(int argc, char* argv[]) {
       case 'e':
         vflag = Eflag = 1;
         break;
-      case 'n': // TODO cat -n
+      case 'n':
         nflag = 1;
         break;
       case 'T':
@@ -81,20 +168,35 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    int c;
-    while((c = fgetc(fp)) != EOF) {
-      if(Tflag && c == '\t') {
-        printf("^I");
-      } else if(Eflag && c == '\n') {
-        printf("$\n");
-      } else if(vflag) {
-        char s[2];
-        vfilter(s,c);
-        printf("%s", s);
-      } else {
-        printf("%c", c);
+    char* line = NULL;
+    size_t count = 1;
+    size_t cap = 0;
+    while(getline(&line, &cap, fp) != -1) {
+      if(nflag) printf("%5zu  ", count);
+      char *orig = line;
+
+      if(Eflag) {
+        line = Efilter(orig);
+        free(orig);
+        orig = line;
       }
+      if(Tflag) {
+        line = Tfilter(orig);
+        free(orig);
+        orig = line;
+      }
+      if(vflag) {
+        line = vfilter(orig);
+        free(orig);
+        orig = line;
+      }
+
+      printf("%s", line);
+      free(line);
+      line = NULL;
+      count++;
     }
+    free(line);
 
     if(strcmp(*argv,"-"))
       fclose(fp);

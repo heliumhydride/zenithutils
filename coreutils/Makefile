@@ -15,7 +15,7 @@ all: $(PROGS)
 dos2unix.o: dos2unix.c
 	$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-cat: cat.o ../lib/prettyprint.o
+cat: cat.o ../lib/prettyprint.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 nproc: nproc.o

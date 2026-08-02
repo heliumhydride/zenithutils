@@ -1,6 +1,5 @@
 -- CODE GOALS --
 
-cat -n
 printf + printf manpage
 
 coreutils/tee: operate line by line
