@@ -1,14 +1,15 @@
 -- CODE GOALS --
 
-printf + printf manpage
+rework: strings, uniq, base64, base32, tr, exedump, tail, tac
+lib/util: get rid of getbytes_stdin, get_filesize, readfile
+coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
 
+printf + printf manpage
 coreutils/tee: operate line by line
 coreutils/echo: implement -n, -e options
 wc column alignment
 strip executables
 coreutils/readlink: mingw: readlink() undeclared
-coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
-coreutils/mkdir: fix permission stuff (decimal to octal conversion ???)
 coreutils/ls: basic options like -A
 coreutils/tac: actually work like tac (detailled method in source)
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
