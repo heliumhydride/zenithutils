@@ -1,8 +1,9 @@
 -- CODE GOALS --
 
+manpages for basename, dirname, readlink, which, tee, mkdir, rmdir
 rework: strings, uniq, base64, base32, tr, exedump, tail, tac
 lib/util: get rid of getbytes_stdin, get_filesize, readfile
-coreutils/{mkdir,rmdir}: recursive directory creation/destruction (-p)
+coreutils/rmdir: recursive directory destruction (-p)
 
 printf + printf manpage
 coreutils/tee: operate line by line
@@ -11,11 +12,9 @@ wc column alignment
 strip executables
 coreutils/readlink: mingw: readlink() undeclared
 coreutils/ls: basic options like -A
-coreutils/tac: actually work like tac (detailled method in source)
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
 remove as much warnings as possible
-coreutils/tail
 util-linux/column
 util-linux/hexdump
 coreutils/groups
@@ -39,7 +38,6 @@ util-linux/{mount,umount,mountpoint} (on Windows, use \\Device\Harddisk0\... or 
 customtools/time (use the portable posix format)
 coreutils/mv
 coreutils/cp
-coreutils/tr
 coreutils/mktemp potential memory safety issues ?
 sharutils/{uuencode,uudecode}
 customtools/strings todos
