@@ -1,43 +1,97 @@
 #define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include <unistd.h>
-//#include <string.h>
+#include <string.h>
 #include <errno.h>
 #include <sys/stat.h>
-
+#include <libgen.h>
+#include <dirent.h>
 #include "../include/prettyprint.h"
 #include "../include/util.h"
 
-int my_mkdir(const char *pathname, mode_t mode, int parent) {
-  // TODO implement -p
-  (void)parent; // for now, ignore parent
+// globals to be accessible to functions
+static int vflag;
+char* program;
+
+int my_mkdir(const char *pathname, mode_t mode) {
   #ifdef _WIN32
   (void)mode; // forget mode
-  return mkdir(pathname);
-  #else // On Unix
-  return mkdir(pathname, mode);
   #endif
+
+  #ifdef _WIN32
+  int status = mkdir(pathname);
+  #else // On Unix
+  int status = mkdir(pathname, mode);
+  #endif
+
+  if((status == 0) && vflag) {
+    printf("%s: created directory '%s'\n", program, pathname);
+    return 0;
+  } else {
+    return status;
+  }
+}
+
+int direxists(const char* pathname) {
+  struct stat st;
+  if(stat(pathname, &st) != 0) return 0;
+  return S_ISDIR(st.st_mode);
+}
+
+int mkdir_p(const char* pathname, mode_t mode) {
+  if(pathname == NULL) {
+    errno = EINVAL;
+    return -1;
+  }
+
+  if(!strcmp(pathname, "/") || !strcmp(pathname, ".") || !strcmp(pathname, ".."))
+    return 0;
+
+  char* tmp = strdup(pathname); // because on glibc dirname can modify pathname?
+  if(tmp == NULL)
+    return -1;
+
+  char* parent = dirname(tmp);
+  if(!direxists(parent))
+    mkdir_p(parent, mode);
+
+  if(my_mkdir(pathname, mode) == 0) {
+    free(tmp);
+    return 0;
+  }
+
+  if(errno == EEXIST) {
+    if(direxists(pathname)) {
+      free(tmp);
+      return 0;
+    } else {
+      errno = ENOTDIR;
+      free(tmp);
+      return -1;
+    }
+  }
+  free(tmp);
+  return -1;
 }
 
 void print_usage(const char* argv0) {
-  fprintf(stderr, "usage: %s [-m mode] [-pv] dir [dir2] [dir3] ...\n", argv0);
+  fprintf(stderr, "usage: %s [-m mode] [-pv] dir [dir] ...\n", argv0);
 }
 
 int main(int argc, char* argv[]) {
   int opt;
   int pflag = 0; // create directories recursively
-  int vflag = 0; // show operations / verbose mode
+  vflag = 0; // show operations / verbose mode
   int mflag = 0; // using mode flag to set mode
   mode_t mode = 0755;
   #ifndef _WIN32 // On Unix
   mode_t process_umask = 0;
   #endif
-  char* program = argv[0];
+  program = argv[0];
 
   while((opt = getopt(argc, argv, ":m:pv")) != -1) {
     switch(opt) {
@@ -59,12 +113,12 @@ int main(int argc, char* argv[]) {
         #endif
         break;
       case '?': // fallthrough
-        print_error("%s: option error: unknown option \"-%c\"", program, optopt);
+        print_error("%s: option error: unknown option '-%c'", program, optopt);
         print_usage(program);
         return 1;
         break;
       case ':':
-        print_error("%s: option \"-%c\" needs an argument", program, optopt);
+        print_error("%s: option '-%c' needs an argument", program, optopt);
         print_usage(program);
         return 1;
         break;
@@ -84,8 +138,13 @@ int main(int argc, char* argv[]) {
   }
 
   while(*++argv) {
-    // TODO implement mkdir -p
-    if(my_mkdir(*argv, mode, pflag) == -1) {
+    int status;
+    if(pflag)
+      status = mkdir_p(*argv, mode);
+    else
+      status = my_mkdir(*argv, mode);
+
+    if(status == -1) {
       switch(errno) { // UGLY ERROR HANDLING
         case EACCES:
           print_error("%s: cannot create directory '%s': access denied", program, *argv);
@@ -130,8 +189,6 @@ int main(int argc, char* argv[]) {
       }
       return 1;
     }
-    if(vflag)
-      printf("%s: created directory '%s'\n", program, *argv);
   }
 
   #ifndef _WIN32 // On Unix
