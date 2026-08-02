@@ -5,7 +5,7 @@
 #include <libgen.h>
 
 void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s path\n", argv0);
+  fprintf(stderr, "usage: %s path [...]\n", argv0);
 }
 
 int main(int argc, char* argv[]) {
@@ -14,6 +14,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  printf("%s\n", dirname(argv[1]));
+  while(*++argv)
+    printf("%s\n", dirname(*argv));
   return 0;
 }
