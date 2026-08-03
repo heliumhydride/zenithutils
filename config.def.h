@@ -22,25 +22,19 @@
 //     hello hello
 //   however, this is NON STANDARD behaviour and therefore STRICT_SEQ is on by default
 
-// If 1, print 'c:/path/to/dir' instead of 'c:\path\to\dir' (default 1)
-#define FORCE_MINGW_PATHS 1
+#define FORCE_MINGW_PATHS 1 // print 'c:/path/to/dir' instead of 'c:\path\to\dir'
 #define MAX_LINK_LENGTH 1024 // for readlink
 #define LS_COLOR 1
 
+#define BASE64_IGNORE  " \n"
 // available variants:
 //   sodium_base64_VARIANT_ORIGINAL
 //   sodium_base64_VARIANT_ORIGINAL_NO_PADDING
 //   sodium_base64_VARIANT_URLSAFE
 //   sodium_base64_VARIANT_URLSAFE_NO_PADDING
 #define BASE64_VARIANT sodium_base64_VARIANT_ORIGINAL
-#define BASE64_IGNORE  " \n"
 
-/*
-  Base32 and Base64 alphabets
-*/
-
-#define base32ab "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-#define base64ab "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+#define BASE32_AB "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 
 /*
   customtools options
