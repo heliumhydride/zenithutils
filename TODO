@@ -1,6 +1,6 @@
 -- CODE GOALS --
 
-manpages for basename, dirname, readlink, which, tee, mkdir, rmdir
+manpages for basename, dirname, readlink, which, tee, mkdir, rmdir, shred
 rework: strings, uniq, base64, base32, tr, exedump, tail, tac
 lib/util: get rid of getbytes_stdin, get_filesize, readfile
 coreutils/rmdir: recursive directory destruction (-p)
