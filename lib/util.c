@@ -63,14 +63,6 @@ char* strsep(char** stringp, const char* delim) {
   return rv;
 }
 
-char* getbytes_stdin() {
-  int i = 0;
-  char* pipe = malloc(STDIN_MAX);
-  while(-1 != (pipe[i++] = getchar()));
-    pipe[i-1] = '\0';
-  return pipe;
-}
-
 ssize_t get_filesize(FILE* fileptr) {
   if(fileptr == stdin)
     return -1;
@@ -82,20 +74,6 @@ ssize_t get_filesize(FILE* fileptr) {
   if(fseek(fileptr, 0L, SEEK_SET) != 0)
     return -1;
   return filesize;
-}
-
-int readfile(FILE* fileptr, char* buf) {
-  ssize_t filesize = get_filesize(fileptr);
-  if(filesize == -1)
-    return -1;
-
-  size_t bytes_read = fread(buf, sizeof(char), filesize, fileptr);
-  if(ferror(fileptr) != 0) {
-    return -1;
-  }
-
-  buf[bytes_read++] = '\0'; // terminate buffer string
-  return 0;
 }
 
 int str_is_nan(char* str) {
