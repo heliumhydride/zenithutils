@@ -2,8 +2,11 @@
 
 manpages for basename, dirname, readlink, which, tee, mkdir, rmdir, shred, rm, base64, sha512sum
 rework: strings, uniq, base32, tr, exedump, tail, tac
-lib/util: get rid of getbytes_stdin, get_filesize, readfile
+lib/util: get rid of getbytes_stdin, readfile
 coreutils/rmdir: recursive directory destruction (-p)
+coreutils/rm: -rfi
+coreutils/sha512sum: -btcz
+coreutils/sha256sum
 
 printf + printf manpage
 coreutils/tee: operate line by line
