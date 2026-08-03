@@ -1,7 +1,7 @@
 -- CODE GOALS --
 
-manpages for basename, dirname, readlink, which, tee, mkdir, rmdir, shred, rm
-rework: strings, uniq, base64, base32, tr, exedump, tail, tac
+manpages for basename, dirname, readlink, which, tee, mkdir, rmdir, shred, rm, base64, sha512sum
+rework: strings, uniq, base32, tr, exedump, tail, tac
 lib/util: get rid of getbytes_stdin, get_filesize, readfile
 coreutils/rmdir: recursive directory destruction (-p)
 
@@ -23,7 +23,6 @@ customtools/read: check if variable was set correctly (check if input == getenv(
 customtools/strings.c: look for all individual strings instead of just printable characters by checking null byte after each printable character
 coreutils/users
 procutils/w
-lib/util base64 encoding/decoding
 coreutils/base32 encoding/decoding
 customtools/exedump (support PE, ELF, and APE formats, format+arch autodetection ?, print properties / executable metadata like exe format version, linked libraries (if any), static/dynamic, min os version (PE only), interpreter(ELF only))
 coreutils/uniq: store file into buf, split into lines, then for each line looks if all other lines are the same, then optimize

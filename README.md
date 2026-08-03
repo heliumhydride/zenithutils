@@ -50,7 +50,7 @@ Man pages are always installed by default (this might change in the future)
   - a c99 toolchain such as gcc / mingw / Clang+LLVM / tcc... but not visual c
   - GNU make (BSD make doesn't work)
   - mkdir+cp commands from coreutils/busybox (yes quite ironic i know...)
-  - [libsodium](https://github.com/jedisct1/libsodium) for 'uuidgen', 'rng', 'mktemp' and 'shred'
+  - [libsodium](https://github.com/jedisct1/libsodium) for 'uuidgen', 'rng', 'mktemp', 'shred', 'base64', 'sha512sum'
   - [openpam](https://git.des.dev/openpam/openpam/wiki) / linux-pam for 'su'
   - [zlib](https://zlib.net) / [zlib-ng](https://github.com/zlib-ng/zlib-ng) with zlib compat for 'gzip'
   - [netbsd-curses](https://github.com/sabotage-linux/netbsd-curses) / [ncurses](https://invisible-island.net/ncurses/) for Linux/*BSD OR [pdcurses](https://github.com/wmcbrine/PDCurses) for Windows
