@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
         char* endptr = NULL;
         n_iterations = strtol(optarg, &endptr, 10);
         if(optarg == endptr) {
-          print_error("%s: %s is not a positive integer\n", program, optarg);
+          print_error("%s: %s is not a positive integer", program, optarg);
           return 1;
         }
         break;
@@ -38,12 +38,12 @@ int main(int argc, char* argv[]) {
         uflag = 1;
         break;
       case '?':
-        print_error("%s: option error: unknown option '-%c'\n", program, optopt);
+        print_error("%s: option error: unknown option '-%c'", program, optopt);
         print_usage(program);
         return 1;
         break;
       case ':':
-        print_error("%s: option '-%c' requires an argument\n", program, optopt);
+        print_error("%s: option '-%c' requires an argument", program, optopt);
         print_usage(program);
         return 1;
         break;
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
   FILE* fp = fopen(*argv, "r+");
   if(fp == NULL) {
-    print_error("%s: could not open file %s\n", program, *argv);
+    print_error("%s: could not open file %s", program, *argv);
     return 1;
   }
 
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
   fclose(fp);
   if(uflag) {
     if(unlink(*argv) == -1) {
-      print_error("%s: %s: could not remove file\n", program, *argv);
+      print_error("%s: %s: could not remove file", program, *argv);
       return 1;
     }
   }
