@@ -5,7 +5,7 @@ include ../config.mk
 # [ is a link to test
 # how would 'nohup' work on Windows?
 
-PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty  base64 base32 mkdir rmdir test mknod whoami readlink dos2unix unix2dos head echo tee shred mkfifo cp mv rm sync tail sort touch timeout truncate uniq users nice ln install id hostname groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum sha512sum pr tr chgrp comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv factor nohup numfmt paste pathchk finger realpath stat shuf
+PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty  base64 base32 mkdir rmdir test mknod whoami readlink dos2unix unix2dos head echo tee shred rm mkfifo cp mv sync tail sort touch timeout truncate uniq users nice ln install id hostname groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum sha512sum pr tr chgrp comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv factor nohup numfmt paste pathchk finger realpath stat shuf
 
 all: $(PROGS)
 
@@ -118,3 +118,6 @@ tee: tee.o ../lib/prettyprint.o
 
 shred: shred.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) -lsodium $^ -o ../o/bin/$(PROG_PREFIX)$@
+
+rm: rm.o ../lib/prettyprint.o
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
