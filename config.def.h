@@ -27,6 +27,14 @@
 #define MAX_LINK_LENGTH 1024 // for readlink
 #define LS_COLOR 1
 
+// available variants:
+//   sodium_base64_VARIANT_ORIGINAL
+//   sodium_base64_VARIANT_ORIGINAL_NO_PADDING
+//   sodium_base64_VARIANT_URLSAFE
+//   sodium_base64_VARIANT_URLSAFE_NO_PADDING
+#define BASE64_VARIANT sodium_base64_VARIANT_ORIGINAL
+#define BASE64_IGNORE  " \n"
+
 /*
   Base32 and Base64 alphabets
 */

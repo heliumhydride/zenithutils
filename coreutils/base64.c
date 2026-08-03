@@ -1,76 +1,99 @@
 #define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
-#include <unistd.h>
 #include <string.h>
-
+#include <getopt.h>
+#include <sodium.h>
 #include "../include/prettyprint.h"
 #include "../include/util.h"
-#include "../include/base64.h"
+#include "../config.h"
 
 void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-di] [file]\n", argv0);
+  fprintf(stderr, "usage: %s [-d] [file]\n", argv0);
 }
 
 int main(int argc, char* argv[]) {
-  int opt;
-  int dflag = 0; // decode mode
-  int iflag = 0; // ignore garbage TODO make use of -i
+  char* program = argv[0];
 
-  while((opt = getopt(argc, argv, ":di")) != -1) {
+  if(sodium_init() == -1) {
+    print_error("%s: sodium_init() failed", program);
+    return 1;
+  }
+
+  int dflag = 0; // decode mode
+  int opt;
+  while((opt = getopt(argc, argv, ":d")) != -1) {
     switch(opt) {
       case 'd':
         dflag = 1;
         break;
-      case 'i':
-        iflag = 1;
-        break;
       case '?':
-        print_error("%s: invalid option -- '%c'", argv[0], optopt);
-        print_usage(argv[0]);
+        print_error("%s: invalid option -- '%c'", program, optopt);
+        print_usage(program);
         return 1;
         break;
     }
   }
 
-  char* buf;
-  if(argc == optind || argv[1][0] == '-') { // read from stdin if no file or file is '-'
-    buf = getbytes_stdin();
-    if(NULL == buf) {
-      print_error("%s: getbytes_stdin() failed", argv[0]);
-      return 1;
-    }
-  } else { // We read from a file
-    FILE* fileptr = fopen(argv[optind], "r");
-    if(NULL == fileptr) {
-      print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
-      return 1;
-    }
+  argc -= optind;
+  argv += optind;
 
-    buf = malloc(get_filesize(fileptr)+1);
-    if(readfile(fileptr, buf) == -1) {
-      print_error("%s: read error", argv[0]);
-      return 1;
+  FILE* fp = stdin;
+  if(argc > 0) {
+    if(strcmp(*argv, "-")) {
+      fp = fopen(*argv, "rb");
+      if(fp == NULL) {
+        print_error("%s: %s: could not open file", program, *argv);
+        return 1;
+      }
     }
-    fclose(fileptr);
   }
 
-  char* result = malloc(strlen(buf)*2+2); // just to be safe
-  if(dflag) { // decoding
-    result = base64_decode(buf);
-  } else { // encoding
-    result = base64_encode(buf);
+  char* in;
+  if(fp == stdin) {
+    in = malloc(STDIN_MAX);
+  } else {
+    in = malloc(get_filesize(fp));
   }
 
-  if(NULL == result || _b64_err > 0) {
-    print_error("%s: base64 encoding/decoding failed", argv[0]);
-    return 1;
+  if(in == NULL) {
+    print_error("%s: malloc() failed", program);
+    return 2;
   }
-  
-  printf("%s\n", result);
+
+  size_t i = 0;
+  int c;
+  while((c = fgetc(fp)) != EOF) {
+    in[i] = c;
+    i++;
+  }
+  if(fp != stdin)
+    fclose(fp);
+
+  size_t out_maxlen;
+  if(dflag)
+    out_maxlen = strlen(in);
+  else
+    out_maxlen = sodium_base64_encoded_len(strlen(in), BASE64_VARIANT);
+
+  char* out = malloc(out_maxlen);
+  if(dflag) {
+    size_t outlen;
+    const char* endptr;
+    if(sodium_base642bin((unsigned char*)out, out_maxlen, in, strlen(in), BASE64_IGNORE, &outlen, &endptr, BASE64_VARIANT) == -1) {
+      print_error("decoding failed\n");
+      return 1;
+    }
+  } else {
+    if(sodium_bin2base64(out, out_maxlen, (unsigned char*)in, strlen(in), BASE64_VARIANT) == NULL) {
+      print_error("%s: encoding failed", program);
+      return 1;
+    }
+  }
+
+  puts(out);
+  free(out);
   return 0;
 }
