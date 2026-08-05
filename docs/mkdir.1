@@ -1,0 +1,26 @@
+.TH MKDIR 1 "5th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+mkdir - create a directory
+
+.SH SYNOPSIS
+\fBmkdir\fP [-m mode] [-pv] directory [...]
+
+.SH DESCRIPTION
+\fBmkdir\fP will create a directory / directories specfied via arguments
+
+.SH OPTIONS
+.TP
+\fB-m \fImode\fP
+create the directory with given octal \fImode\fP for permissions. this is ignored on Windows.
+
+.TP
+\fB-v\fP
+verbose mode, say when a directory was created
+
+.TP
+\fB-p\fP
+recursively create parent directories as needed
+
+.SH SEE ALSO
+mkdir(2)

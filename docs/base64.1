@@ -1,0 +1,21 @@
+.TH BASE64 1 "5th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+base64 - encode/decode to/from base64
+
+.SH SYNOPSIS
+\fBbase64\fP [-di] [file]
+
+.SH DESCRIPTIONS
+\fBbase64\fP will encode/decode the given input to/from base64
+If \fI-d\fP is not specified, encode by default, otherwise decode.
+If \fIfile\fP is not specified, work with stdin.
+
+.SH OPTIONS
+.TP
+\fB-d\fP
+decode input
+
+.TP
+\fB-i\fP
+when decoding, ignore non-base64 characters

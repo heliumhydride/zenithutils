@@ -1,0 +1,33 @@
+.TH WHICH 1 "5th of August 2026" "zenithutils" "User Commands"
+
+.SH NAME
+which - find where an executable is in PATH
+
+.SH SYNOPSIS
+\fBwhich\fP [-as] program [...]
+
+.SH DESCRIPTION
+\fBwhich\fP will look in the $PATH environment variable for an executable speciifed via arguments and print its location
+
+.SH OPTIONS
+.TP
+\fB-s\fP
+silent mode, only tell via exit code
+
+.TP
+\fB-a\fP
+print all paths found, not just the first one
+
+.SH EXAMPLES
+.EX
+
+    $ which sh
+    /bin/sh
+
+    $ which -a ls which   #assuming your os is usr-merged
+    /bin/ls
+    /usr/bin/ls
+    /bin/which
+    /usr/bin/which
+.EE
+

@@ -1,0 +1,30 @@
+.TH RM 1 "5th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+rm - remove a file
+
+.SH SYNOPSIS
+\fBrm\fP [-fiRrv] path [...]
+
+.SH DESCRIPTION
+\fBrm\fP removes paths specified in arguments
+
+.SH OPTIONS
+.TP
+\fB-f\fP
+force removal
+
+.TP
+\fB-i\fP
+interactive, ask for each file. ignore if paired with \fI-f\fP
+
+.TP
+\fB-R, -r\fP
+recursively remove a path (so its subfolders, etc...)
+
+.TP
+\fB-v\fP
+verbose, tell whenever a file was removed
+
+.SH SEE ALSO
+unlink(2)

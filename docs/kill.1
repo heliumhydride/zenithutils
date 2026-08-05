@@ -1,4 +1,4 @@
-.TH KILL 1 "31st of July 2026" zenithutils "User Commands"
+.TH KILL 1 "5th of August 2026" zenithutils "User Commands"
 
 .SH NAME
 kill - terminate one or multiple processes
@@ -22,5 +22,9 @@ On Unix, a signal can be specified with the following syntaxes:
 .EE
 
 .SH OPTIONS (unix only)
+.TP
+\fB-SIGNAL\fP
+signal used to terminate the process, can be provided numerically, or via the name of the signal, or via the name of the signal prepended with "SIG"
 
-  \fB-SIGNAL\fP  signal used to terminate the process, can be provided numerically, or via the name of the signal, or via the name of the signal prepended with "SIG"
+.SH SEE ALSO
+kill(2)

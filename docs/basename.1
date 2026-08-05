@@ -1,0 +1,26 @@
+.TH BASENAME 1 "5th of August 2026" "zenithutils" "User Commands"
+
+.SH NAME
+basename - strip dirctory name and suffix from filename
+
+.SH SYNOPSIS
+\fBbasename\fP filename [suffix]
+
+.SH DESCRIPTION
+\fBbasename\fP removes the directory name (everything before the last slash included) and optionally a suffix also (if specified)
+
+.SH EXAMPLES
+.EX
+
+    $ basename /bin/bash
+    bash
+
+    $ basename /usr/include/ctype.h .h
+    ctype
+.EE
+
+.SH OPTIONS
+not applicable
+
+.SH SEE ALSO
+basename(3)

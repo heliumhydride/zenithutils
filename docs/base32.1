@@ -1,0 +1,21 @@
+.TH BASE32 1 "5th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+base32 - encode/decode to/from base32
+
+.SH SYNOPSIS
+\fBbase32\fP [-di] [file]
+
+.SH DESCRIPTIONS
+\fBbase32\fP will encode/decode the given input to/from base32
+If \fI-d\fP is not specified, encode by default, otherwise decode.
+If \fIfile\fP is not specified, work with stdin.
+
+.SH OPTIONS
+.TP
+\fB-d\fP
+decode input
+
+.TP
+\fB-i\fP
+when decoding, ignore non-base32 characters

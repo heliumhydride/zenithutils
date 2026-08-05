@@ -1,0 +1,34 @@
+.TH READLINK 1 "5th of August 2026" "zenithutils" "User Commands"
+
+.SH NAME
+readlink - ask symbolic links where they point to
+
+.SH SYNOPSIS
+\fBreadlink\fP [-fevqn] file [...]
+
+.SH DESCRIPTION
+\fBreadlink\fP takes one or more paths as arguments, and gives where they point to as symlinks
+
+.SH OPTIONS
+.TP
+\fB-f\fP
+canonicalize paths
+
+.TP
+\fB-e\fP
+canonicalize paths and ensure it exists
+
+.TP
+\fB-v\fP
+verbose mode, print error messages
+
+.TP
+\fB-q\fP
+quiet mode, read link but do not print filename (exit code only)
+
+.TP
+\fB-n\fP
+no newline after filename (only applies if there's one argument)
+
+.SH SEE ALSO
+readlink(2)

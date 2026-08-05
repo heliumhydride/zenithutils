@@ -1,0 +1,19 @@
+.TH SHRED 1 "5th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+shred - make files unrecoverable
+
+.SH SYNOPSIS
+\fBshred\fP [-n iterations] [-u] file
+
+.SH DESCRIPTION
+\fBshred\fP overwrites a file with random bytes to make it more difficult for data recovery software to access the original contents
+
+.SH OPTIONS
+.TP
+\fB-n \fIiterations\fP
+overwrite the file \fIiterations\fP times. default is 3
+
+.TP
+\fB-u\fP
+delete file after shredding

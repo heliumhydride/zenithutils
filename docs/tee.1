@@ -1,0 +1,16 @@
+.TH TEE 1 "5th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+tee - copy standard input to standard output and file
+
+.SH SYNOPSIS
+\fBtee\fP [-a] [file] ...
+
+.SH DESCRIPTION
+\fBtee\fP takes input from stdin, and writes it to both stdout and given \fIfile\fP(s)
+If no file is given then just write to stdout
+
+.SH OPTIONS
+.TP
+\fB-a\fP
+append instead of overwriting
