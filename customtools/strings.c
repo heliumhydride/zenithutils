@@ -2,30 +2,42 @@
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <getopt.h>
-#include <unistd.h>
-//#include <string.h>
-
+#include <string.h>
+#include <ctype.h>
 #include "../include/prettyprint.h"
 #include "../include/util.h"
+#include "../config.h"
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-nfo] [-t o|d|x] file [files ...]\n", argv0);
+// TODO radix
+
+void print_usage(char* program) {
+  fprintf(stderr, "usage: %s [-nf] file [files ...]\n", program);
+  // fprintf(stderr, "usage: %s [-nfo] [-t o|d|x] file [files ...]\n", program);
 }
 
 int main(int argc, char* argv[]) {
-  int opt;
+  char* program = argv[0];
 
-  int tflag = 0;
-  char* tmode;
+  long min_strlen = 4;
   int fflag = 0;
+  // int tflag = 0;
+  // char* tmode;
 
-  // TODO: Getopt options
-  while((opt = getopt(argc, argv, ":nt:fo")) != -1) {
+  int opt;
+  while((opt = getopt(argc, argv, ":n:t:fo")) != -1) {
     switch(opt) {
       case 'n':
+        min_strlen = atol(optarg);
+        if(str_is_nan(optarg) || min_strlen <= 0) {
+          print_error("%s: '%s': not a positive integer", program, optarg);
+          return 1;
+        }
         break;
+      case 'f':
+        fflag = 1;
+        break;
+      /*
       case 't':
         tflag = 1;
         tmode = optarg;
@@ -34,63 +46,66 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         break;
-      case 'f':
-        fflag = 1;
-        break;
       case 'o':
         tflag = 1;
         tmode = "o";
         break;
+      */
       case '?':
-        print_error("%s: invalid option -- '%c'", argv[0], optopt);
-        print_usage(argv[0]);
+        print_error("%s: invalid option -- '-%c'", program, optopt);
+        print_usage(program);
+        return 1;
+        break;
+      case ':':
+        print_error("%s: option '-%c' requires an argument", program, optopt);
+        print_usage(program);
         return 1;
         break;
     }
   }
 
-  if(argc==optind) { // no file arg provided
-    print_usage(argv[0]);
+  argc -= optind;
+  argv += optind - 1;
+
+  if(argc == 0) { // no file arg provided
+    print_usage(program);
     return 1;
   }
 
-  FILE* fileptr = fopen(argv[optind], "r");
-
-  if(NULL == fileptr) {
-    print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
-    return 1;
-  }
-
-  size_t filesize = get_filesize(fileptr);
-
-  char* buf = malloc(filesize);
-  if(readfile(fileptr, buf) == -1) {
-    print_error("%s: read error", argv[0]);
-  }
-
-  fclose(fileptr);
-
-  // TODO: Split each string, not characters (to put filename before each line/string via -f option)
-  char* tmp_str;
-  char* str_ptr = tmp_str;
-  char ch; char* chptr = &ch;
-  for(int i = 0; i < filesize; i++) {
-    ch = buf[i];
-    if(is_printable_ch(ch))
-      printf("%c", *chptr);
-    /*
-    while(*chptr++ != '\0' || *chptr != '\n') { // strings will be separated by NULL or LF
-      if(is_printable_ch(*chptr))
-        *str_ptr++ = *chptr;
+  char buf[STRING_MAXSTRLEN] = {0};
+  while(*++argv) {
+    FILE* fp = fopen(*argv, "rb");
+    if(fp == NULL) {
+      fprintf(stderr, "%s: %s: could not open file", program, *argv);
+      return 1;
     }
-    *str_ptr-- = '\0'; // terminate string
-    if(fflag)
-      printf("%s: ", argv[optind]);
-    printf("%s\n", tmp_str);
-    str_ptr = tmp_str; // reset string pointer to be able to repeat the loop
-    */
+
+    long i = 0;
+    int c;
+    while((c = fgetc(fp)) != EOF) {
+      if(isprint(c)) {
+        if(i > min_strlen)
+          putchar(c);
+        else {
+          buf[i] = (char)c;
+          if(i == min_strlen) {
+            if(fflag)
+              printf("%s:  ", *argv);
+            printf("%s", buf);
+          }
+          i++;
+        }
+      } else {
+        memset(buf, 0, STRING_MAXSTRLEN);
+        if(i > min_strlen)
+          putchar('\n');
+        i = 0;
+      }
+    }
+
+    fclose(fp);
   }
 
-  free(buf);
+
   return 0;
 }

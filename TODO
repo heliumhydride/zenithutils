@@ -1,11 +1,12 @@
 -- CODE GOALS --
 
-rework: strings, uniq, tr, exedump, tail, tac
+rework: uniq, tr, exedump, tail, tac
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
 coreutils/sha512sum: -btcz
 coreutils/sha256sum
 
+customtools/strings: radix
 printf + printf manpage
 coreutils/tee: operate line by line
 coreutils/echo: implement -n, -e options
@@ -22,7 +23,6 @@ util-linux/hexdump
 coreutils/groups
 coreutils/test
 customtools/read: check if variable was set correctly (check if input == getenv(variable))
-customtools/strings.c: look for all individual strings instead of just printable characters by checking null byte after each printable character
 coreutils/users
 procutils/w
 coreutils/base32 encoding/decoding
@@ -41,7 +41,6 @@ coreutils/mv
 coreutils/cp
 coreutils/mktemp potential memory safety issues ?
 sharutils/{uuencode,uudecode}
-customtools/strings todos
 coretuils/pwd todos (test on real Windows, not Wine)
 coreutils/which Windows-specific fixes
 coreutils/mkfifo

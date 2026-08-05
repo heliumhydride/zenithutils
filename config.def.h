@@ -41,6 +41,7 @@
 */
 
 #define ASCII_SHOW_OCTAL 0 // 1 to enable
+#define STRING_MAXSTRLEN 256
 #define exedump_col1 "\033[1;34m"
 #define exedump_col2 "\033[1;31m"
 
