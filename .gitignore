@@ -2,3 +2,4 @@ config.h
 o/*
 !o/.gitkeep
 */*.o
+tags

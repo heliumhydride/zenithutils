@@ -1,6 +1,6 @@
 -- CODE GOALS --
 
-manpages for basename, dirname, readlink, which, tee, mkdir, rmdir, shred, rm, base64, sha512sum
+manpages for basename, readlink, which, tee, mkdir, rmdir, shred, rm, base64, sha512sum
 rework: strings, uniq, base32, tr, exedump, tail, tac
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
