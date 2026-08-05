@@ -9,7 +9,7 @@ include ../config.mk
 # fsck on windows: do we just 'execvp("chkdsk.exe", ...);' ?
 
 # TODO note to self: nologin, fdisk, fsck, losetup, mkfs, mkswap, mount, pivot_root are in /sbin.
-PROGS=rev nologin uuidgen lscpu column blkid cal cfdisk chsh col dmesg eject fallocate fdisk findfs fsck getopt hexdump ionice last login losetup lsblk lslogins mcookie mkfs mkswap more mount mountpoint pivot_root renice write whereis swapon swapoff
+PROGS=rev nologin uuidgen hexdump lscpu column blkid cal cfdisk chsh col dmesg eject fallocate fdisk findfs fsck getopt ionice last login losetup lsblk lslogins mcookie mkfs mkswap more mount mountpoint pivot_root renice write whereis swapon swapoff
 
 all: $(PROGS)
 
@@ -26,3 +26,5 @@ nologin: nologin.o
 uuidgen: uuidgen.o ../lib/prettyprint.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
 
+hexdump: hexdump.o ../lib/prettyprint.o
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@

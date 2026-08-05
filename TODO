@@ -14,12 +14,12 @@ wc column alignment
 strip executables
 coreutils/readlink: mingw: readlink() undeclared
 coreutils/ls: basic options like -A
+util-linux/hexdump todos
 coreutils/base32 fixes
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
 remove as much warnings as possible
 util-linux/column
-util-linux/hexdump
 coreutils/groups
 coreutils/test
 customtools/read: check if variable was set correctly (check if input == getenv(variable))
