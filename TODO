@@ -1,7 +1,7 @@
 -- CODE GOALS --
 
-manpages for basename, readlink, which, tee, mkdir, rmdir, shred, rm, base64, sha512sum
-rework: strings, uniq, base32, tr, exedump, tail, tac
+manpages for basename, readlink, which, tee, mkdir, rmdir, shred, rm, base64, sha512sum, base32
+rework: strings, uniq, tr, exedump, tail, tac
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
 coreutils/sha512sum: -btcz
@@ -14,6 +14,7 @@ wc column alignment
 strip executables
 coreutils/readlink: mingw: readlink() undeclared
 coreutils/ls: basic options like -A
+coreutils/base32 fixes
 reconsider implementing read,bg,fg (time will be implemented as dash shell doesn't have it)
 which: extract arguments out of getopt like coreutils/cat (to allow '$ which ls -a sh -s mv' for example)
 remove as much warnings as possible
