@@ -66,6 +66,7 @@ clean:
 
 check:
 	find -name '*.c' -or -name '*.h' | xargs cppcheck --std=c99 --check-level=exhaustive
+	shellcheck -S style -s sh scripts/*
 
 tags:
 	ctags -R --c-kinds=+p --exclude=TODO --exclude=docs --exclude=o --exclude=scripts --exclude=README.md
