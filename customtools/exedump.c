@@ -2,378 +2,465 @@
 #define _POSIX_C_SOURCE 200112L
 
 #include <stdio.h>
-#include <getopt.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-
+#include <unistd.h>
 #include "../include/prettyprint.h"
 #include "../include/util.h"
+#include "../include/elf.h"
+#include "../include/pe.h"
 #include "../config.h"
 
-typedef struct elf_header_struct {
-  unsigned int bitness;
-  unsigned int endianness; // offset 5
-  unsigned int os_abi; // offset 7
-  unsigned int type; // offset 16/17
-  unsigned int arch; // offset 18/19
-} elf_header;
+enum formats {
+  FMT_AUTO,
+  FMT_ELF,
+  FMT_PE,
+  FMT_UNKNOWN
+};
 
-typedef struct pe_header_struct {
-  unsigned int bitness;
-  unsigned int arch;
-  unsigned int image_type;
-  char* subsystems[];
-} pe_header;
+int valid_elf_magic(uint8_t* buf);
+int valid_pe_magic(uint8_t* buf);
+void print_elf_info(uint8_t* buf);
+void print_pe_info(uint8_t* buf);
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-c] [-f auto|elf|pe|ape] executable\n", argv0);
+void print_usage(char* program) {
+  fprintf(stderr, "usage: %s executable [...]\n", program);
 }
 
 int main(int argc, char* argv[]) {
-  char* exefmt = "auto"; // Default to autodetection
-  char* c1 = ""; // Default to no colors
-  char* c2 = ""; // Default to no colors
+  char* program = argv[0];
 
-  int opt;
-  // int cflag = 0;
-  while((opt = getopt(argc, argv, ":f:c")) != -1) {
-    switch(opt) {
-      case 'f': // Specify executable format
-        exefmt = optarg;
-        break;
-      case 'c': // Color output
-        // cflag = 1;
-        c1 = exedump_col1;
-        c2 = exedump_col2;
-        break;
-      case '?':
-        print_error("%s: invalid option -- '%c'", argv[0], optopt);
-        print_usage(argv[0]);
-        return 1;
-        break;
+  int exefmt = FMT_AUTO;
+  if(argc < 2) {
+    print_usage(program);
+    return 1;
+  }
+
+  int multiple_files = 0;
+  if(argc > 2)
+    multiple_files = 1;
+
+  putchar('\n');
+
+  while(*++argv) {
+    FILE* fp = fopen(*argv, "rb");
+    if(fp == NULL) {
+      print_error("%s: %s: could not open file", program, *argv);
+      return 1;
     }
-  }
 
-  if(argc == optind) { // No file arg provided
-    print_usage(argv[0]);
-    return 1;
-  }
-
-  // LOAD FILE INTO MEM
-  FILE* fileptr = fopen(argv[optind], "r");
-  if(NULL == fileptr) {
-    print_error("%s: could not open file \"%s\"", argv[0], argv[optind]);
-    return 1;
-  }
-  
-  //unsigned 
-  char* buf = malloc(get_filesize(fileptr)+1);
-  if(readfile(fileptr, buf) == -1) {
-    print_error("%s: read error", argv[0]);
-  }
-
-  fclose(fileptr);
-  // DONE LOADING FILE INTO MEM
-
-  if(!(strcmp(exefmt, "auto"))) { // Autodetect format
-    if(buf[0] == 0x7f && buf[1] == 'E' && buf[2] == 'L' && buf[3] == 'F') {
-      exefmt = "elf";
-    } else if(buf[0] == 0x4d && buf[1] == 0x5a && buf[2] == 0x90) {
-      exefmt = "pe";
+    // Read entire file into memory
+    size_t filesize = (size_t)get_filesize(fp);
+    uint8_t* buf = malloc(filesize);
+    if(buf == NULL) {
+      print_error("%s: malloc() failed", program);
+      return 2;
     }
-  }
+    fread(buf, filesize, 1, fp);
+    fclose(fp);
 
-  if(!(strcmp(exefmt, "auto"))) { // Autodetect failed
-    print_error("%s: unable to identify executable type", argv[0]);
-    return 1;
-  }
-
-  // TODO: put properties for each executable in a struct (something like struct elf, struct pe, struct ape)
-  // TODO: implement actually portable executable support
-  printf("| %sformat         %s| %s%s%s\n", c1, ANSI_NORM, c2, exefmt, ANSI_NORM);
-
-  size_t i = 0; // we need this later
-  if(!strcmp("elf", exefmt)) {
-    // see https://wiki.osdev.org/ELF#ELF_Header for much easier to read details
-    // see also https://www.sco.com/developers/gabi/latest/ch4.eheader.html
-    // I also manually researched some parts myself (for dynamic loader detection)
-
-    elf_header elf;
-
-    printf("| %sendianness     %s| %s", c1, ANSI_NORM, c2);
-    elf.endianness = !buf[5]; // defaults to 0 (little endian) by itself by the way
-    if(elf.endianness == 0) {
-      printf("little");
-    } else if(elf.endianness == 1) {
-      printf("big");
+    // Autodetect
+    if(valid_elf_magic(buf)) {
+      exefmt = FMT_ELF;
+    } else if(valid_pe_magic(buf)) {
+      exefmt = FMT_PE;
     } else {
-      printf("unknown");
-    }
-    printf("%s\n", ANSI_NORM);
-
-    // printf("| %sbitness        %s| %s%d bit%s\n", c1, ANSI_NORM, c2, buf[4]*32, ANSI_NORM);
-    elf.bitness = (unsigned int)buf[4];
-    printf("| %sbitness        %s| %s", c1, ANSI_NORM, c2);
-    if(elf.bitness <= 3) {
-      printf("%d bit", (int)pow(2, 4 + elf.bitness)); // Given that 2^(4+1) = 32, 2^(4+2) = 64, 2^(4+3) = 128
-      // yes, 128-bit is cursed, but apparently it actually exists. see https://github.com/fpetrot/riscv-gnu-toolchain/blob/docker-128-bit/elf128-spec.md
-    } else {
-      printf("invalid bitness!");
-    }
-    printf("%s\n", ANSI_NORM);
-
-    printf("| %sarchitecture   %s| %s", c1, ANSI_NORM, c2);
-    elf.arch = (unsigned int)buf[18+elf.endianness];
-    switch(elf.arch) {
-      case 0:
-        printf("none");
-        break;
-      case 2:
-        printf("sparc");
-        break;
-      case 3:  // fallthrough
-      case 7:  // fallthrough
-      case 62: // fallthrough
-        printf("x86");
-        break;
-      case 4:
-        printf("m68k");
-        break;
-      case 8:
-        printf("mips");
-        break;
-      case 15:
-        printf("hppa");
-        break;
-      case 20:
-        printf("powerpc");
-        break;
-      case 40:  // fallthrough
-      case 183:
-        printf("arm");
-        break;
-      case 42:
-        printf("superh");
-        break;
-      case 50:
-        printf("ia64");
-        break;
-      case 75:
-        printf("vax");
-        break;
-      case 83:
-        printf("avr");
-        break;
-      case 243:
-        printf("risc-v");
-        break;
-      default:
-        printf("unknown");
-    }
-    printf("%s\n", ANSI_NORM);
-
-    // Same as elf version normally ???
-    //printf("| %shdr version     %s| %s%d%s\n", c1, ANSI_NORM, c2, buf[6], ANSI_NORM);
-
-    // Sources: https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html and https://github.com/file/file/blob/master/magic/Magdir/elf
-    printf("| %sos abi         %s| %s", c1, ANSI_NORM, c2);
-    elf.os_abi = (unsigned int)buf[7];
-    switch(elf.os_abi) {
-      case 0:
-        printf("system v");
-        break;
-      case 1:
-        printf("hp-ux");
-        break;
-      case 2:
-        printf("netbsd");
-        break;
-      case 3:
-        printf("linux");
-        break;
-      case 4:
-        printf("gnu hurd");
-        break;
-      case 5:
-        printf("86open");
-        break;
-      case 6:
-        printf("solaris");
-        break;
-      case 7:
-        printf("aix");
-        break;
-      case 8:
-        printf("irix");
-        break;
-      case 9:
-        printf("freebsd");
-        break;
-      case 10:
-        printf("tru64");
-        break;
-      case 11:
-        printf("modesto");
-        break;
-      case 12:
-        printf("openbsd");
-        break;
-      case 13:
-        printf("openvms");
-        break;
-      case 14:
-        printf("hp_nsk");
-        break;
-      case 15:
-        printf("aros");
-        break;
-      case 16:
-        printf("fenixos");
-        break;
-      case 17:
-        printf("nuxi cloudabi");
-        break;
-      default:
-        printf("unknown");
-    }
-    printf("%s\n", ANSI_NORM);
-
-    printf("| %stype           %s| %s", c1, ANSI_NORM, c2);
-    elf.type = (unsigned int)buf[16+elf.endianness];
-    switch(elf.type) {
-      case 0:
-        printf("none");
-        break;
-      case 1:
-        printf("relocatable");
-        break;
-      case 2:
-        printf("static executable");
-        break;
-      case 3:
-        printf("dynamically linked executable");
-        break;
-      case 4:
-        printf("core dump");
-        break;
-      default:
-        printf("unknown");
-    }
-    printf("%s\n", ANSI_NORM);
-
-    // normally, we should check buf[20+(bitness*3)] (buf[20]/buf[23] depending on endianness), but ELF version is usually 1, so lets go the lazy route...
-    printf("| %self version    %s| %s1%s\n", c1, ANSI_NORM, c2, ANSI_NORM);
-
-    if(elf.type == 3) {
-      printf("| %sdynamic loader %s| %s", c1, ANSI_NORM, c2);
-
-      // TODO: find fool-proof way to get the dynamic elf loader for any elf executable (because there is no specific offset to it, it has to be found someway)
-      size_t ldso_offset;
-      switch(elf.arch) {
-        case 0x3E: // tested on an x86_64 linux glibc executable
-          ldso_offset = 504;
-          break;
-        case 0xB7: // tested on an arm64 linux musl executable
-          ldso_offset = 568;
-          break;
-      }
-
-      i = 0;
-      unsigned char ch;
-      while(ch != '\0') {
-        ch = buf[ldso_offset+i];
-        printf("%c", ch);
-        i++;
-      }
-      printf("%s\n", ANSI_NORM);
+      print_error("%s: could not autodetect format for '%s'", program, *argv);
+      free(buf);
+      return 1;
     }
 
-  } else if(!strcmp("pe", exefmt)) {
-    // TODO: get PE metadata and other properties (bitness, ...)
-    // See https://learn.microsoft.com/en-us/windows/win32/debug/pe-format
-    // I also manually researched some parts myself
-    // TODO: use pe_header struct here
+    if(multiple_files)
+      printf("%s:\n", *argv);
 
-    // pe_header pe;
-
-    printf("| %sarchitecture   %s| %s", c1, ANSI_NORM, c2);
-
-    int coff_offset_begin = 132; // Default x86
-    if(buf[2] == 'x') { // ARM
-      coff_offset_begin = 124;
-    }
-
-    switch(buf[coff_offset_begin]) {
-      case 0x00:
-        printf("any/unknown");
+    // Dispatch accordingly
+    switch(exefmt) {
+      case FMT_ELF:
+        print_elf_info(buf);
         break;
-      case 0x4c:
-        if(buf[coff_offset_begin+1] == 0x01) {
-          printf("x86");
-        } else {
-          printf("unknown");
-        }
-        break;
-      case 0x64:
-        if(buf[coff_offset_begin+1] == 0x86) {
-          printf("x86_64");
-        } else if(buf[coff_offset_begin+1] == 0xaa) {
-          printf("arm64");
-        } else {
-          printf("unknown");
-        }
-        break;
-      case 0xc4:
-        printf("arm32");
-        if(buf[coff_offset_begin+1] == 0x01) {
-          printf(" thumb");
-        }
-        break;
-      default:
-        printf("unknown");
-    }
-    printf("%s\n", ANSI_NORM);
-    
-    printf("| %spe image type  %s| %s", c1, ANSI_NORM, c2);
-    int pe_type = 2; // Default to 2; 0 = PE32, 1 = PE32+, >=2 unknown variant
-    // TODO: detect PE type (PE32, PE32+)
-    for(i = 0; i < strlen(buf); i++) {
-      if(buf[i] == 0xb0) {
-        if(buf[i+1] == 0x01) {
-          pe_type = 0;
-          break;
-        } else if(buf[i+1] == 0x02) {
-          pe_type = 1;
-          break;
-        }
-      }
-    }
-    printf("pe32");
-    if(pe_type == 1)
-      printf("+");
-    if(pe_type > 1)
-      printf(" unknown variant");
-
-    i = 0;
-    for(i = 0; i < strlen(buf); i++) {
-      if(buf[i] == 'P' && buf[i+1] == 'E' && ((buf[i+2] == buf[i+3]) == '\0'))
+      case FMT_PE:
+        print_pe_info(buf);
         break;
     }
-    int pe_hdr_offset = i;
-    printf("%s\n", ANSI_NORM);
 
-    printf("| %ssubsystems     %s| %s", c1, ANSI_NORM, c2);
-    // TODO: detect subsystems (win32 console, win32 gui, native(nt mode / driver), efi, dll console, dll gui, ...)
-    printf("%s\n", ANSI_NORM);
-
+    puts(ANSI_NORM);
+    free(buf);
   }
-
-  // TODO: get program entry,header table offsets ...
-  // TODO: get list of linked libraries (if any) (dynamic executables only)
-
-  // free buffer when done
-  free(buf);
   return 0;
+}
+
+int valid_elf_magic(uint8_t* buf) {
+  char magic_buf[5];
+  memcpy(magic_buf, buf, 4);
+  magic_buf[4] = '\0';
+  return(!strcmp(ELF_MAGIC, magic_buf));
+}
+
+int valid_pe_magic(uint8_t* buf) {
+  DosStub_t* dos_stub = (DosStub_t*)buf;
+  if(dos_stub->Magic != 0x5a4d)
+    return 0;
+
+  uintptr_t pe_offset = dos_stub->e_lfanew;
+  PeHeader_t* pe = (PeHeader_t*)(buf + pe_offset);
+
+  return(pe->Magic == 0x00004550);
+}
+
+void print_elf_info(uint8_t* buf) {
+  puts(EXEDUMP_COLOR1"  Format:       "EXEDUMP_COLOR2"ELF");
+
+  Elf64_Ehdr* elf = (Elf64_Ehdr*)buf;
+  printf(EXEDUMP_COLOR1"  Bitness:      "EXEDUMP_COLOR2);
+  switch(elf->e_ident[4]) {
+    case ELF_BITS_32:
+      puts("32");
+      break;
+    case ELF_BITS_64:
+      puts("64");
+      break;
+    default:
+      puts("?");
+  }
+
+  printf(EXEDUMP_COLOR1"  OS:           "EXEDUMP_COLOR2);
+  switch(elf->e_ident[7]) {
+    case ABI_SYSV:
+      puts("SysV");
+      break;
+    case ABI_HPUX:
+      puts("HP-UX");
+      break;
+    case ABI_NETBSD:
+      puts("NetBSD");
+      break;
+    case ABI_LINUX:
+      puts("Linux");
+      break;
+    case ABI_HURD:
+      puts("GNU/Hurd");
+      break;
+    case ABI_86OPEN:
+      puts("86Open");
+      break;
+    case ABI_SOLARIS:
+      puts("Solaris");
+      break;
+    case ABI_AIX:
+      puts("AIX");
+      break;
+    case ABI_IRIS:
+      puts("IRIS");
+      break;
+    case ABI_FREEBSD:
+      puts("FreeBSD");
+      break;
+    case ABI_TRU64:
+      puts("Tru64");
+      break;
+    case ABI_MODESTO:
+      puts("Modesto");
+      break;
+    case ABI_OPENBSD:
+      puts("OpenBSD");
+      break;
+    default:
+      puts("?");
+  }
+
+  printf(EXEDUMP_COLOR1"  Machine:      "EXEDUMP_COLOR2);
+  switch(elf->e_machine) {
+    case EM_NONE:
+      puts("none");
+      break;
+    case EM_386:
+      puts("i386");
+      break;
+    case EM_PPC:   // fall
+    case EM_PPC64:
+      puts("powerpc");
+      break;
+    case EM_ARM:
+      puts("arm");
+      break;
+    case EM_X86_64:
+      puts("x86_64");
+      break;
+    case EM_AVR:
+      puts("avr");
+      break;
+    case EM_AARCH64:
+      puts("aarch64");
+      break;
+    case EM_RISCV:
+      puts("risc-v");
+      break;
+    case EM_LOONG:
+      puts("loongarch");
+      break;
+    default:
+      puts("unknown");
+  }
+
+  int is_dyn_and_exec = 0;
+  char* interp;
+  Elf64_Phdr* phdr = (Elf64_Phdr*)(buf + elf->e_phoff);
+  for(int i = 0; i < elf->e_phnum; i++) {
+    if(phdr->p_type == 3) {
+      is_dyn_and_exec = 1;
+      interp = (char*)(buf + phdr->p_offset);
+    }
+    phdr = (Elf64_Phdr*)((uint8_t*)phdr + elf->e_phentsize);
+  }
+
+  printf(EXEDUMP_COLOR1"  Type:         "EXEDUMP_COLOR2);
+  switch(elf->e_type) {
+    case ET_REL:
+      puts("Relocatable");
+      break;
+    case ET_EXEC:
+      puts("Executable");
+      break;
+    case ET_DYN:
+      if(is_dyn_and_exec)
+        puts("Dynamic executable");
+      else
+        puts("Shared library");
+      break;
+    case ET_CORE:
+      puts("Core dump");
+      break;
+  }
+
+  if(is_dyn_and_exec)
+    printf(EXEDUMP_COLOR1"  Interpreter:  "EXEDUMP_COLOR2"%s\n", interp);
+}
+
+void print_pe_info(uint8_t* buf) {
+  puts(EXEDUMP_COLOR1"  Format:             "EXEDUMP_COLOR2"PE");
+
+  DosStub_t* dos_stub = (DosStub_t*)buf;
+  uintptr_t pe_offset = dos_stub->e_lfanew;
+  PeHeader_t* pe = (PeHeader_t*)(buf + pe_offset);
+
+  printf(EXEDUMP_COLOR1"  Machine:            "EXEDUMP_COLOR2);
+  switch(pe->Machine) {
+    case IMAGE_FILE_MACHINE_UNKNOWN:
+      puts("N/A");
+      break;
+    case IMAGE_FILE_MACHINE_ALPHA:
+      puts("Alpha 32");
+      break;
+    case IMAGE_FILE_MACHINE_ALPHA64:
+      puts("Alpha 64");
+      break;
+    case IMAGE_FILE_MACHINE_AM33:
+      puts("Matsushita AM33");
+      break;
+    case IMAGE_FILE_MACHINE_AMD64:
+      puts("AMD64");
+      break;
+    case IMAGE_FILE_MACHINE_ARM:
+      puts("ARM");
+      break;
+    case IMAGE_FILE_MACHINE_ARM64:
+      puts("ARM64");
+      break;
+    case IMAGE_FILE_MACHINE_ARM64EC:
+      puts("ARM64 (Emulation Compatible)");
+      break;
+    case IMAGE_FILE_MACHINE_ARM64X:
+      puts("Combined ARM64/ARM64EC");
+      break;
+    case IMAGE_FILE_MACHINE_ARMNT:
+      puts("ARM (Thumb-2)");
+      break;
+    case IMAGE_FILE_MACHINE_EBC:
+      puts("EFI Byte code");
+      break;
+    case IMAGE_FILE_MACHINE_I386:
+      puts("Intel x86");
+      break;
+    case IMAGE_FILE_MACHINE_IA64:
+      puts("Intel Itanium 64");
+      break;
+    case IMAGE_FILE_MACHINE_M32R:
+      puts("Mitsubishi M32R");
+      break;
+    case IMAGE_FILE_MACHINE_MIPS16:
+      puts("MIPS 16");
+      break;
+    case IMAGE_FILE_MACHINE_MIPSFPU:
+      puts("MIPS (w/ FPU)");
+      break;
+    case IMAGE_FILE_MACHINE_MIPSFPU16:
+      puts("MIPS16 (w/ FPU)");
+      break;
+    case IMAGE_FILE_MACHINE_POWERPC:
+      puts("PowerPC");
+      break;
+    case IMAGE_FILE_MACHINE_POWERPCFP:
+      puts("PowerPC (w/ float support)");
+      break;
+    case IMAGE_FILE_MACHINE_R4000:
+      puts("MIPS little endian");
+      break;
+    case IMAGE_FILE_MACHINE_RISCV32:
+      puts("RISC-V 32");
+      break;
+    case IMAGE_FILE_MACHINE_RISCV64:
+      puts("RISC-V 64");
+      break;
+    case IMAGE_FILE_MACHINE_RISCV128 :
+      puts("RISC-V 128");
+      break;
+    case IMAGE_FILE_MACHINE_SH3:
+      puts("Hitachi SH3");
+      break;
+    case IMAGE_FILE_MACHINE_SH3DSP:
+      puts("Hitachi SH3 DSP");
+      break;
+    case IMAGE_FILE_MACHINE_SH4:
+      puts("Hitachi SH4");
+      break;
+    case IMAGE_FILE_MACHINE_SH5:
+      puts("Hitachi SH5");
+      break;
+    case IMAGE_FILE_MACHINE_THUMB:
+      puts("Thumb");
+      break;
+    case IMAGE_FILE_MACHINE_WCEMIPSV2:
+      puts("MIPS little endian WCE v2");
+      break;
+    default:
+      puts("Unknown");
+  }
+
+  printf(EXEDUMP_COLOR1"  Number of Sectors:  "EXEDUMP_COLOR2"%d\n", pe->NumberOfSections);
+
+  printf(EXEDUMP_COLOR1"  Characteristics:    "EXEDUMP_COLOR2);
+  if(pe->Characteristics & IMAGE_FILE_RELOCS_STRIPPED)
+    printf("relocs_stripped ");
+  if(pe->Characteristics & IMAGE_FILE_EXECUTABLE_IMAGE)
+    printf("executable ");
+  if(pe->Characteristics & IMAGE_FILE_LARGE_ADDRESS_AWARE)
+    printf("large_address_aware ");
+  if(pe->Characteristics & IMAGE_FILE_32BIT_MACHINE)
+    printf("32bit ");
+  if(pe->Characteristics & IMAGE_FILE_DEBUG_STRIPPED)
+    printf("debug_stripped ");
+  if(pe->Characteristics & IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP)
+    printf("removable_run_from_swap ");
+  if(pe->Characteristics & IMAGE_FILE_NET_RUN_FROM_SWAP)
+    printf("net_run_from_swap ");
+  if(pe->Characteristics & IMAGE_FILE_SYSTEM)
+    printf("system ");
+  if(pe->Characteristics & IMAGE_FILE_DLL)
+    printf("dll ");
+  if(pe->Characteristics & IMAGE_FILE_UP_SYSTEM_ONLY)
+    printf("uniprocessor_only ");
+  putchar('\n');
+
+  int is_pe_plus = 0;
+  Pe32OptHeader_t* pe_opt = (Pe32OptHeader_t*)((uint8_t*)pe + sizeof(PeHeader_t));
+  Pe32PlusOptHeader_t* peplus_opt;
+  if(pe_opt->Magic == 0x20b) {
+    is_pe_plus = 1;
+    peplus_opt = (Pe32PlusOptHeader_t*)pe_opt;
+  }
+
+  printf(EXEDUMP_COLOR1"  PE Type:            "EXEDUMP_COLOR2"PE32%c\n", is_pe_plus ? '+' : ' ');
+
+  printf(EXEDUMP_COLOR1"  Entry at:           "EXEDUMP_COLOR2);
+  if(is_pe_plus)
+    printf("0x%x", peplus_opt->AddressOfEntryPoint);
+  else
+    printf("0x%x", pe_opt->AddressOfEntryPoint);
+  putchar('\n');
+
+  printf(EXEDUMP_COLOR1"  OS Version:         "EXEDUMP_COLOR2);
+  if(is_pe_plus) {
+    printf("%d.%d",
+      peplus_opt->MajorOperatingSystemVersion,
+      peplus_opt->MinorOperatingSystemVersion
+    );
+  }
+  else {
+    printf("%d.%d",
+      pe_opt->MajorOperatingSystemVersion,
+      pe_opt->MinorOperatingSystemVersion
+    );
+  }
+  putchar('\n');
+
+  printf(EXEDUMP_COLOR1"  Subsystem:          "EXEDUMP_COLOR2);
+  uint16_t subsystem;
+  if(is_pe_plus)
+    subsystem = peplus_opt->Subsystem;
+  else
+    subsystem = pe_opt->Subsystem;
+  switch(subsystem) {
+    case IMAGE_SUBSYSTEM_NATIVE:
+      puts("NT Native");
+      break;
+    case IMAGE_SUBSYSTEM_WINDOWS_GUI:
+      puts("Win32 GUI");
+      break;
+    case IMAGE_SUBSYSTEM_WINDOWS_CUI:
+      puts("Win32 Console");
+      break;
+    case IMAGE_SUBSYSTEM_OS2_CUI:
+      puts("OS/2 Console");
+      break;
+    case IMAGE_SUBSYSTEM_POSIX_CUI:
+      puts("POSIX Console");
+      break;
+    case IMAGE_SUBSYSTEM_NATIVE_WINDOWS:
+      puts("Windows 9x VXD");
+      break;
+    case IMAGE_SUBSYSTEM_WINDOWS_CE_GUI:
+      puts("Windows CE");
+      break;
+    case IMAGE_SUBSYSTEM_EFI_APPLICATION:
+      puts("EFI Application");
+      break;
+    case IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER:
+      puts("EFI Driver (w/ Boot services)");
+      break;
+    case IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER:
+      puts("EFI Driver (w/ Runtime services)");
+      break;
+    case IMAGE_SUBSYSTEM_EFI_ROM:
+      puts("EFI ROM");
+      break;
+    case IMAGE_SUBSYSTEM_XBOX:
+      puts("XBOX");
+      break;
+    case IMAGE_SUBSYSTEM_WINDOWS_BOOT_APPLICATION:
+      puts("Windows boot application");
+      break;
+    default:
+      puts("Unknown");
+  }
+
+  printf(EXEDUMP_COLOR1"  Subsystem Version:  "EXEDUMP_COLOR2);
+  if(is_pe_plus) {
+    printf("%d.%d",
+      peplus_opt->MajorSubsystemVersion,
+      peplus_opt->MinorSubsystemVersion
+    );
+  } else {
+    printf("%d.%d",
+      pe_opt->MajorSubsystemVersion,
+      pe_opt->MinorSubsystemVersion
+    );
+  }
+  putchar('\n');
+
+  printf(EXEDUMP_COLOR1"  Checksum:           "EXEDUMP_COLOR2);
+  if(is_pe_plus)
+    printf("0x%08x", peplus_opt->CheckSum);
+  else
+    printf("0x%08x", pe_opt->CheckSum);
+  putchar('\n');
 }

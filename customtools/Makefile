@@ -14,7 +14,7 @@ clear: clear.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 exedump: exedump.o ../lib/prettyprint.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@ -lm
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 read: read.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@

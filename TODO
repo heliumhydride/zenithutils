@@ -1,6 +1,7 @@
 -- CODE GOALS --
 
 rework: uniq, tr, exedump, tail, tac
+customtools/exedump + include/elf.h: work with ELF32 binaries
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
 coreutils/sha512sum: -btcz
