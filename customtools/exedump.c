@@ -110,9 +110,13 @@ int valid_pe_magic(uint8_t* buf) {
 void print_elf_info(uint8_t* buf) {
   puts(EXEDUMP_COLOR1"  Format:       "EXEDUMP_COLOR2"ELF");
 
-  Elf64_Ehdr* elf = (Elf64_Ehdr*)buf;
+  Elf64_Ehdr* elf64 = (Elf64_Ehdr*)buf;
+  Elf32_Ehdr* elf32 = (Elf32_Ehdr*)buf;
+
+  // For the elf identifiers, we can assume an architecture, as both are the same size in elf32 and elf64
   printf(EXEDUMP_COLOR1"  Bitness:      "EXEDUMP_COLOR2);
-  switch(elf->e_ident[4]) {
+  uint8_t bitness = elf32->e_ident[4]; // needed for later
+  switch(bitness) {
     case ELF_BITS_32:
       puts("32");
       break;
@@ -123,8 +127,21 @@ void print_elf_info(uint8_t* buf) {
       puts("?");
   }
 
+  printf(EXEDUMP_COLOR1"  Endianness:   "EXEDUMP_COLOR2);
+  uint8_t endianness = elf32->e_ident[5]; // also needed for later
+  switch(endianness) {
+    case ELF_LSB:
+      puts("Little (LSB)");
+      break;
+    case ELF_MSB:
+      puts("Big (MSB)");
+      break;
+    default:
+      puts("?");
+  }
+
   printf(EXEDUMP_COLOR1"  OS:           "EXEDUMP_COLOR2);
-  switch(elf->e_ident[7]) {
+  switch(elf32->e_ident[7]) {
     case ABI_SYSV:
       puts("SysV");
       break;
@@ -164,57 +181,136 @@ void print_elf_info(uint8_t* buf) {
     case ABI_OPENBSD:
       puts("OpenBSD");
       break;
+    case ABI_ARM_AEABI:
+      puts("ARM EABI");
+      break;
+    case ABI_ARM:
+      puts("ARM");
+      break;
+    case ABI_STANDALONE:
+      puts("Standalone");
+      break;
     default:
       puts("?");
   }
 
   printf(EXEDUMP_COLOR1"  Machine:      "EXEDUMP_COLOR2);
-  switch(elf->e_machine) {
+  uint16_t machine = elf64->e_machine;
+  if(bitness == ELF_BITS_32) machine = elf32->e_machine;
+  if(endianness == ELF_MSB)  machine = reverse_end16(machine);
+  switch(machine) {
     case EM_NONE:
-      puts("none");
+      puts("None");
+      break;
+    case EM_SPARC:
+      puts("Sparc");
       break;
     case EM_386:
       puts("i386");
       break;
+    case EM_68K:
+      puts("Motorola M68K");
+      break;
+    case EM_MIPS:
+      puts("MIPS");
+      break;
+    case EM_MIPS_RS3_LE:
+      puts("MIPS Little Endian");
+      break;
     case EM_PPC:   // fall
     case EM_PPC64:
-      puts("powerpc");
+      puts("PowerPC");
+      break;
+    case EM_S390:
+      puts("IBM S390");
       break;
     case EM_ARM:
-      puts("arm");
+      puts("ARM");
+      break;
+    case EM_SH:
+      puts("Hitachi SH4");
+      break;
+    case EM_SPARCV9:
+      puts("Sparc V9");
+      break;
+    case EM_IA_64:
+      puts("Itanium 64");
       break;
     case EM_X86_64:
       puts("x86_64");
       break;
     case EM_AVR:
-      puts("avr");
+      puts("AVR");
       break;
     case EM_AARCH64:
-      puts("aarch64");
+      puts("AArch64");
+      break;
+    case EM_CUDA:
+      puts("Nvidia CUDA");
+      break;
+    case EM_AMDGPU:
+      puts("AMD GPU");
       break;
     case EM_RISCV:
-      puts("risc-v");
+      puts("RISC-V");
       break;
     case EM_LOONG:
-      puts("loongarch");
+      puts("Loongarch");
       break;
     default:
-      puts("unknown");
+      puts("Unknown");
   }
 
+  uint32_t phoff32 = elf32->e_phoff;
+  uint64_t phoff64 = elf64->e_phoff;
+  if(endianness == ELF_MSB) {
+    phoff32 = reverse_end32(phoff32);
+    phoff64 = reverse_end64(phoff64);
+  }
+  Elf32_Phdr* phdr32 = (Elf32_Phdr*)(buf + phoff32);
+  Elf64_Phdr* phdr64 = (Elf64_Phdr*)(buf + phoff64);
+
+  uint16_t phnum = elf64->e_phnum;
+  if(bitness == ELF_BITS_32) phnum = elf32->e_phnum;
+  if(endianness == ELF_MSB)  phnum = reverse_end16(phnum);
+  printf(EXEDUMP_COLOR1"  Headers:      "EXEDUMP_COLOR2"%d\n", phnum);
+
   int is_dyn_and_exec = 0;
-  char* interp;
-  Elf64_Phdr* phdr = (Elf64_Phdr*)(buf + elf->e_phoff);
-  for(int i = 0; i < elf->e_phnum; i++) {
-    if(phdr->p_type == 3) {
-      is_dyn_and_exec = 1;
-      interp = (char*)(buf + phdr->p_offset);
+  char* interp = NULL;
+  for(int i = 0; i < phnum; i++) {
+    uint32_t type = phdr64->p_type;
+    if(bitness == ELF_BITS_32) type = phdr32->p_type;
+    if(endianness == ELF_MSB)  type = reverse_end32(type);
+
+    uint32_t offset32 = phdr32->p_offset;
+    uint64_t offset64 = phdr64->p_offset;
+    if(endianness == ELF_MSB) {
+      if(bitness == ELF_BITS_32)
+        offset32 = reverse_end32(offset32);
+      else
+        offset64 = reverse_end64(offset64);
     }
-    phdr = (Elf64_Phdr*)((uint8_t*)phdr + elf->e_phentsize);
+
+    if(type == 3) {
+      is_dyn_and_exec = 1;
+      if(bitness == ELF_BITS_32)
+        interp = (char*)(buf + offset32);
+      else
+        interp = (char*)(buf + offset64);
+    }
+
+    uint16_t phentsize = elf64->e_phentsize;
+    if(bitness == ELF_BITS_32) phentsize = elf32->e_phentsize;
+    if(endianness == ELF_MSB)  phentsize = reverse_end16(phentsize);
+    phdr64 = (Elf64_Phdr*)((uint8_t*)phdr64 + phentsize);
+    phdr32 = (Elf32_Phdr*)((uint8_t*)phdr32 + phentsize);
   }
 
   printf(EXEDUMP_COLOR1"  Type:         "EXEDUMP_COLOR2);
-  switch(elf->e_type) {
+  uint16_t type = elf64->e_type;
+  if(bitness == ELF_BITS_32) type = elf32->e_type;
+  if(endianness == ELF_MSB)  type = reverse_end16(type);
+  switch(type) {
     case ET_REL:
       puts("Relocatable");
       break;
@@ -230,6 +326,8 @@ void print_elf_info(uint8_t* buf) {
     case ET_CORE:
       puts("Core dump");
       break;
+    default:
+      puts("Unknown");
   }
 
   if(is_dyn_and_exec)

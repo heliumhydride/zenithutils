@@ -153,3 +153,21 @@ int is_mode_t(char* mode_str) {
   return state;
 }
 
+uint16_t reverse_end16(uint16_t val) {
+  return (val << 8) | (val >> 8);
+}
+
+uint32_t reverse_end32(uint32_t val) {
+  return ((val & 0x000000FF) << 24) |
+         ((val & 0x0000FF00) << 8)  |
+         ((val & 0x00FF0000) >> 8)  |
+         ((val & 0xFF000000) >> 24);
+}
+
+uint64_t reverse_end64(uint64_t val) {
+  val = ((val << 8) & 0xFF00FF00FF00FF00ULL) | 
+        ((val >> 8) & 0x00FF00FF00FF00FFULL);
+  val = ((val << 16) & 0xFFFF0000FFFF0000ULL) | 
+        ((val >> 16) & 0x0000FFFF0000FFFFULL);
+  return (val << 32) | (val >> 32);
+}

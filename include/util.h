@@ -18,4 +18,9 @@ int str_is_nan(char* str);
 int is_printable_ch(char ch);
 void mingw_path(char* out, char* path);
 int is_mode_t(char* mode_str);
+
+uint16_t reverse_end16(uint16_t val);
+uint32_t reverse_end32(uint32_t val);
+uint64_t reverse_end64(uint64_t val);
+
 #endif
