@@ -1,6 +1,7 @@
 -- CODE GOALS --
 
-rework: uniq, tr, exedump, tail, tac
+rework: uniq, tr, tail, tac
+manpage for exedump
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
 coreutils/sha512sum: -btcz
