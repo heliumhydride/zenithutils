@@ -1,47 +1,63 @@
 #define _XOPEN_SOURCE   600
 #define _POSIX_C_SOURCE 200112L
 
-/// Useful includes
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
-//#include <getopt.h>
-#include <unistd.h>
-#include <string.h>
+#define STB_DS_IMPLEMENTATION
+#include "../include/stb_ds.h"
 
 #include "../include/prettyprint.h"
 #include "../include/util.h"
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [file ...]\n", argv0);
-}
+// void print_usage(char* program);
 
 int main(int argc, char* argv[]) {
-  ssize_t filesize;
-  FILE* fileptr;
-  char* program = argv[0];
+  char* program = 0;
 
+  if(argc < 2) {
+    argv--;
+    argv[1] = "-";
+  }
+
+  FILE* fp;
   while(*++argv) {
-    if(argc <= 1) {
-      fileptr = stdin;
-      filesize = STDIN_MAX;
-    } else {
-      fileptr = fopen(*argv, "r");
-      if(NULL == fileptr) {
-        print_error("%s: could not open file \"%s\"", program, *argv);
-        return 1;
+    fp = stdin;
+    if(strcmp(*argv, "-"))
+      fp = fopen(*argv, "r");
+
+    if(fp == NULL) {
+      print_error("%s: %s: could not open file", program, *argv);
+      return 1;
+    }
+
+    // compile the list of lines
+    char** line_list = NULL;
+    char* line = NULL;
+    size_t cap = 0;
+    while(getline(&line, &cap, fp) != -1) {
+      char* line2 = malloc(strlen(line) + 1);
+      if(line2 == NULL) {
+        print_error("%s: malloc() failed", program);
+        return 2;
       }
-      filesize = get_filesize(fileptr);
+      strcpy(line2, line);
+      stbds_arrput(line_list, line2);
     }
-    // TODO get amount of lines in file (by using readfile to get each bytes) and take function size_t count_lines(const char* str) from coreutils/wc.c, make an array of char* with the size of the number of lines in the buffer and store each line in reverse from the buffer, then print this array
-    char* line = malloc(filesize);
-    while((line = fgets(line, filesize, fileptr)) != NULL) {
-      line[strlen(line)-1] = '\0'; // strip '\n' off the line
-      for(size_t i = 0; i <= strlen(line); i++)
-        printf("%c", line[i]);
-      printf("\n");
-    }
-    fclose(fileptr);
-    free(line);
+    if(fp != stdin)
+      fclose(fp);
+
+    // reverse the lines
+    char** rline_list = NULL;
+    for(size_t i = 0; i < stbds_arrlenu(line_list); i++)
+      stbds_arrins(rline_list, 0, line_list[i]);
+
+    // print the reversed list
+    for(size_t i = 0; i < stbds_arrlenu(rline_list); i++)
+      printf("%s", rline_list[i]);
+
+    stbds_arrfree(line_list);
+    stbds_arrfree(rline_list);
   }
   return 0;
 }
