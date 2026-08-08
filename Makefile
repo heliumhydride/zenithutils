@@ -62,13 +62,16 @@ install: init_outdir
 	PREFIX="$(PREFIX)" DESTDIR="$(DESTDIR)" scripts/install.sh
 
 clean:
-	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o config.h
+	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
+
+distclean: clean
+	rm -f config.h
 
 check:
-	find -name '*.c' -or -name '*.h' | xargs cppcheck --std=c99 --check-level=exhaustive
+	find -name '*.c' -or -name '*.h' | xargs cppcheck --std=c99 --check-level=exhaustive >/dev/null
 	shellcheck -S style -s sh scripts/*
 
 tags:
 	ctags -R --c-kinds=+p --exclude=TODO --exclude=docs --exclude=o --exclude=scripts --exclude=README.md
 
-.PHONY: clean all init_outdir install check tags
+.PHONY: clean distclean init_outdir install check tags
