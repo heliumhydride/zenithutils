@@ -1,6 +1,6 @@
 include ../config.mk
 
-PROGS=ascii clear exedump read rng strings time usleep zenithutils_version
+PROGS=ascii clear exedump read rng strings time usleep wpath zenithutils_version
 
 all: $(PROGS)
 
@@ -29,6 +29,9 @@ time: time.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 usleep: usleep.o ../lib/prettyprint.o ../lib/util.o
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+
+wpath: wpath.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 zenithutils_version: zenithutils_version.o
