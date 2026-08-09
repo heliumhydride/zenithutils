@@ -7,7 +7,7 @@ coreutils/rm: -rfi
 coreutils/sha512sum: -btcz
 coreutils/sha256sum
 
-customtools/strings: radix
+findutils/xargs todos
 printf + printf manpage
 coreutils/tee: operate line by line
 coreutils/echo: implement -n, -e options
@@ -43,7 +43,6 @@ sharutils/{uuencode,uudecode}
 coretuils/pwd todos (test on real Windows, not Wine)
 coreutils/which Windows-specific fixes
 coreutils/mkfifo
-findutils/xargs
 coreutils/dd (On Windows, provide /dev/zero, /dev/null, /dev/urandom, /dev/random emulation and possibly emulate /dev/sdXY)
 procutils/sysctl (On Windows, do we provide the same linux interface translated to windows or do we create a command-line alternative to the control panel ?)
 coreutils/env
