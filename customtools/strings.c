@@ -9,11 +9,8 @@
 #include "../include/util.h"
 #include "../config.h"
 
-// TODO radix
-
 void print_usage(char* program) {
-  fprintf(stderr, "usage: %s [-nf] file [files ...]\n", program);
-  // fprintf(stderr, "usage: %s [-nfo] [-t o|d|x] file [files ...]\n", program);
+  fprintf(stderr, "usage: %s [-nfo] [-t o|d|x] file [files ...]\n", program);
 }
 
 int main(int argc, char* argv[]) {
@@ -21,14 +18,14 @@ int main(int argc, char* argv[]) {
 
   long min_strlen = 4;
   int fflag = 0;
-  // int tflag = 0;
-  // char* tmode;
+  int tflag = 0;
+  char tmode;
 
   int opt;
   while((opt = getopt(argc, argv, ":n:t:fo")) != -1) {
     switch(opt) {
       case 'n':
-        min_strlen = atol(optarg);
+        min_strlen = atol(optarg) - 1;
         if(str_is_nan(optarg) || min_strlen <= 0) {
           print_error("%s: '%s': not a positive integer", program, optarg);
           return 1;
@@ -37,20 +34,25 @@ int main(int argc, char* argv[]) {
       case 'f':
         fflag = 1;
         break;
-      /*
       case 't':
         tflag = 1;
-        tmode = optarg;
-        if(tmode == NULL) {
-          print_error("%s option '-t' requires an argument", argv[0]);
-          return 1;
+        tmode = optarg[0];
+        switch(tmode) {
+          case 'x': // fall
+          case 'd': // fall
+          case 'o': // fall
+            break;
+          default:
+            print_error("%s: invalid radix '%s'", program, optarg);
+            print_usage(program);
+            return 1;
+            break;
         }
         break;
       case 'o':
         tflag = 1;
-        tmode = "o";
+        tmode = 'o';
         break;
-      */
       case '?':
         print_error("%s: invalid option -- '-%c'", program, optopt);
         print_usage(program);
@@ -81,6 +83,7 @@ int main(int argc, char* argv[]) {
     }
 
     long i = 0;
+    long offset = 0;
     int c;
     while((c = fgetc(fp)) != EOF) {
       if(isprint(c)) {
@@ -91,6 +94,19 @@ int main(int argc, char* argv[]) {
           if(i == min_strlen) {
             if(fflag)
               printf("%s:  ", *argv);
+            if(tflag) {
+              switch(tmode) {
+                case 'x':
+                  printf("%lx ", offset - i);
+                  break;
+                case 'd':
+                  printf("%ld ", offset - i);
+                  break;
+                case 'o':
+                  printf("%lo ", offset - i);
+                  break;
+              }
+            }
             printf("%s", buf);
           }
           i++;
@@ -101,11 +117,9 @@ int main(int argc, char* argv[]) {
           putchar('\n');
         i = 0;
       }
+      offset++;
     }
-
     fclose(fp);
   }
-
-
   return 0;
 }

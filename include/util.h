@@ -11,9 +11,7 @@
 ssize_t getdelim(char** lineptr, size_t* n, int delim, FILE* fp);
 ssize_t getline(char** lineptr, size_t* n, FILE* fp);
 char* strsep(char** stringp, const char* delim);
-char* getbytes_stdin();
 ssize_t get_filesize(FILE* fileptr);
-int readfile(FILE* fileptr, char* buf);
 int str_is_nan(char* str);
 int is_printable_ch(char ch);
 void mingw_path(char* out, char* path);
