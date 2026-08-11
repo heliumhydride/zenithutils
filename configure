@@ -36,7 +36,7 @@ check_installed() {
 
 check_lib() {
   echo "Checking for lib${1} (-l$1) ..."
-  echo 'int main(void){}' | "$CC" -xc - -l"$1" >/dev/null 2>&1 || error "Library 'lib${1}' not installed"
+  echo 'int main(void){}' | "$CC" $CFLAGS -xc - -l"$1" >/dev/null 2>&1 || error "Library 'lib${1}' not installed"
   rm -f a.out
 }
 
