@@ -73,6 +73,7 @@ coreutils/ options:
   --base64-ignore=[str]        Ignore these characters (default " \n", space and newline)
   --base64-variant=[str]       Can be one of ORIGINAL, ORIGINAL_NO_PADDING, URLSAFE, URLSAFE_NO_PADDING
   --base32-ab=[str]            Alphabet to use for Base32 conversion
+  --factor-max-primes=[int]    Maximum amount of prime factors a number can have (default 128)
 
 customtools/ options:
   --enable-ascii-show-octal    Show octal code for characters for ascii table (takes wider screen space)
@@ -113,6 +114,7 @@ ls_color=1
 base64_ignore=" \n"
 base64_variant="ORIGINAL"
 base32_ab="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+factor_max_primes=128
 ascii_show_octal=0
 string_maxstrlen=256
 exedump_color1="\033[1;34m"
@@ -136,6 +138,7 @@ while :; do
     --base64-ignore*)             base64_ignore="$(parse_option "$1")";;
     --base64-variant*)            base64_variant="$(parse_option "$1")";;
     --base32-ab*)                 base32_ab="$(parse_option "$1")";;
+    --factor-max-primes*)         factor_max_primes="$(parse_option "$1")";;
     --enable-ascii-show-octal)    ascii_show_octal=1;;
     --string-maxstrlen*)          string_maxstrlen="$(parse_option "$1")";;
     --exedump-color1*)            exedump_color1="$(parse_option "$1")";;
@@ -198,12 +201,13 @@ cat > config.h << EOF
   coreutils options
 */
 
-#define STRICT_SEQ       $strict_seq
-#define MAX_LINK_LENGTH  $max_link_length
-#define LS_COLOR         $ls_color
-#define BASE64_IGNORE    "$base64_ignore"
-#define BASE64_VARIANT   sodium_base64_VARIANT_${base64_variant}
-#define BASE32_AB        "$base32_ab"
+#define STRICT_SEQ        $strict_seq
+#define MAX_LINK_LENGTH   $max_link_length
+#define LS_COLOR          $ls_color
+#define BASE64_IGNORE     "$base64_ignore"
+#define BASE64_VARIANT    sodium_base64_VARIANT_${base64_variant}
+#define BASE32_AB         "$base32_ab"
+#define FACTOR_MAX_PRIMES $factor_max_primes
 
 /*
   customtools options

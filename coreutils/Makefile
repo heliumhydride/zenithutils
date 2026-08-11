@@ -127,3 +127,6 @@ sha512sum: sha512sum.o ../lib/prettyprint.o ../lib/util.o
 
 hostname: hostname.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+
+factor: factor.o ../lib/prettyprint.o
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
