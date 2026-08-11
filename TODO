@@ -1,12 +1,13 @@
 -- CODE GOALS --
 
-rework: uniq, tr, tail
-manpage for exedump, tac, strings, xargs, wpath
+rework: uniq, tr
+manpage for exedump, tac, strings, xargs, wpath, tail
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
 coreutils/sha512sum: -btcz
 coreutils/sha256sum
 
+coreutils/tail: -f
 findutils/xargs todos
 printf + printf manpage
 coreutils/tee: operate line by line
