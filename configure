@@ -78,7 +78,9 @@ customtools/ options:
   --enable-ascii-show-octal    Show octal code for characters for ascii table (takes wider screen space)
   --string-maxstrlen=[int]     Max length for a string for string (default 256)
   --exedump-color1=[str]       Primary color for exedump, ansi color code (default "\033[1;34m", which is blue)
-  --exedump-color2=[str]       Primary color for exedump, ansi color code (default "\033[1;31m", which is red)
+  --exedump-color2=[str]       Secondary color for exedump, ansi color code (default "\033[1;31m", which is red)
+  --no-exedump-color           Disable all color output for exedump
+  --no-exedump-color2          Disable secondary color for exedump
 
 Misc options:
   -h, --help                   Show this help
@@ -138,6 +140,8 @@ while :; do
     --string-maxstrlen*)          string_maxstrlen="$(parse_option "$1")";;
     --exedump-color1*)            exedump_color1="$(parse_option "$1")";;
     --exedump-color2*)            exedump_color2="$(parse_option "$1")";;
+    --no-exedump-color)           exedump_color1=""; exedump_color2="";;
+    --no-exedump-color2)          exedump_color2="";;
     --help|-h) print_usage;;
     --) shift; break;;
     '') break;;

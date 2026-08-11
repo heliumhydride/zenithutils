@@ -4,7 +4,7 @@ PROGS=su
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 su: su.o

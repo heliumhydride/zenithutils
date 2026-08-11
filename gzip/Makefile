@@ -4,7 +4,7 @@ PROGS=gzip gunzip zcat
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 gzip: gzip.o

@@ -4,7 +4,7 @@ PROGS=diff cmp sdiff
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 diff: diff.o

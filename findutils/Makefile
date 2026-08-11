@@ -4,7 +4,7 @@ PROGS=xargs find
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 xargs: xargs.o ../lib/prettyprint.o

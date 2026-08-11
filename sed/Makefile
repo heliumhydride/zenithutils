@@ -4,7 +4,7 @@ PROGS=sed
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 sed: sed.o

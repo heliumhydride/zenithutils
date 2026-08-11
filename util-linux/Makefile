@@ -13,7 +13,7 @@ PROGS=rev nologin uuidgen hexdump lscpu column blkid cal cfdisk chsh col dmesg e
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 rev: rev.o ../lib/prettyprint.o ../lib/util.o

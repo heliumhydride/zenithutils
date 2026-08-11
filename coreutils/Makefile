@@ -9,7 +9,7 @@ PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mk
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 dos2unix.o: dos2unix.c

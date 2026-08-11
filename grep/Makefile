@@ -4,7 +4,7 @@ PROGS=grep egrep fgrep
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 grep: grep.o

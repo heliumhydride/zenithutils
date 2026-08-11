@@ -8,7 +8,7 @@ PROGS=kill pkill w top pstree fuser killall ps sysctl pidof free pgrep vmstat
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 kill.o: kill.c

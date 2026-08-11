@@ -4,7 +4,7 @@ PROGS=ascii clear exedump read rng strings time usleep wpath zenithutils_version
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 ascii: ascii.o

@@ -4,7 +4,7 @@ PROGS=which
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 which: which.o ../lib/prettyprint.o ../lib/util.o

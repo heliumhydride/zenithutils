@@ -5,7 +5,7 @@ PROGS=passwd chage useradd userdel usermod groupadd groupdel groupmod sg
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 passwd: passwd.o ../lib/prettyprint.o ../lib/util.o

@@ -4,7 +4,7 @@ PROGS=shar uuencode uudecode
 
 all: $(PROGS)
 
-%.o: %.c
+%.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 shar: shar.sh
