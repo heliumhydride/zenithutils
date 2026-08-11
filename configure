@@ -1,0 +1,230 @@
+#!/bin/sh
+
+VERSION="v0.0_wip"
+
+ANSI_RED="\033[1;31m"
+ANSI_GREEN="\033[1;32m"
+ANSI_YELLOW="\033[1;33m"
+ANSI_BLUE="\033[1;34m"
+ANSI_NORM="\033[0m"
+
+#
+#  Support functions
+#
+
+error() {
+  >&2 printf "${ANSI_RED}[  ERROR] -> %s${ANSI_NORM}\n" "$1" 
+  exit 1
+}
+
+warn() {
+  printf "${ANSI_YELLOW}[  WARN] -> %s${ANSI_NORM}\n" "$1"
+}
+
+info() {
+  printf "${ANSI_BLUE}-> %s${ANSI_NORM}\n" "$1"
+}
+
+success() {
+  printf "${ANSI_GREEN}-> %s${ANSI_NORM}\n" "$1"
+}
+
+check_installed() {
+  $1 > /dev/null 2>&1
+  [ "$?" -eq 127 ] && error "$1 command not installed / not found in \$PATH"
+}
+
+# parse_option() {
+#   res="$(echo "$1" | cut -f2 -d'=')"
+#   [ "$res" = "$1" ] && error "Option requires assignment '='  $1"
+#   [ "$res" = "${1}=" ] && error "Option requires assignment '='  $1"
+#   echo "$res"
+# }
+
+parse_option() {
+  option="$1"
+  [ "${option##*=}" = "$option" ] && error "Option requires assignment '=' $option"
+  [ -z "${option##*=}" ] && error "Option requires assignment '=' $option"
+
+  printf "%s" "${option##*=}"
+}
+
+print_usage() {
+  cat << EOF
+
+zenithutils configure script
+usage:  $0 [options]
+
+Installation + Compilation options:
+  --prefix=[path]              Root directory of the installation (default /usr/local)
+  --destdir=[path]             Install into [path] (default /)
+  --program-prefix=[prefix]    Append [prefix] to every program name (default none)
+  --enable-win32               Target os is Windows
+
+global zenithutils options:
+  --stdin-max=[int]            Max number of characters allowed on standard input (default 4096)
+  --pathname-max=[int]         Max length for a pathname (default 512)
+  --enable-force-mingw-paths   Convert any path to mingw on Windows (c:\\xyz -> c:/xyz)
+  --disable-colored-errors     Do not print errors in red
+
+coreutils/ options:
+  --disable-strict-seq         Allow -f to accept formats with no % directive
+  --max-link-length=[int]      Max link length for readlink (default 1024)
+  --disable-ls-color           Do not color output in ls
+  --base64-ignore=[str]        Ignore these characters (default " \n", space and newline)
+  --base64-variant=[str]       Can be one of ORIGINAL, ORIGINAL_NO_PADDING, URLSAFE, URLSAFE_NO_PADDING
+  --base32-ab=[str]            Alphabet to use for Base32 conversion
+
+customtools/ options:
+  --enable-ascii-show-octal    Show octal code for characters for ascii table (takes wider screen space)
+  --string-maxstrlen=[int]     Max length for a string for string (default 256)
+  --exedump-color1=[str]       Primary color for exedump, ansi color code (default "\033[1;34m", which is blue)
+  --exedump-color2=[str]       Primary color for exedump, ansi color code (default "\033[1;31m", which is red)
+
+Misc options:
+  -h, --help                   Show this help
+
+Environment variables:
+  [CC]       defines the C compiler                       ($CC)
+  [CFLAGS]   pass CFLAGS to the C compiler                ($CFLAGS)
+  [LDFLAGS]  pass LDFLAGS to the C compiler at link-time  ($LDFLAGS)
+
+EOF
+  exit 1
+}
+
+#
+#  Default options
+#
+
+[ -z "$CC" ] && CC="cc"
+[ -z "$CFLAGS" ] && CFLAGS="-O2 -std=c99 -Wall -Wextra -Wpedantic"
+[ -z "$LDFLAGS" ] && LDFLAGS="-O2 -s"
+PREFIX="/usr/local"
+WIN32=0
+stdin_max=4096
+pathname_max=512
+force_mingw_paths=0
+colored_errors=1
+strict_seq=1
+max_link_length=1024
+ls_color=1
+base64_ignore=" \n"
+base64_variant="ORIGINAL"
+base32_ab="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+ascii_show_octal=0
+string_maxstrlen=256
+exedump_color1="\033[1;34m"
+exedump_color2="\033[1;31m"
+# DESTDIR=""
+# program_prefix=""
+
+while :; do
+  case "$1" in
+    --prefix*)                    PREFIX="$(parse_option "$1")";;
+    --destdir*)                   DESTDIR="$(parse_option "$1")";;
+    --program-prefix*)            program_prefix="$(parse_option "$1")";;
+    --enable-win32)               WIN32=1;;
+    --stdin-max*)                 stdin_max="$(parse_option "$1")";;
+    --pathname-max*)              pathname_max="$(parse_option "$1")";;
+    --enable-force-mingw-paths)   force_mingw_paths=1;;
+    --disable-colored-errors)     colored_errors=0;;
+    --disable-strict-seq)         strict_seq=0;;
+    --max-link-length*)           max_link_length="$(parse_option "$1")";;
+    --disable-ls-color)           ls_color=0;;
+    --base64-ignore*)             base64_ignore="$(parse_option "$1")";;
+    --base64-variant*)            base64_variant="$(parse_option "$1")";;
+    --base32-ab*)                 base32_ab="$(parse_option "$1")";;
+    --enable-ascii-show-octal)    ascii_show_octal=1;;
+    --string-maxstrlen*)          string_maxstrlen="$(parse_option "$1")";;
+    --exedump-color1*)            exedump_color1="$(parse_option "$1")";;
+    --exedump-color2*)            exedump_color2="$(parse_option "$1")";;
+    --help|-h) print_usage;;
+    --) shift; break;;
+    '') break;;
+    *) warn "Unknown option $1"; print_usage;;
+  esac
+  shift
+done
+
+_features_list=""
+[ "$ascii_show_octal" = "1" ] && _features_list="${_features_list}ascii_show_octal  "
+[ "$colored_errors" = "1" ] && _features_list="${_features_list}colored_errors  "
+[ "$WIN32" = "1" ] && _features_list="${_features_list}win32"
+
+cat << EOF
+
+heliumhydride's configure script
+
+Configuration summary:
+
+    Program prefix           $PREFIX 
+    Install destination      $DESTDIR
+    C compiler               $CC     
+    C compiler flags         $CFLAGS 
+    Linking flags            $LDFLAGS
+    Extra features           $_features_list
+
+EOF
+
+info "Creating files config.mk and config.h"
+
+cat > config.h << EOF
+#ifndef CONFIG_H
+#define CONFIG_H
+
+/*
+  global options
+*/
+
+#define VERSION            "$VERSION"
+#define PREFIX             "$PREFIX"
+#define STDIN_MAX          $stdin_max
+#define PATHNAME_MAX       $pathname_max
+#define FORCE_MINGW_PATHS  $force_mingw_paths
+#define COLORED_ERRORS     $colored_errors
+
+/*
+  coreutils options
+*/
+
+#define STRICT_SEQ       $strict_seq
+#define MAX_LINK_LENGTH  $max_link_length
+#define LS_COLOR         $ls_color
+#define BASE64_IGNORE    "$base64_ignore"
+#define BASE64_VARIANT   sodium_base64_VARIANT_${base64_variant}
+#define BASE32_AB        "$base32_ab"
+
+/*
+  customtools options
+*/
+
+#define ASCII_SHOW_OCTAL  $ascii_show_octal
+#define STRING_MAXSTRLEN  $string_maxstrlen
+#define EXEDUMP_COLOR1    "$exedump_color1"
+#define EXEDUMP_COLOR2    "$exedump_color2"
+
+#endif // CONFIG_H
+EOF
+
+cat > config.mk << EOF
+# Prepend to every program name:
+PROG_PREFIX := $program_prefix
+
+# Install to:
+PREFIX := $PREFIX
+DESTDIR := $DESTDIR
+
+# Toolchain setup
+CC := $CC
+LD := $CC
+CFLAGS := $CFLAGS
+LDFLAGS := $LDFLAGS
+WIN32 := $WIN32
+EOF
+
+[ -e "o/" ] || {
+  info "Creating binary output directories"
+  mkdir -vp o/bin o/sbin
+}
+success "Configuration finished. Please run make"

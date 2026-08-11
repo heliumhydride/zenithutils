@@ -1,77 +1,72 @@
+ifeq ($(wildcard config.mk),)
+  $(error Please run ./configure first..)
+endif
+
 include config.mk
 
-all: customtools coreutils util-linux which procutils diffutils findutils grep gzip iconv patch sed sharutils su passwdutils
+SUBDIRS = customtools coreutils util-linux which procutils diffutils findutils grep gzip iconv patch sed sharutils su passwdutils
 
-customtools: config.h init_outdir
+all: $(SUBDIRS)
+
+customtools:
 	$(MAKE) -C customtools
 
-coreutils: config.h init_outdir
+coreutils:
 	$(MAKE) -C coreutils
 
-util-linux: config.h init_outdir
+util-linux:
 	$(MAKE) -C util-linux
 
-which: config.h init_outdir
+which:
 	$(MAKE) -C which
 
-procutils: config.h init_outdir
+procutils:
 	$(MAKE) -C procutils
 
-diffutils: config.h init_outdir
+diffutils:
 	$(MAKE) -C diffutils
 
-findutils: config.h init_outdir
+findutils:
 	$(MAKE) -C findutils
 
-grep: config.h init_outdir
+grep:
 	$(MAKE) -C grep
 
-gzip: config.h init_outdir
+gzip:
 	$(MAKE) -C gzip
 
-iconv: config.h init_outdir
+iconv:
 	$(MAKE) -C iconv
 
-patch: config.h init_outdir
+patch:
 	$(MAKE) -C patch
 
-sed: config.h init_outdir
+sed:
 	$(MAKE) -C sed
 
-sharutils: config.h init_outdir
+sharutils:
 	$(MAKE) -C sharutils
 
-su: config.h init_outdir
+su:
 	$(MAKE) -C su
 
-passwdutils: config.h init_outdir
+passwdutils:
 	$(MAKE) -C passwdutils
 
-config.h: config.def.h
-	cp config.def.h config.h
-
-init_outdir: o/bin o/sbin
-
-o/bin:
-	mkdir -p $@
-
-o/sbin:
-	mkdir -p $@
-
-install: init_outdir
+install: 
 	PREFIX="$(PREFIX)" DESTDIR="$(DESTDIR)" scripts/install.sh
 
 clean:
-	rm -rf o/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
+	rm -rf o/bin/* o/sbin/* coreutils/*.o customtools/*.o diffutils/*.o findutils/*.o grep/*.o gzip/*.o iconv/*.o lib/*.o patch/*.o procutils/*.o sed/*.o sharutils/*.o su/*.o util-linux/*.o which/*.o passwdutils/*.o
 
 distclean: clean
-	rm -f config.h
+	rm -rf config.h config.mk o/
 
 check:
 	find -name '*.c' -or -name '*.h' | xargs cppcheck --std=c99 --check-level=exhaustive >/dev/null
-	shellcheck -S style -s sh scripts/*
+	shellcheck -S style -s sh scripts/* configure
 
 tags:
 	ctags -R --c-kinds=+p --exclude=TODO --exclude=docs --exclude=o --exclude=scripts --exclude=README.md
 
-.PHONY: clean distclean init_outdir install check tags
+.PHONY: all $(SUBDIRS) clean distclean install check tags all customtools

@@ -1,5 +1,4 @@
 config.h
-o/*
-!o/.gitkeep
+config.mk
 */*.o
 tags

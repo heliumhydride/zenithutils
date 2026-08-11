@@ -12,7 +12,6 @@ printf + printf manpage
 coreutils/tee: operate line by line
 coreutils/echo: implement -n, -e options
 wc column alignment
-strip executables
 coreutils/readlink: mingw: readlink() undeclared
 coreutils/ls: basic options like -A
 util-linux/hexdump todos
