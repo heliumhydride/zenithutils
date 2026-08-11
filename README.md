@@ -3,34 +3,25 @@ An nth implementation of coreutils / util-linux / chimerautils / busybox / sbase
 
 
 ### building
-Create the config file:
+Configure:
 ```sh
-$ make config.h
+$ ./configure
 ```
+Run `./configure --help` to see which options are available
 
-Edit the options in `config.mk` and `config.h`:
-```sh
-$ $EDITOR config.h
-```
+*Note, if your build targets Windows, no matter the host, specify* `--enable-win32`
 
 Then simply invoke make as usual:
 ```sh
 $ make
 ```
-**NOTE: if the target os is Windows, pass WIN32=1 (not just cross compiling, always)**
-
 
 If you want to build a specific directory, for example:
 ```sh
 $ make customtools
 ```
 
-To build an individual program, first initialize the config and the output directory
-```sh
-$ make init_outdir config.h
-```
-
-Then, for example:
+To build an individual program
 ```sh
 $ make -C coreutils readlink
 ```
@@ -39,10 +30,6 @@ $ make -C coreutils readlink
 The standard way
 ```
 $ make install
-```
-It is configurable, for example if you need to package zenithutils for a distribution,
-```
-$ make install PREFIX=/ DESTDIR=/tmp/packaging
 ```
 Man pages are always installed by default (this might change in the future)
 
