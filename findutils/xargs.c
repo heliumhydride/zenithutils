@@ -5,13 +5,16 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifndef _WIN32
+#include <sys/wait.h>
+#endif
+
 #define STB_DS_IMPLEMENTATION
 #include "../include/stb_ds.h"
 
 #include "../include/prettyprint.h"
 #include "../config.h"
 
-// TODO [1] fork on Unix
 // TODO build from existing argv too, allow for other args basically
 // TODO -0 option
 
@@ -59,11 +62,31 @@ int main(int argc, char* argv[]) {
   }
   stbds_arrput(new_argv, NULL);
 
-  // TODO [1]
-  int res = execvp(path, new_argv);
-  // NOTE on Windows, this won't be a problem because mingw's execvp uses CreateProcess instead of replacing the process (like a normal exec should?)
+  int res;
+#ifdef _WIN32
+  res = execvp(path, new_argv);
+#else // On Unix
+  int wstatus;
+  pid_t pid = fork();
+  switch(pid) {
+    case -1:
+      print_error("%s: could not fork()", program);
+      return 2;
+    case 0:
+      execvp(path, new_argv);
+      break;
+    default:
+      (void)waitpid(pid, &wstatus, 0);
+      if(WIFEXITED(wstatus))
+        res = WEXITSTATUS(wstatus);
+      break;
+  }
+  if(pid == -1) {
+    return 2;
+  }
+  res = execvp(path, new_argv);
+#endif // _WIN32
 
-  // these two will never happen until [1] is fixed
   free(buf);
   return res;
 }
