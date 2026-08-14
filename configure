@@ -169,6 +169,11 @@ _features_list=""
 [ "$strict_seq" = "1" ] && _features_list="${_features_list}strict_seq  "
 [ "$ls_color" = "1" ] && _features_list="${_features_list}ls_color  "
 
+if [ -z "$DESTDIR" ]; then
+  _destdir="/"
+else
+  _destdir="$DESTDIR"
+fi
 cat << EOF
 
 heliumhydride's configure script
@@ -176,7 +181,7 @@ heliumhydride's configure script
 Configuration summary:
 
     Program prefix           $PREFIX 
-    Install destination      $DESTDIR
+    Install destination      $_destdir
     C compiler               $CC     
     C compiler flags         $CFLAGS 
     Linking flags            $LDFLAGS
