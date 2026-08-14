@@ -145,6 +145,7 @@ while :; do
     --exedump-color2*)            exedump_color2="$(parse_option "$1")";;
     --no-exedump-color)           exedump_color1=""; exedump_color2="";;
     --no-exedump-color2)          exedump_color2="";;
+    --host*)                      warn "if you are cross-compiling, --host isn't supported, instead specify C compiler via 'CC=...' envronment variable";;
     --help|-h) print_usage;;
     --) shift; break;;
     '') break;;
