@@ -164,7 +164,10 @@ check_lib sodium
 _features_list=""
 [ "$ascii_show_octal" = "1" ] && _features_list="${_features_list}ascii_show_octal  "
 [ "$colored_errors" = "1" ] && _features_list="${_features_list}colored_errors  "
-[ "$WIN32" = "1" ] && _features_list="${_features_list}win32"
+[ "$WIN32" = "1" ] && _features_list="${_features_list}win32  "
+[ "$force_mingw_paths" = "1" ] && _features_list="${_features_list}force_mingw_paths  "
+[ "$strict_seq" = "1" ] && _features_list="${_features_list}strict_seq  "
+[ "$ls_color" = "1" ] && _features_list="${_features_list}ls_color  "
 
 cat << EOF
 
