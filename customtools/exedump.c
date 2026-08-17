@@ -127,75 +127,9 @@ void print_elf_info(uint8_t* buf) {
       puts("?");
   }
 
-  printf(EXEDUMP_COLOR1"  Endianness:   "EXEDUMP_COLOR2);
-  uint8_t endianness = elf32->e_ident[5]; // also needed for later
-  switch(endianness) {
-    case ELF_LSB:
-      puts("Little (LSB)");
-      break;
-    case ELF_MSB:
-      puts("Big (MSB)");
-      break;
-    default:
-      puts("?");
-  }
-
-  printf(EXEDUMP_COLOR1"  OS:           "EXEDUMP_COLOR2);
-  switch(elf32->e_ident[7]) {
-    case ABI_SYSV:
-      puts("SysV");
-      break;
-    case ABI_HPUX:
-      puts("HP-UX");
-      break;
-    case ABI_NETBSD:
-      puts("NetBSD");
-      break;
-    case ABI_LINUX:
-      puts("Linux");
-      break;
-    case ABI_HURD:
-      puts("GNU/Hurd");
-      break;
-    case ABI_86OPEN:
-      puts("86Open");
-      break;
-    case ABI_SOLARIS:
-      puts("Solaris");
-      break;
-    case ABI_AIX:
-      puts("AIX");
-      break;
-    case ABI_IRIS:
-      puts("IRIS");
-      break;
-    case ABI_FREEBSD:
-      puts("FreeBSD");
-      break;
-    case ABI_TRU64:
-      puts("Tru64");
-      break;
-    case ABI_MODESTO:
-      puts("Modesto");
-      break;
-    case ABI_OPENBSD:
-      puts("OpenBSD");
-      break;
-    case ABI_ARM_AEABI:
-      puts("ARM EABI");
-      break;
-    case ABI_ARM:
-      puts("ARM");
-      break;
-    case ABI_STANDALONE:
-      puts("Standalone");
-      break;
-    default:
-      puts("?");
-  }
-
   printf(EXEDUMP_COLOR1"  Machine:      "EXEDUMP_COLOR2);
   uint16_t machine = elf64->e_machine;
+  uint8_t endianness = elf32->e_ident[5]; // also needed for later
   if(bitness == ELF_BITS_32) machine = elf32->e_machine;
   if(endianness == ELF_MSB)  machine = reverse_end16(machine);
   switch(machine) {
@@ -259,6 +193,72 @@ void print_elf_info(uint8_t* buf) {
       break;
     default:
       puts("Unknown");
+  }
+
+  printf(EXEDUMP_COLOR1"  Endianness:   "EXEDUMP_COLOR2);
+  switch(endianness) {
+    case ELF_LSB:
+      puts("Little (LSB)");
+      break;
+    case ELF_MSB:
+      puts("Big (MSB)");
+      break;
+    default:
+      puts("?");
+  }
+
+  printf(EXEDUMP_COLOR1"  OS:           "EXEDUMP_COLOR2);
+  switch(elf32->e_ident[7]) {
+    case ABI_SYSV:
+      puts("SysV");
+      break;
+    case ABI_HPUX:
+      puts("HP-UX");
+      break;
+    case ABI_NETBSD:
+      puts("NetBSD");
+      break;
+    case ABI_LINUX:
+      puts("Linux");
+      break;
+    case ABI_HURD:
+      puts("GNU/Hurd");
+      break;
+    case ABI_86OPEN:
+      puts("86Open");
+      break;
+    case ABI_SOLARIS:
+      puts("Solaris");
+      break;
+    case ABI_AIX:
+      puts("AIX");
+      break;
+    case ABI_IRIS:
+      puts("IRIS");
+      break;
+    case ABI_FREEBSD:
+      puts("FreeBSD");
+      break;
+    case ABI_TRU64:
+      puts("Tru64");
+      break;
+    case ABI_MODESTO:
+      puts("Modesto");
+      break;
+    case ABI_OPENBSD:
+      puts("OpenBSD");
+      break;
+    case ABI_ARM_AEABI:
+      puts("ARM EABI");
+      break;
+    case ABI_ARM:
+      puts("ARM");
+      break;
+    case ABI_STANDALONE:
+      puts("Standalone");
+      break;
+    default:
+      puts("?");
   }
 
   uint32_t phoff32 = elf32->e_phoff;
@@ -340,6 +340,20 @@ void print_pe_info(uint8_t* buf) {
   DosStub_t* dos_stub = (DosStub_t*)buf;
   uintptr_t pe_offset = dos_stub->e_lfanew;
   PeHeader_t* pe = (PeHeader_t*)(buf + pe_offset);
+
+  int is_pe_plus = 0;
+  Pe32OptHeader_t* pe_opt = (Pe32OptHeader_t*)((uint8_t*)pe + sizeof(PeHeader_t));
+  Pe32PlusOptHeader_t* peplus_opt;
+  if(pe_opt->Magic == 0x20b) {
+    is_pe_plus = 1;
+    peplus_opt = (Pe32PlusOptHeader_t*)pe_opt;
+  }
+
+  printf(EXEDUMP_COLOR1"  Bitness:            "EXEDUMP_COLOR2);
+  if(is_pe_plus)
+    printf("64 (PE32+)\n");
+  else
+    printf("32 (PE32)\n");
 
   printf(EXEDUMP_COLOR1"  Machine:            "EXEDUMP_COLOR2);
   switch(pe->Machine) {
@@ -458,16 +472,6 @@ void print_pe_info(uint8_t* buf) {
   if(pe->Characteristics & IMAGE_FILE_UP_SYSTEM_ONLY)
     printf("uniprocessor_only ");
   putchar('\n');
-
-  int is_pe_plus = 0;
-  Pe32OptHeader_t* pe_opt = (Pe32OptHeader_t*)((uint8_t*)pe + sizeof(PeHeader_t));
-  Pe32PlusOptHeader_t* peplus_opt;
-  if(pe_opt->Magic == 0x20b) {
-    is_pe_plus = 1;
-    peplus_opt = (Pe32PlusOptHeader_t*)pe_opt;
-  }
-
-  printf(EXEDUMP_COLOR1"  PE Type:            "EXEDUMP_COLOR2"PE32%c\n", is_pe_plus ? '+' : ' ');
 
   printf(EXEDUMP_COLOR1"  Entry at:           "EXEDUMP_COLOR2);
   if(is_pe_plus)
