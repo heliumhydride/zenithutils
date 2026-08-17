@@ -1,0 +1,35 @@
+.TH EXEDUMP 1 "17th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+tail - print the last n bytes/lines
+
+.SH SYNOPSIS
+\fBtail\fP \fI[-c num | -n num] [-vq] [files]\fP ...
+
+.SH DESCRIPTION
+Print the last n bytes or lines of a file
+If -c or -n are not specified, assume -n10
+If not file is specified or is '-'; assume standard input
+
+.B
+-f is not yet implemented
+
+.SH OPTIONS
+.TP
+\fB-n \fInum\fP
+Print the last \fInum\fP lines
+
+.TP
+\fB-c \fInum\fP
+Print the last \fInum\fP bytes
+
+.TP
+\fB-v\fP
+Verbose, print filenames
+
+.TP
+\fB-q\fP
+Quiet, do not say filename even on explicit standard input with multiple files
+
+.SH SEE ALSO
+head(1)

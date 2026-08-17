@@ -1,0 +1,35 @@
+.TH EXEDUMP 1 "17th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+wpath - print win32 or mingw variant of a path
+
+.SH SYNOPSIS
+\fBwpath\fP \fI[-mw] path\fP
+
+.SH DESCRIPTION
+Will print the win32 or mingw variant of a path (default: mingw)
+
+Drive letters will not be added or removed.
+
+Think of this utility like the cygpath from cygwin, but much more minimal
+
+.SH OPTIONS
+.TP
+\fB-m\fP
+Print mingw version of a path (default, therefore will do nothing)
+
+.TP
+\fB-w\fP
+Print win32 version of a path
+
+.SH EXAMPLES
+
+.EX
+  $ wpath C:\\Windows\\System32\\cmd.exe
+  C:/Windows/System32/cmd.exe
+.EE
+
+.EX
+  $ wpath -w /neptunium64/bin/sh.exe
+  \\neptunium64\\bin\\sh.exe
+.EE

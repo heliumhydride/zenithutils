@@ -1,0 +1,44 @@
+.TH EXEDUMP 1 "17th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+exedump - print information about a given executable
+
+.SH SYNOPSIS
+\fBexedump\fP \fIexecutable\fP \fI[executables]\fP
+
+.SH DESCRIPTION
+.P
+Prints data about an executable by looking at the executable headers.
+Supported formats are ELF and PE
+
+.P
+Displayed information for ELF:
+
+.EX
+  + Bitness (32/64)
+  + Endianness (Little/Big)
+  + OS ABI
+  + Machine/Architecture
+  + Numbers of program headers
+  + Type (Executable, shared object, dynamic executable, relocatable code)
+  + Program Interpreter (if applicable)
+.EE
+
+.P
+
+Displayed information for PE:
+
+.EX
+  + Machine/Architecture \n
+  + Number of sectors
+  + Characteristics
+  + PE Type (PE32/PE32+)
+  + Entry point address
+  + OS Version
+  + Subsystem
+  + Subsystem Version
+  + Checksum
+.EE
+
+.SH OPTIONS
+not applicable

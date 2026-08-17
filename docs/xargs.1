@@ -1,0 +1,23 @@
+.TH XARGS 1 "17th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+xargs - extract command line arguments and execute commands
+
+.SH SYNOPSIS
+\fBxargs\fP \fIcommand\fP
+
+.SH DESCRIPTION
+xargs takes arguments from stdin and executes commands according to those arguments
+
+Beware: this version of xargs takes no other arguments yet, only from stdin! (for now)
+
+.SH OPTIONS
+not applicable
+
+.SH EXAMPLES
+.EX
+    $ which ls sh | xargs file
+    /sbin/ls: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), ...
+    /sbin/sh: symbolic link to dash
+.EE
+

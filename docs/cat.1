@@ -7,7 +7,7 @@
 \fBcat\fP \fI[-AEenTtv] [file1] [file2] ...\fP
 
 .SH DESCRIPTION
-\fBcat\fP concatenates each file passed as argument, character by character.
+\fBcat\fP concatenates each file passed as argument, line by line.
 If no argument is provided or argument is '-', cat will read from standard input
 
 .SH OPTIONS
@@ -45,3 +45,6 @@ Concatenate file1, standard input (which reads xyz), and file2 in order:
 .EX
   $ echo xyz | cat file1 - file2
 .EE
+
+.SH SEE ALSO
+tac(1)

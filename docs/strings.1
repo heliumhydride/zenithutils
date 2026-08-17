@@ -1,0 +1,38 @@
+.TH STRINGS 1 "17th of August 2026" zenithutils "User Commands"
+
+.SH NAME
+strings - print strings in a binary file
+
+.SH SYNOPSIS
+\fBstrings\fP \fI[-nfo] [-t o|d|x] file [files]\fP ...
+
+.SH DESCRIPTION
+For all intents and purposes of this program, a 'string' simply means a sequence of printable characters (defalt 4 or more in length), not the traditional null-terminated string
+
+Looks for any 'string's in a file (or multiple files) and prints them
+
+.SH OPTIONS
+.TP
+\fB-n \fInum\fP
+A string should be \fInum\fP printable characters long
+
+.TP
+\fB-f\fP
+Display filename(s) along with the string
+
+.TP
+\fB-t \fIradix\fP
+Display the offset of each strings
+
+\fIradix\fPes:
+.EX
+  \fBx\fP  show offset in hexadecimal
+
+  \fBd\fP  show offset in decimal
+
+  \fBo\fP  show offset in octal
+.EE
+
+.TP
+\fB-o\fP
+Shorthand for '-t o'
