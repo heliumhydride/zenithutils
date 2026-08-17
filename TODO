@@ -1,10 +1,6 @@
 -- CODE GOALS --
 
 xargs: executes the program twice for some reason (investigate)
-wpath:
-  + take from stdin
-  + allow for PATH variable conversion ':' <-> ';' with -p
-  + allow for multiple arguments
 
 rework: uniq, tr
 coreutils/rmdir: recursive directory destruction (-p)

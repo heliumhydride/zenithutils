@@ -5,11 +5,16 @@
 #include <getopt.h>
 #include <string.h>
 #include "../include/prettyprint.h"
+#include "../config.h"
+
+static int pflag = 0; // {mingw,win32}path need to know about this
 
 void mingw_path(char* path) {
   for(size_t i = 0; i < strlen(path); i++) {
     if(path[i] == '\\')
       path[i] = '/';
+    if(pflag && path[i] == ';')
+      path[i] = ':';
   }
 }
 
@@ -17,21 +22,26 @@ void win32_path(char* path) {
   for(size_t i = 0; i < strlen(path); i++) {
     if(path[i] == '/')
       path[i] = '\\';
+    if(pflag && path[i] == ':')
+      path[i] = ';';
   }
 }
 
 void print_usage(char* program) {
-  fprintf(stderr, "usage: %s [-mw] path\n", program);
+  fprintf(stderr, "usage: %s [-mw] [path]\n", program);
 }
 
 int main(int argc, char* argv[]) {
   char* program = argv[0];
   char mode = 'm';
   int opt;
-  while((opt = getopt(argc, argv, ":mw")) != -1) {
+  while((opt = getopt(argc, argv, ":mwp")) != -1) {
     switch(opt) {
       case 'w':
         mode = 'w';
+        break;
+      case 'p':
+        pflag = 1;
         break;
       case '?':
         print_error("%s: option error: unknown option '-%c'", program, optopt);
@@ -42,21 +52,38 @@ int main(int argc, char* argv[]) {
   }
 
   argc -= optind;
-  argv += optind;
+  argv += optind - 1;
 
   if(argc == 0) {
-    print_usage(program);
-    return 1;
+    char buf[STDIN_MAX];
+    int c;
+    size_t i = 0;
+    while((c = getchar()) != EOF) {
+      buf[i] = (char)c;
+      i++;
+    }
+    switch(mode) {
+      case 'm':
+        mingw_path(buf);
+        break;
+      case 'w':
+        win32_path(buf);
+        break;
+    }
+    puts(buf);
+  } else {
+    while(*++argv) {
+      switch(mode) {
+        case 'm':
+          mingw_path(*argv);
+          break;
+        case 'w':
+          win32_path(*argv);
+          break;
+      }
+      puts(*argv);
+    }
   }
 
-  switch(mode) {
-    case 'm':
-      mingw_path(*argv);
-      break;
-    case 'w':
-      win32_path(*argv);
-      break;
-  }
-  puts(*argv);
   return 0;
 }
