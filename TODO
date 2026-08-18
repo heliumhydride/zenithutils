@@ -1,7 +1,5 @@
 -- CODE GOALS --
 
-xargs: executes the program twice for some reason (investigate)
-
 rework: uniq, tr
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi

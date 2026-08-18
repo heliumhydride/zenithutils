@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
       print_error("%s: could not fork()", program);
       return 2;
     case 0:
-      execvp(path, new_argv);
+      res = execvp(path, new_argv);
       break;
     default:
       (void)waitpid(pid, &wstatus, 0);
@@ -81,10 +81,6 @@ int main(int argc, char* argv[]) {
         res = WEXITSTATUS(wstatus);
       break;
   }
-  if(pid == -1) {
-    return 2;
-  }
-  res = execvp(path, new_argv);
 #endif // _WIN32
 
   free(buf);
