@@ -4,18 +4,17 @@
 xargs - extract command line arguments and execute commands
 
 .SH SYNOPSIS
-\fBxargs\fP \fIcommand\fP
+\fBxargs\fP \fIcommand [...]\fP
 
 .SH DESCRIPTION
-xargs takes arguments from stdin and executes commands according to those arguments
-
-Beware: this version of xargs takes no other arguments yet, only from stdin! (for now)
+\fBxargs\fP runs a program specified by \fIcommand\fP and builds arguments for it based on its first arguments \fI'...'\fP and then arguments from standard input, separated by either a space ' ', newline '\\n', or horizontal tab '\\t'
 
 .SH OPTIONS
 not applicable
 
 .SH EXAMPLES
 .EX
+    $ # note: which separates by newline '\\n'
     $ which ls sh | xargs file
     /sbin/ls: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), ...
     /sbin/sh: symbolic link to dash
