@@ -1,5 +1,6 @@
 -- CODE GOALS --
 
+rework subdir makefiles to not rebuild output binaries all the time
 rework: uniq, tr
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
