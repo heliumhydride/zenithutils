@@ -1,15 +1,30 @@
 .TH ASCII 1 "28th of July 2026" "zenithutils" "User Commands"
 
 .SH NAME
-ascii - print the ascii table
+ascii - print the ascii table, or codes of specified characters
 
 .SH SYNOPSIS
-.B ascii
+\fBascii\fI [char] ...\fP
 
 .SH DESCRIPTION
 .PP
-\fBascii\fP prints the 128 characters of the ascii table on 8 (11 to 16 char wide) columns and 17 lines.
+\fBascii\fP, without any arguments, prints the 128 characters of the ascii table on 8 (11 to 16 char wide) columns and 17 lines.
 This is not unlike busybox's version of ascii
 
+If arguments are provided via the command line
+
+.SH EXAMPLES
+.EX
+  $ ascii x y z
+  Dec Hx
+  120 78 x
+  121 79 y
+  122 7A z
+.EE
+
 .SH OPTIONS
-At build time, in 'config.h', you can enable the display of octal codes by setting \fBASCII_SHOW_OCTAL\fP to 1
+\fBascii\fP does not take any command line arguments at runtime
+
+When configuring the software before building with './configure', pass the option '--enable-ascii-show-octal' enable the display of octal codes 
+
+Alternatively, in 'config.h', you can do the same by setting \fBASCII_SHOW_OCTAL\fP to 1
