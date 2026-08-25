@@ -31,16 +31,18 @@ const asciientry_t ascii_map[] = {
 };
 
 int main(int argc, char* argv[]) {
+  char* fmt;
+#if ASCII_SHOW_OCTAL
+    fmt = "%3d %02X %03o %-3s ";
+#else
+    fmt = "%3d %02X %-3s ";
+#endif // ASCII_SHOW_OCTAL
   if(argc < 2) { // no argument, show whole ascii table
-    char* fmt;
     #if ASCII_SHOW_OCTAL
     printf("Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct\n");
-    fmt = "%3d %02X %03o %-3s ";
     #else
     printf("Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx\n");
-    fmt = "%3d %02X %-3s ";
     #endif // ASCII_SHOW_OCTAL
-
     for (int r = 0; r < 16; r++) {
       for (int c = 0; c < 8; c++) {
         int i = r + 16*c;
@@ -54,13 +56,20 @@ int main(int argc, char* argv[]) {
       putchar('\n');
     }
   } else {
-    printf("Dec Hx\n");
+    printf("Dec Hx");
+#if ASCII_SHOW_OCTAL
+    printf(" Oct");
+#endif
+    putchar('\n');
     while(*++argv) {
       for(size_t i = 0; i < 128; i++) {
         if(!strcmp(*argv, ascii_map[i].representation))
-          printf("%3d %02X %s",
+          printf(fmt,
             ascii_map[i].code,
             ascii_map[i].code,
+            #if ASCII_SHOW_OCTAL
+            ascii_map[i].code,
+            #endif // ASCII_SHOW_OCTAL
             ascii_map[i].representation
           );
       }
