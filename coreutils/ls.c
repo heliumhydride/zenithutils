@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <errno.h>
+#include <unistd.h>
 //#include <getopt.h>
 #include "../include/prettyprint.h"
 #include "../config.h"
@@ -18,6 +19,8 @@
 #define DT_SOCK 12
 #define DT_WHT 14
 
+// TODO print individual files with color
+// TODO separate filename printing function
 // TODO show directory names if there are multiple directories
 // TODO options
 // TODO formatting
@@ -68,6 +71,18 @@ int main(int argc, char* argv[]) {
               break;
             case DT_LNK:
               printf("\033[1;36m");
+              break;
+            default: // any other file, check executable permission
+              #ifdef _WIN32
+              if(
+                file_ext_is(ent->d_name, "exe") ||
+                file_ext_is(ent->d_name, "cmd") ||
+                file_ext_is(ent->d_name, "bat")
+              ) // TODO this configuration is not hardcoded into windows
+              #else // On Unix
+              if(access(ent->d_name, X_OK) == 0)
+              #endif
+                printf("\033[1;32m");
               break;
           }
           #endif // LS_COLOR, !_WIN32
