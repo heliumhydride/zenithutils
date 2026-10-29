@@ -130,3 +130,6 @@ hostname: hostname.o ../lib/prettyprint.o
 
 factor: factor.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+
+touch: touch.o ../lib/prettyprint.o
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
