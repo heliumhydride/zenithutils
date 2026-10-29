@@ -1,8 +1,4 @@
-#define _XOPEN_SOURCE   600
-#define _POSIX_C_SOURCE 200112L
-
 #include <stdio.h>
-//#include <stdlib.h>
 #include <getopt.h>
 #include <unistd.h>
 #include <string.h>
@@ -22,143 +18,133 @@
   #include <utmp.h>
 #endif
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s [-ps]\n", argv0);
+void print_usage(const char* program)
+{
+    fprintf(stderr, "usage: %s [-ps]\n", program);
 }
 
-void print_version() {
-  fprintf(stderr, "w/uptime from zenithutils " VERSION "\n");
+void print_version()
+{
+    fputs("w/uptime from zenithutils " VERSION "\n", stderr);
 }
 
 int main(int argc, char* argv[]) {
-  int uptime_mode = 0;
-  int opt;
+    // flags for uptime: -psV
+    int uptime_pflag = 0;
+    int uptime_sflag = 0;
+    int pflag = 0;
+    int sflag = 0;
+    // flags for w     : -AhiMNpns
+    int hflag = 0;
+    int Aflag = 0;
+    int iflag = 0;
+    int Mflag = 0;
+    int Nflag = 0;
+    int nflag = 0;
 
-  // flags for uptime: -psV
-  // flags for w     : -AhiMNpns
-  int uptime_pflag = 0;
-  int uptime_sflag = 0;
-  int pflag = 0;
-  int sflag = 0;
+    int uptime_mode = 0;
+    if(!strcmp(basename(argv[0]), PROG_PREFIX"uptime"))
+        uptime_mode = 1;
 
-  int hflag = 0;
-  int Aflag = 0;
-  int iflag = 0;
-  int Mflag = 0;
-  int Nflag = 0;
-  int nflag = 0;
-
-  if(basename(argv[0])[0] == 'u') {
-    uptime_mode = 1;
-  }
-
-  while((opt = getopt(argc, argv, ":psVhAiMNn")) != -1) {
-    switch(opt) {
-      case 'p':
-        if(uptime_mode) {
-          uptime_pflag = 1;
-        } else {
-          pflag = 1;
+    int opt;
+    while((opt = getopt(argc, argv, ":psVhAiMNn")) != -1) {
+        switch(opt) {
+            case 'p':
+                if(uptime_mode) uptime_pflag = 1;
+                else            pflag = 1;
+                break;
+            case 's':
+                if(uptime_mode) uptime_sflag = 1;
+                else            sflag = 1;
+                break;
+            case 'h':
+                hflag = 1;
+                break;
+            case 'A':
+                Aflag = 1;
+                break;
+            case 'i':
+                iflag = 1;
+                break;
+            case 'M':
+                Mflag = 1;
+                break;
+            case 'N':
+                Nflag = 1;
+                break;
+            case 'n':
+                nflag = 1;
+                break;
+            case 'V': // compat with standard uptime -V
+                print_version();
+                return 1;
+                break;
+            case '?':
+                print_error("%s: invalid option -- '%c'", argv[0], optopt);
+                print_usage(argv[0]);
+                return 1;
+                break;
         }
-        break;
-      case 's':
-        if(uptime_mode) {
-          uptime_sflag = 1;
-        } else {
-          sflag = 1;
-        }
-        break;
-      case 'h':
-        hflag = 1;
-        break;
-      case 'A':
-        Aflag = 1;
-        break;
-      case 'i':
-        iflag = 1;
-        break;
-      case 'M':
-        Mflag = 1;
-        break;
-      case 'N':
-        Nflag = 1;
-        break;
-      case 'n':
-        nflag = 1;
-        break;
-      case 'V': // compat with standard uptime -V
-        print_version();
-        return 1;
-        break;
-      case '?':
-        print_error("%s: invalid option -- '%c'", argv[0], optopt);
-        print_usage(argv[0]);
-        return 1;
-        break;
     }
-  }
 
-  #ifndef _WIN32 // On Unix
+    #ifndef _WIN32 // On Unix
     if(!hflag) {
-      /*
-         gather some data here
-      */
-      // should we read /proc/uptime or not ?
-      FILE* uptime_file; // /proc/uptime
-      float uptime; // uptime in seconds
-      uptime_file = fopen("/proc/uptime", "r");
+        // -- gather some data here --
+        // should we read /proc/uptime or not ?
+        FILE* uptime_file; // /proc/uptime
+        float uptime; // uptime in seconds
+        uptime_file = fopen("/proc/uptime", "r");
 
-      if(uptime_file == NULL) {
-        print_error("could not open /proc/uptime");
-        return 1;
-      }
-
-      fscanf(uptime_file, "%f", &uptime);
-      fclose(uptime_file);
-      
-      int uptime_new[3] = {0,0,0};
-      format_time(uptime_new,uptime);
-
-      time_t rawtime;
-      struct tm* timeinfo;
-      time(&rawtime);
-      timeinfo = localtime (&rawtime);
-
-      struct utmp* utmp_dat;
-      setutent();
-      uint32_t n_users = 0;
-      while((utmp_dat = getutent()) != NULL) {
-        if (utmp_dat->ut_line[0] == '~') continue;
-        if (utmp_dat->ut_user[0] && (strcmp(utmp_dat->ut_user, "LOGIN")==1)) {
-          n_users++;
+        if(uptime_file == NULL) {
+          print_error("could not open /proc/uptime");
+          return 1;
         }
-      }
-      endutent();
-      /*
-         stop gathering some data
-      */
 
-      /* we need to print something like:
-          [current time] up [up for x minutes||hh:mm], [number of users logged in] user(s), load average [load averages]
-      */
+        fscanf(uptime_file, "%f", &uptime);
+        fclose(uptime_file);
+        
+        int uptime_new[3] = {0,0,0};
+        format_time(uptime_new,uptime);
 
-      printf(" %02d:%02d:%02d up  ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
-      if(floor(uptime/3600) > 0) {
-        printf("%d:%02d,  ", uptime_new[0], uptime_new[1]);
-      } else {
-        printf("%d min,  ", (int)floor(uptime/60));
-      }
+        time_t rawtime;
+        struct tm* timeinfo;
+        time(&rawtime);
+        timeinfo = localtime (&rawtime);
 
-      printf("%d user", n_users);
-      if(n_users > 1) printf("s");
+        struct utmp* utmp_dat;
+        setutent();
+        uint32_t n_users = 0;
+        while((utmp_dat = getutent()) != NULL) {
+          if (utmp_dat->ut_line[0] == '~') continue;
+          if (utmp_dat->ut_user[0] && (strcmp(utmp_dat->ut_user, "LOGIN")==1)) {
+            n_users++;
+          }
+        }
+        endutent();
+        // -- stop gathering some data --
 
-      printf(",  load average: ");
+        /*
+            we need to print something like:
+            [current time] up [up for x minutes||hh:mm], [number of users logged in] user(s), load average [load averages]
+        */
+
+        printf(" %02d:%02d:%02d up  ", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+        if(floor(uptime/3600) > 0)
+            printf("%d:%02d,  ", uptime_new[0], uptime_new[1]);
+        else
+            printf("%d min,  ", (int)floor(uptime/60));
+
+        printf("%d user%c", n_users, (n_users>1) ? 's' : '\0');
+        printf(",  load average: ");
     }
-  #endif
+    #endif
 
-  #ifdef _WIN32
+    #ifdef _WIN32
     // TODO windows
     // TODO do we emulate /dev/ttyX or just output CON ?
-  #endif
-  return 0;
+    fputs("TODO  windows(mingw)", stderr);
+    return 1;
+    #endif
+
+    return 0;
 }

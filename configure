@@ -12,44 +12,52 @@ ANSI_NORM="\033[0m"
 #  Support functions
 #
 
-error() {
-  >&2 printf "${ANSI_RED}[  ERROR] -> %s${ANSI_NORM}\n" "$1" 
-  exit 1
+error()
+{
+    >&2 printf "${ANSI_RED}[  ERROR] -> %s${ANSI_NORM}\n" "$1" 
+    exit 1
 }
 
-warn() {
-  printf "${ANSI_YELLOW}[  WARN] -> %s${ANSI_NORM}\n" "$1"
+warn()
+{
+    printf "${ANSI_YELLOW}[  WARN] -> %s${ANSI_NORM}\n" "$1"
 }
 
-info() {
-  printf "${ANSI_BLUE}-> %s${ANSI_NORM}\n" "$1"
+info()
+{
+    printf "${ANSI_BLUE}-> %s${ANSI_NORM}\n" "$1"
 }
 
-success() {
-  printf "${ANSI_GREEN}-> %s${ANSI_NORM}\n" "$1"
+success()
+{
+    printf "${ANSI_GREEN}-> %s${ANSI_NORM}\n" "$1"
 }
 
-check_installed() {
-  $1 > /dev/null 2>&1
-  [ "$?" -eq 127 ] && error "$1 command not installed / not found in \$PATH"
+check_installed()
+{
+    $1 > /dev/null 2>&1
+    [ "$?" -eq 127 ] && error "$1 command not installed / not found in \$PATH"
 }
 
-check_lib() {
-  echo "Checking for lib${1} (-l$1) ..."
-  echo 'int main(void){}' | "$CC" $CFLAGS -xc - -l"$1" >/dev/null 2>&1 || error "Library 'lib${1}' not installed"
-  rm -f a.out a.exe
+check_lib()
+{
+    echo "Checking for lib${1} (-l$1) ..."
+    echo 'int main(void){}' | "$CC" $CFLAGS -xc - -l"$1" >/dev/null 2>&1 || error "Library 'lib${1}' not installed"
+    rm -f a.out a.exe
 }
 
-parse_option() {
-  option="$1"
-  [ "${option##*=}" = "$option" ] && error "Option requires assignment '=' $option"
-  [ -z "${option##*=}" ] && error "Option requires assignment '=' $option"
+parse_option()
+{
+    option="$1"
+    [ "${option##*=}" = "$option" ] && error "Option requires assignment '=' $option"
+    [ -z "${option##*=}" ] && error "Option requires assignment '=' $option"
 
-  printf "%s" "${option##*=}"
+    printf "%s" "${option##*=}"
 }
 
-print_usage() {
-  cat << EOF
+print_usage()
+{
+    cat << EOF
 
 zenithutils configure script
 usage:  $0 [options]
@@ -92,16 +100,22 @@ Environment variables:
   [LDFLAGS]  pass LDFLAGS to the C compiler at link-time  ($LDFLAGS)
 
 EOF
-  exit 1
+    exit 1
 }
 
 #
 #  Default options
 #
 
+_cflags="-std=c99 -Wall -Wextra -Wpedantic"
 [ -z "$CC" ] && CC="cc"
-[ -z "$CFLAGS" ] && CFLAGS="-O2 -std=c99 -Wall -Wextra -Wpedantic"
-[ -z "$LDFLAGS" ] && LDFLAGS="-O2 -s"
+if [ -z "$CFLAGS" ]; then
+    CFLAGS="$_cflags -O2 -Werror"
+else
+    CFLAGS="$_cflags $CFLAGS"
+fi
+
+[ -z "$LDFLAGS" ] && LDFLAGS="-s"
 PREFIX="/usr/local"
 WIN32=0
 stdin_max=4096
@@ -123,35 +137,35 @@ exedump_color2="\033[1;31m"
 # program_prefix=""
 
 while :; do
-  case "$1" in
-    --prefix*)                    PREFIX="$(parse_option "$1")";;
-    --destdir*)                   DESTDIR="$(parse_option "$1")";;
-    --program-prefix*)            program_prefix="$(parse_option "$1")";;
-    --enable-win32)               WIN32=1;;
-    --stdin-max*)                 stdin_max="$(parse_option "$1")";;
-    --pathname-max*)              pathname_max="$(parse_option "$1")";;
-    --enable-force-mingw-paths)   force_mingw_paths=1;;
-    --disable-colored-errors)     colored_errors=0;;
-    --disable-strict-seq)         strict_seq=0;;
-    --max-link-length*)           max_link_length="$(parse_option "$1")";;
-    --disable-ls-color)           ls_color=0;;
-    --base64-ignore*)             base64_ignore="$(parse_option "$1")";;
-    --base64-variant*)            base64_variant="$(parse_option "$1")";;
-    --base32-ab*)                 base32_ab="$(parse_option "$1")";;
-    --factor-max-primes*)         factor_max_primes="$(parse_option "$1")";;
-    --enable-ascii-show-octal)    ascii_show_octal=1;;
-    --string-maxstrlen*)          string_maxstrlen="$(parse_option "$1")";;
-    --exedump-color1*)            exedump_color1="$(parse_option "$1")";;
-    --exedump-color2*)            exedump_color2="$(parse_option "$1")";;
-    --no-exedump-color)           exedump_color1=""; exedump_color2="";;
-    --no-exedump-color2)          exedump_color2="";;
-    --host*)                      warn "if you are cross-compiling, --host isn't supported, instead specify C compiler via 'CC=...' envronment variable";;
-    --help|-h) print_usage;;
-    --) shift; break;;
-    '') break;;
-    *) warn "Unknown option $1"; print_usage;;
-  esac
-  shift
+    case "$1" in
+        --prefix*)                    PREFIX="$(parse_option "$1")";;
+        --destdir*)                   DESTDIR="$(parse_option "$1")";;
+        --program-prefix*)            program_prefix="$(parse_option "$1")";;
+        --enable-win32)               WIN32=1;;
+        --stdin-max*)                 stdin_max="$(parse_option "$1")";;
+        --pathname-max*)              pathname_max="$(parse_option "$1")";;
+        --enable-force-mingw-paths)   force_mingw_paths=1;;
+        --disable-colored-errors)     colored_errors=0;;
+        --disable-strict-seq)         strict_seq=0;;
+        --max-link-length*)           max_link_length="$(parse_option "$1")";;
+        --disable-ls-color)           ls_color=0;;
+        --base64-ignore*)             base64_ignore="$(parse_option "$1")";;
+        --base64-variant*)            base64_variant="$(parse_option "$1")";;
+        --base32-ab*)                 base32_ab="$(parse_option "$1")";;
+        --factor-max-primes*)         factor_max_primes="$(parse_option "$1")";;
+        --enable-ascii-show-octal)    ascii_show_octal=1;;
+        --string-maxstrlen*)          string_maxstrlen="$(parse_option "$1")";;
+        --exedump-color1*)            exedump_color1="$(parse_option "$1")";;
+        --exedump-color2*)            exedump_color2="$(parse_option "$1")";;
+        --no-exedump-color)           exedump_color1=""; exedump_color2="";;
+        --no-exedump-color2)          exedump_color2="";;
+        --host*)                      warn "if you are cross-compiling, --host isn't supported, instead specify C compiler via 'CC=...' envronment variable";;
+        --help|-h) print_usage;;
+        --) shift; break;;
+        '') break;;
+        *) warn "Unknown option $1"; print_usage;;
+    esac
+    shift
 done
 
 check_installed "$CC"
@@ -170,9 +184,9 @@ _features_list=""
 [ "$ls_color" = "1" ] && _features_list="${_features_list}ls_color  "
 
 if [ -z "$DESTDIR" ]; then
-  _destdir="/"
+    _destdir="/"
 else
-  _destdir="$DESTDIR"
+    _destdir="$DESTDIR"
 fi
 cat << EOF
 
@@ -247,7 +261,7 @@ WIN32 := $WIN32
 EOF
 
 [ -e "o/" ] || {
-  info "Creating binary output directories"
-  mkdir -vp o/bin o/sbin
+    info "Creating binary output directories"
+    mkdir -vp o/bin o/sbin
 }
 success "Configuration finished. Please run make"

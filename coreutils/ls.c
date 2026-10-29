@@ -1,12 +1,9 @@
-#define _XOPEN_SOURCE   600
-#define _POSIX_C_SOURCE 200112L
-
 #include <stdio.h>
 #include <dirent.h>
 #include <errno.h>
 #include <unistd.h>
 //#include <getopt.h>
-#include "../include/prettyprint.h"
+#include "../include/prettyprint.h" // includes "../include/color.h"
 #include "../config.h"
 
 #define DT_UNKNOWN 0
@@ -25,82 +22,83 @@
 // TODO options
 // TODO formatting
 
-int main(int argc, char* argv[]) {
-  char* program = argv[0];
-  char type = 'd';
+int main(int argc, char* argv[])
+{
+    const char* program = argv[0];
+    char type = 'd';
 
-  if(argc < 2) {
-    argv--;
-    argv[1] = ".";
-  }
-
-  DIR* d;
-  struct dirent* ent;
-  while(*++argv) {
-    // Try to open whatever path we got before us, be it a directory or a file
-    d = opendir(*argv);
-    switch(errno) {
-      case ENOTDIR:
-        type = 'f';
-        break;
-      case EACCES:
-        print_error("%s: '%s': Access denied", program, *argv);
-        return 1;
-        break;
-      case ENOENT:
-        print_error("%s: '%s': No such file or directory", program, *argv);
-        return 1;
-        break;
+    if(argc < 2) {
+        argv--;
+        argv[1] = ".";
     }
 
-    switch(type) {
-      case 'd':
-        while((ent = readdir(d))) {
-          #if LS_COLOR && !defined(_WIN32) // TODO d_type not supported on mingw?
-          switch(ent->d_type) {
-            case DT_BLK: // fallthrough
-            case DT_CHR: // bright yellow
-              printf("\033[1;33m");
+    DIR* d;
+    struct dirent* ent;
+    while(*++argv) {
+        // Try to open whatever path we got before us, be it a directory or a file
+        d = opendir(*argv);
+        switch(errno) {
+            case ENOTDIR:
+              type = 'f';
               break;
-            case DT_DIR:
-              printf("\033[1;34m");
+            case EACCES:
+              print_error("%s: '%s': Access denied", program, *argv);
+              return 1;
               break;
-            case DT_FIFO:
-            case DT_SOCK:
-              printf("\033[1;35m");
+            case ENOENT:
+              print_error("%s: '%s': No such file or directory", program, *argv);
+              return 1;
               break;
-            case DT_LNK:
-              printf("\033[1;36m");
-              break;
-            default: // any other file, check executable permission
-              #ifdef _WIN32
-              if(
-                file_ext_is(ent->d_name, "exe") ||
-                file_ext_is(ent->d_name, "cmd") ||
-                file_ext_is(ent->d_name, "bat")
-              ) // TODO this configuration is not hardcoded into windows
-              #else // On Unix
-              if(access(ent->d_name, X_OK) == 0)
-              #endif
-                printf("\033[1;32m");
-              break;
-          }
-          #endif // LS_COLOR, !_WIN32
+        }
 
-          printf("%s ", ent->d_name);
+        switch(type) {
+            case 'd':
+                while((ent = readdir(d))) {
+                    #if LS_COLOR && !defined(_WIN32) // TODO d_type not supported on mingw?
+                    switch(ent->d_type) {
+                        case DT_BLK: // fallthrough
+                        case DT_CHR: // bright yellow
+                            printf(ANSI_YELLOW);
+                            break;
+                        case DT_DIR:
+                            printf(ANSI_BLUE);
+                            break;
+                        case DT_FIFO:
+                        case DT_SOCK:
+                            printf(ANSI_MAGENTA);
+                            break;
+                        case DT_LNK:
+                            printf(ANSI_CYAN);
+                            break;
+                        default: // any other file, check executable permission
+                            #ifdef _WIN32
+                            if(
+                              file_ext_is(ent->d_name, "exe") ||
+                              file_ext_is(ent->d_name, "cmd") ||
+                              file_ext_is(ent->d_name, "bat")
+                            ) // TODO this configuration is not hardcoded into windows
+                            #else // On Unix
+                            if(access(ent->d_name, X_OK) == 0)
+                            #endif
+                              printf(ANSI_GREEN);
+                            break;
+                    }
+                    #endif // LS_COLOR, !_WIN32
 
-          #if LS_COLOR && !defined(_WIN32)
-          printf("\033[0m");
-          #endif // LS_COLOR, !_WIN32
-      }
-        break;
-      case 'f':
-        printf("%s ", *argv);
-        break;
+                    printf("%s ", ent->d_name);
+
+                    #if LS_COLOR && !defined(_WIN32)
+                    printf(ANSI_NORM);
+                    #endif // LS_COLOR, !_WIN32
+                }
+                break;
+            case 'f':
+                printf("%s ", *argv);
+                break;
+        }
+        if(type == 'd') closedir(d);
+        putchar('\n');
     }
-    if(type == 'd')
-      closedir(d);
-    putchar('\n');
-  }
-  return 0;
+
+    return 0;
 }

@@ -1,20 +1,20 @@
-#define _XOPEN_SOURCE   600
-#define _POSIX_C_SOURCE 200112L
-
 #include <stdio.h>
 #include <libgen.h>
 
-void print_usage(char* argv0) {
-  fprintf(stderr, "usage: %s path [...]\n", argv0);
+void print_usage(const char* program)
+{
+  fprintf(stderr, "usage: %s path [...]\n", program);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
   if(argc < 2) {
-    print_usage(argv[0]);
-    return 1;
+      print_usage(argv[0]);
+      return 1;
   }
 
   while(*++argv)
-    printf("%s\n", dirname(*argv));
+      printf("%s\n", dirname(*argv));
+
   return 0;
 }

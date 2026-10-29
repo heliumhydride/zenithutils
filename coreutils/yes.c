@@ -1,17 +1,16 @@
-#define _XOPEN_SOURCE   600
-#define _POSIX_C_SOURCE 200112L
-
 #include <stdio.h>
 
-int main(int argc, char* argv[]) {
-  char* expletive = "y";
+int main(int argc, char* argv[])
+{
+    char* expletive = "y";
 
-  if(argc >= 2)
-    expletive = argv[1];
+    if(argc >= 2) expletive = argv[1];
 
-  while(1)
-    printf("%s\n", expletive);
+    while(1) printf("%s\n", expletive);
 
-  // we dont need return ?
-  return 0;
+    /*
+        We don't need return in practice, but in theory it is needed in the eyes of the compiler, because main() should return an integer.
+        Let's return a very bad integer because we're not supposed to reach this place.
+    */
+    return 255;
 }
