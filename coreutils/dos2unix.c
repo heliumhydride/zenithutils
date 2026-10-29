@@ -11,7 +11,7 @@ void print_usage(const char* program)
 
 int main(int argc, char* argv[])
 {
-    const char* program = argv[0];
+    char* program = argv[0];
     char convert_to = 'u'; // default, u=dos2unix, d=unix2dos
 
     // if called as unix2dos, switch to unix2dos mode

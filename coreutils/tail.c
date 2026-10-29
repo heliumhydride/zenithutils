@@ -15,7 +15,6 @@ void print_usage(const char* program)
   fprintf(stderr, "usage: %s [-f] [-s float] [-n int] [-v|-q]\n", program);
 }
 
-// TODO tail -f, make use of -s
 int main(int argc, char* argv[])
 {
     const char* program = argv[0];
@@ -25,6 +24,10 @@ int main(int argc, char* argv[])
     int verbosity = 1; // quiet:0 normal:1 full:2
     int fflag = 0; // follow file output
     float sleep_interval = 1.0f; // in seconds
+
+    // TODO tail -f, make use of -s
+    (void)fflag;
+    (void)sleep_interval;
 
     char* endptr;
     int opt;

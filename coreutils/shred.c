@@ -23,10 +23,10 @@ int main(int argc, char* argv[])
     long n_iterations = 3;
     int uflag = 0;
     int opt;
+    char* endptr = NULL;
     while((opt = getopt(argc, argv, ":n:u")) != -1) {
         switch(opt) {
             case 'n':
-                char* endptr = NULL;
                 n_iterations = strtol(optarg, &endptr, 10);
                 if(optarg == endptr) {
                     print_error("%s: %s is not a positive integer", program, optarg);

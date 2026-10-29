@@ -16,6 +16,7 @@ void print_usage(const char* program) {
 
 int main(int argc, char* argv[])
 {
+    (void)argc;
     char* username = NULL;
 
     #ifdef _WIN32

@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
     else
       printf(">> replace %s by %s\n <<", string1, string2);
 
+    (void)cflag; (void)sflag;
     /* TODO
     if(cflag) {
       // complement
@@ -64,6 +65,6 @@ int main(int argc, char* argv[])
     */
 
     // TODO no more getbytes_stdin
-    printf("%s", getbytes_stdin());
+    // printf("%s", getbytes_stdin());
     return 0;
 }

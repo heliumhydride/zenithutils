@@ -114,6 +114,8 @@ if [ -z "$CFLAGS" ]; then
 else
     CFLAGS="$_cflags $CFLAGS"
 fi
+# for stb_ds.h: not my library, not my problem:
+CFLAGS="$CFLAGS -Wno-error=sign-compare"
 
 [ -z "$LDFLAGS" ] && LDFLAGS="-s"
 PREFIX="/usr/local"

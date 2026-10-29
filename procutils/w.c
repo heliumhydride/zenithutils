@@ -87,6 +87,17 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // TODO parameters
+    (void)nflag;
+    (void)Nflag;
+    (void)Mflag;
+    (void)iflag;
+    (void)Aflag;
+    (void)sflag;
+    (void)pflag;
+    (void)uptime_sflag;
+    (void)uptime_pflag;
+
     #ifndef _WIN32 // On Unix
     if(!hflag) {
         // -- gather some data here --

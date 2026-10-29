@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 500
 #include <errno.h>
 #include <getopt.h>
 #include <stdio.h>
@@ -7,7 +8,7 @@
 
 void print_usage(const char* program)
 {
-  fprintf(stderr, "usage: %s [-fevqn] [file] ...\n", program);
+    fprintf(stderr, "usage: %s [-fevqn] [file] ...\n", program);
 }
 
 int main(int argc, char* argv[])
@@ -61,6 +62,7 @@ int main(int argc, char* argv[])
     }
 
     // TODO implement -f, -e
+    (void)fflag; (void)eflag;
     while(*++argv) {
         char buf[MAX_LINK_LENGTH] = {0};
         if(-1 == readlink(*argv, buf, sizeof(buf))) {

@@ -39,14 +39,20 @@ int main(int argc, char* argv[])
     }
     // TODO allow taking one or two file args, while still keeping getopt working correctly (see usage, infile, outfile)
 
+    // TODO TODO TODO TODO TODO this code is so outdated and used functions that don't exist anymore i hate it aaaaaaaaaa
+    (void)dflag;
+    (void)cflag;
+    (void)uflag;
+
+    /*
     char* stdin_buffer;
     char* old_line;
     char* current_line;
     int count = 1; // TODO count occurences of a line
 
-    // TODO no more getbytes_stdin, rework all of this in general
     if(argc == optind) { // No arg, we read from stdin
-        stdin_buffer = getbytes_stdin();
+        // TODO no more getbytes_stdin, rework all of this in general
+        stdin_buffer = NULL;
         if(NULL == stdin_buffer) {
             print_error("%s: getbytes_stdin() failed", argv[0]);
             return 1;
@@ -59,12 +65,17 @@ int main(int argc, char* argv[])
         }
 
         stdin_buffer = malloc(get_filesize(fileptr)+1);
-        if(readfile(fileptr, input_buffer) == -1)
+        // TODO read file
+        if(readfile(fileptr, input_buffer) == -1) {
             print_error("%s: read error", argv[0]);
-        fclose(fileptr)
+            return 1;
+        }
+        fclose(fileptr);
     }
-
+    */
     // TODO split into each line (see tac.c for example)
+
+    /*
     while((current_line = strsep(&stdin_buffer, "  ")) != NULL) {
       if(cflag == 1)
           printf("%8d ", count);
@@ -72,6 +83,8 @@ int main(int argc, char* argv[])
           printf("%s\n", current_line);
       old_line = current_line;
     }
+    */
+
     // TODO go through each line and either show only duplicates or unique lines (store previous file into prev_linebuffer)
 
     return 0;

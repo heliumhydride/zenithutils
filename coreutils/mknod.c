@@ -11,8 +11,8 @@
 
 void print_usage(const char* program)
 {
-  fprintf(stderr, "usage: %s [-m mode] [-u uid] [-g gid] path type maj [min]\n", program);
-  fprintf(stderr, "where type is b|c|u|p\n");
+    fprintf(stderr, "usage: %s [-m mode] [-u uid] [-g gid] path type maj [min]\n", program);
+    fprintf(stderr, "where type is b|c|u|p\n");
 }
 
 int main(int argc, char* argv[]) {
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    printf("mode %u\nuid  %d\ngid  %d\n", mode, uid, gid);
+    printf("mode %u\nuid  %zu\ngid  %zu\n", mode, uid, gid);
 
     filename = argv[optind];
     type     = argv[optind+1][0];

@@ -62,4 +62,9 @@ int uname(struct utsname* uts)
             break;
     }
 }
+#else
+void utsname_winnt_unused(void)
+{
+    (void)0;
+}
 #endif // _WIN32

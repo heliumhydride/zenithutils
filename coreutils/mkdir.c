@@ -1,10 +1,11 @@
+#define _XOPEN_SOURCE 500
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <getopt.h>
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
-#include <sys/stat.h>
 #include <libgen.h>
 #include <dirent.h>
 #include "../include/prettyprint.h"

@@ -41,8 +41,9 @@ int main(int argc, char* argv[])
                 }
                 count = atol(optarg);
                 break;
-            case '?': // fallthrough
+            case '?':
                 print_error("%s: invalid option -- '%c'", argv[0], optopt);
+                // fallthrough
             case 'h':
                 print_usage(argv[0]);
                 return 1;
@@ -55,7 +56,7 @@ int main(int argc, char* argv[])
     char u[37] = {0};
     for(size_t i = 0; i < count; i++) {
         uuidgen(u);
-        puts(u)
+        puts(u);
     }
 
     return 0;

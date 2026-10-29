@@ -11,11 +11,14 @@ all: $(PROGS)
 %.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
+w.o: w.c ../config.h
+	$(CC) $(CFLAGS) -c $< -o $@ -DPROG_PREFIX=\"$(PROG_PREFIX)\"
+
 kill.o: kill.c
 ifeq ($(WIN32), 1)
 	$(CC) $(CFLAGS) -c kill_win32.c -o kill.o
 else
-	$(CC) $(CFLAGS) -c kill.c -o kill.o
+	$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c kill.c -o kill.o
 endif
 
 kill: kill.o ../lib/prettyprint.o ../lib/util.o

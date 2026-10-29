@@ -45,8 +45,9 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    // TODO implement rmdir -p
+    (void)pflag;
     while(*++argv) {
-        // TODO implement rmdir -p
         if(rmdir(*argv) == -1) {
             switch(errno) { // UGLY ERROR HANDLING
                 case EACCES:

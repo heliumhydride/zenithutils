@@ -28,18 +28,13 @@ int main(int argc, char* argv[])
     char cwd[PATH_MAX];
 
     int Lflag = 0;
-    int Pflag = 0;
     int opt;
     while((opt = getopt(argc, argv, ":LP")) != -1) {
         switch(opt) {
-            case 'L':
-                // Use the PWD variable on unix and the CD variable on Windows
-                // (logical working directory)
+            case 'L': // Use the PWD variable on unix and the CD variable on Windows (logical working directory)
                 Lflag = 1;
                 break;
-            case 'P':
-                // Resolve symlinks (aka. "Print physical working directory")
-                Pflag = 1; // ignored; default
+            case 'P': // Resolve symlinks (aka. "Print physical working directory")
                 break;
             case '?':
                 print_error("%s: invalid option -- '%c'", argv[0], optopt);
@@ -49,8 +44,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    if(!Lflag) {
-        // We use OS functions (normal pwd behaviour)
+    if(!Lflag) { // We use OS functions (normal pwd behaviour)
         #ifdef _WIN32
         GetCurrentDirectory(PATH_MAX, cwd);
         if(FORCE_MINGW_PATHS) {
@@ -68,8 +62,7 @@ int main(int argc, char* argv[])
             return 1;
         }
         #endif // _WIN32
-    } else {
-        // We use PWD/CD environment variable (gnu pwd -L behaviour)
+    } else { // We use PWD/CD environment variable (gnu pwd -L behaviour)
         if(getenv("PWD") != NULL) {
             printf("%s\n", getenv("PWD"));
         } else {

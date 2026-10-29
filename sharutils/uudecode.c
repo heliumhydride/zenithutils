@@ -1,6 +1,7 @@
+#include <getopt.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void print_usage(const char* program)
 {
@@ -9,9 +10,10 @@ void print_usage(const char* program)
 
 char* uudecode(char* in)
 {
-    char* buf;
     // TODO: uudecode from 'in' to 'buf'
-    return buf;
+    // char* buf;
+    (void)in;
+    return NULL;
 }
 
 enum {
@@ -38,7 +40,7 @@ int main(int argc, char* argv[])
                 break;
             case 'o':
                 output = OUTPUT_TO_FILE;
-                char* outfilename;
+                // char* outfilename;
                 // TODO get optarg for 'o' to 'outfilename'
                 break;
             case '?':
@@ -49,6 +51,7 @@ int main(int argc, char* argv[])
         }
     }
 
+    (void)output;
     // TODO: get inputfile filename (if any, if not use stdin) from argv
     switch(mode) {
       case FORMAT_UUENCODE:

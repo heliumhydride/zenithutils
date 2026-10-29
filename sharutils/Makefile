@@ -10,9 +10,9 @@ all: $(PROGS)
 shar: shar.sh
 	cp shar.sh ../o/bin/$(PROG_PREFIX)shar
 
-uuencode: uuencode.o ../lib/prettyprint.o ../lib/base64.o
+uuencode: uuencode.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-udecode: uudecode.o ../lib/prettyprint.o ../lib/util.o
+uudecode: uudecode.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 

@@ -137,6 +137,6 @@ int main(int argc, char* argv[])
         mingw_path(fullpath_new, fullpath);
     #endif // _WIN32
 
-    puts(fullpath_new)
+    puts(fullpath_new);
     return 0;
 }
