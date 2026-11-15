@@ -22,8 +22,7 @@ build system:
     proper makefile for lib/* to run before everything else
     configure --debug-build: auto set LDFLAGS="-ggdb" CFLAGS="-O0 -ggdb -Wall -Wextra -Wpedantic -Werror"
     if target is windows, instead of building binaries saying "doesnt apply to windows", just don't build them lol (ifeq w/ WIN32 and change PROGRAMS accordingly)
-try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c for example)
-use perror(3) where possible, especially in mkdir (well, use perror2)
+try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c and zenithutils/coreutils/hostname.c for example)
 in some places, to not fclose stdin, there is a strcmp("-",argv[1]). horrible, do like in coreutils/wc instead and do if(fp != stdin) fclose(fp);
 clear command: adapt for mingw, see related todo in customtools/clear.c
 some programs still need style update, eg coreutils/base64
