@@ -10,8 +10,6 @@ lib/util.c:
     read_entire_file() function
     is_mode_t: modes can be e.g. 1777, so 4 chars long
     shift_args family of functions
-    in lib/util_m.c explain why libutil was split (to avoid linking with -lm all the time)
-lib/prettyprint.c: cleanup a bit?
 build system:
     allow make check, make tags to run before checking for config.{h,mk} (but putting them before the ifeq doesn't fix that?)
     rule to build binaries:
@@ -19,7 +17,6 @@ build system:
             $(CC) ...
         and individual rules for binaries in sbin ../o/sbin/*
         (to simplify makefiles and not rebuild programs when already built)
-    proper makefile for lib/* to run before everything else
     configure --debug-build: auto set LDFLAGS="-ggdb" CFLAGS="-O0 -ggdb -Wall -Wextra -Wpedantic -Werror"
     if target is windows, instead of building binaries saying "doesnt apply to windows", just don't build them lol (ifeq w/ WIN32 and change PROGRAMS accordingly)
 try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c and zenithutils/coreutils/hostname.c for example)
