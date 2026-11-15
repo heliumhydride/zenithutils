@@ -169,3 +169,14 @@ uint64_t reverse_end64(uint64_t val)
           ((val >> 16) & 0x0000FFFF0000FFFFULL);
     return (val << 32) | (val >> 32);
 }
+
+int mkdir2(const char* pathname, const mode_t mode)
+{
+    #ifdef _WIN32
+    (void)mode; // Ignore mode parameter
+    return mkdir(pathname);
+    #else // On Unix
+    return mkdir(pathname, mode);
+    #endif
+}
+

@@ -11,30 +11,6 @@
 #include "../include/prettyprint.h"
 #include "../include/util.h"
 
-// globals to be accessible to functions
-static int vflag;
-char* program;
-
-int my_mkdir(const char *pathname, mode_t mode)
-{
-    #ifdef _WIN32
-    (void)mode; // forget mode
-    #endif
-
-    #ifdef _WIN32
-    int status = mkdir(pathname);
-    #else // On Unix
-    int status = mkdir(pathname, mode);
-    #endif
-
-    if((status == 0) && vflag) {
-        printf("%s: created directory '%s'\n", program, pathname);
-        return 0;
-    } else {
-        return status;
-    }
-}
-
 int direxists(const char* pathname)
 {
     struct stat st;
@@ -59,7 +35,7 @@ int mkdir_p(const char* pathname, mode_t mode)
     if(!direxists(parent))
         mkdir_p(parent, mode);
 
-    if(my_mkdir(pathname, mode) == 0) {
+    if(mkdir2(pathname, mode) == 0) {
         free(tmp);
         return 0;
     }
@@ -86,15 +62,15 @@ void print_usage(const char* program)
 
 int main(int argc, char* argv[])
 {
+    const char* program = argv[0];
     int opt;
     int pflag = 0; // create directories recursively
-    vflag = 0; // show operations / verbose mode
+    int vflag = 0; // show operations / verbose mode
     int mflag = 0; // using mode flag to set mode
     mode_t mode = 0755;
     #if !defined(_WIN32) // On Unix
     mode_t process_umask = 0;
     #endif // !_WIN32
-    program = argv[0];
 
     while((opt = getopt(argc, argv, ":m:pv")) != -1) {
       switch(opt) {
@@ -143,7 +119,7 @@ int main(int argc, char* argv[])
     while(*++argv) {
       int status;
       if(pflag) status = mkdir_p(*argv, mode);
-      else      status = my_mkdir(*argv, mode);
+      else      status = mkdir2(*argv, mode);
 
       if(status == -1) {
           switch(errno) { // UGLY ERROR HANDLING

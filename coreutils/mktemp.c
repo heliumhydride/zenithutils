@@ -16,16 +16,6 @@
 
 const char* xreplacer = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyz0123456789";
 
-int my_mkdir(const char* pathname, const mode_t mode)
-{
-    #ifdef _WIN32
-    (void)mode; // Ignore mode parameter
-    return mkdir(pathname);
-    #else // On Unix
-    return mkdir(pathname, mode);
-    #endif
-}
-
 void print_usage(const char* program)
 {
     fprintf(stderr, "usage: %s [-dqu] [-p tmpdir] [-t prefix | template]\n", program);
@@ -111,7 +101,7 @@ int main(int argc, char* argv[])
 
     if(!uflag) {
         if(dflag) { // we create a directory
-            if(my_mkdir(fullpath, 0700) != 0) {
+            if(mkdir2(fullpath, 0700) != 0) {
               if(!qflag)
                   print_error("%s: creating directory '%s' failed", fullpath);
               return 1;

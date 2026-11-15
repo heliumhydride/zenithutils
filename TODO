@@ -1,9 +1,9 @@
+mkdir -v: print when a directory has been created, outside the mkdir function (maybe in mkdir_p)
 make a argv,argc shifting function in util.c, to avoid weird argv+= optind-1 etc..
     make two versions, one when getopt is or isn't used
         shift_args(&argc,&argv);
         shift_args_getopt(&argc,&argv,optind);
 lib/util.c:
-    move my_mkdir and rename to mkdir2
     read_entire_file() function
     is_mode_t: modes can be e.g. 1777, so 4 chars long
     perror2(const char* s, const char* program),
