@@ -1,12 +1,53 @@
--- CODE GOALS --
+make a argv,argc shifting function in util.c, to avoid weird argv+= optind-1 etc..
+    make two versions, one when getopt is or isn't used
+        shift_args(&argc,&argv);
+        shift_args_getopt(&argc,&argv,optind);
+lib/util.c:
+    update code style
+    move my_mkdir and rename to mkdir2
+    read_entire_file() function
+    is_mode_t: modes can be e.g. 1777, so 4 chars long
+    perror2(const char* s, const char* program),
+        see ctests/httpd.c, but program is passed as arg instead of being a global
+    shift_args family of functions
+    in lib/util_m.c explain why libutil was split (to avoid linking with -lm all the time)
+lib/prettyprint.c: cleanup a bit?
+build system:
+    make documentation optional:
+         make docs (copies documentation to o/usr/share)
+         say in readme to run make docs optionally to get documentation
+    allow make check, make tags to run before checking for config.{h,mk}
+    make check:
+        instead of using find and xargs, just run cppcheck on the current directory, but exclude stb_ds.h
+            cppcheck --std=c99 . --check-level=exhaustive --suppress='*:include/stb_ds.h'
+            #                                             ^^^
+            #                                             not my library not my problem
+    rule to build binaries:
+        %: ../o/bin/%
+            $(CC) ...
+        and individual rules for binaries in sbin ../o/sbin/*
+        (to simplify makefiles and not rebuild programs when already built)
+    proper makefile for lib/* to run before everything else
+    configure --debug-build: auto set LDFLAGS="-ggdb" CFLAGS="-O0 -ggdb -Wall -Wextra -Wpedantic -Werror"
+    if target is windows, instead of building binaries saying "doesnt apply to windows", just don't build them lol (ifeq w/ WIN32 and change PROGRAMS accordingly)
+try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c for example)
+use perror(3) where possible, especially in mkdir (well, use perror2)
+in some places, to not fclose stdin, there is a strcmp("-",argv[1]). horrible, do like in coreutils/wc instead and do if(fp != stdin) fclose(fp);
+clear command: adapt for mingw, see related todo in customtools/clear.c
+some programs still need style update, eg coreutils/base64
+mknod check atoi validity for maj/min of nodes
+retest build for all platforms
+implement:
+    ++ date, cal, errno*
+    -- reconsider read, some things need to be left to the shell (time may be kept because dash doesn't have it)
+* see errno(3). doesn't seem to be standard however, but glibc says it exists so let's go
 
-rework subdir makefiles to not rebuild output binaries all the time
+
 rework: uniq, tr
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
 coreutils/sha512sum: -btcz
 coreutils/sha256sum
-
 coreutils/tail: -f
 findutils/xargs todos
 printf + printf manpage
