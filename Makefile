@@ -1,7 +1,6 @@
 ifeq ($(wildcard config.mk),)
   $(error Please run ./configure first..)
 endif
-
 include config.mk
 
 SUBDIRS = customtools coreutils util-linux which procutils diffutils findutils grep gzip iconv patch sed sharutils su passwdutils
@@ -31,7 +30,8 @@ distclean: clean
 	rm -rf config.h config.mk o/
 
 check:
-	find -name '*.c' -or -name '*.h' | xargs cppcheck --std=c99 --check-level=exhaustive
+	#                                             -> not my library not my problem
+	cppcheck --std=c99 . --check-level=exhaustive --suppress='*:include/stb_ds.h'
 	shellcheck -S style -s sh scripts/* configure
 
 tags:
