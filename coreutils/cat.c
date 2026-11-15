@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
             count++;
         }
         free(line);
-        if(strcmp(*argv,"-")) fclose(fp); // only close if not stdin
+        if(fp != stdin) fclose(fp);
     }
 
     return 0;
