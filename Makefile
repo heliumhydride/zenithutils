@@ -1,7 +1,16 @@
+NO_CONFIG_TARGETS := check tags
+
+# If no goals were specified, require config.mk.
+# Otherwise, require it if any requested goal isn't in the whitelist.
+NEEDS_CONFIG := $(if $(strip $(MAKECMDGOALS)),\
+    $(filter-out $(NO_CONFIG_TARGETS),$(MAKECMDGOALS)),default)
+
+ifneq ($(strip $(NEEDS_CONFIG)),)
 ifeq ($(wildcard config.mk),)
-  $(error Please run ./configure first..)
+    $(error Please run ./configure first.)
 endif
 include config.mk
+endif
 
 SUBDIRS = customtools coreutils util-linux which procutils diffutils findutils grep gzip iconv patch sed sharutils su passwdutils
 

@@ -11,7 +11,6 @@ lib/util.c:
     is_mode_t: modes can be e.g. 1777, so 4 chars long
     shift_args family of functions
 build system:
-    allow make check, make tags to run before checking for config.{h,mk} (but putting them before the ifeq doesn't fix that?)
     rule to build binaries:
         %: ../o/bin/%
             $(CC) ...
