@@ -13,12 +13,7 @@ lib/util.c:
     in lib/util_m.c explain why libutil was split (to avoid linking with -lm all the time)
 lib/prettyprint.c: cleanup a bit?
 build system:
-    allow make check, make tags to run before checking for config.{h,mk}
-    make check:
-        instead of using find and xargs, just run cppcheck on the current directory, but exclude stb_ds.h
-            cppcheck --std=c99 . --check-level=exhaustive --suppress='*:include/stb_ds.h'
-            #                                             ^^^
-            #                                             not my library not my problem
+    allow make check, make tags to run before checking for config.{h,mk} (but putting them before the ifeq doesn't fix that?)
     rule to build binaries:
         %: ../o/bin/%
             $(CC) ...
