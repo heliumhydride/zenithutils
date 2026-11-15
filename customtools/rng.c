@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sodium.h>
-
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 void print_usage(const char* program)

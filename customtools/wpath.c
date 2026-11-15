@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 #include "../config.h"
 
 static int pflag = 0; // {mingw,win32}path need to know about this
 
-void mingw_path(char* path)
+void mingw_path2(char* path)
 {
     for(size_t i = 0; i < strlen(path); i++) {
         if(path[i] == '\\')          path[i] = '/';
@@ -14,7 +14,7 @@ void mingw_path(char* path)
     }
 }
 
-void win32_path(char* path)
+void win32_path2(char* path)
 {
     for(size_t i = 0; i < strlen(path); i++) {
         if(path[i] == '/')           path[i] = '\\';
@@ -63,10 +63,10 @@ int main(int argc, char* argv[])
 
         switch(mode) {
             case 'm':
-                mingw_path(buf);
+                mingw_path2(buf);
                 break;
             case 'w':
-                win32_path(buf);
+                win32_path2(buf);
                 break;
         }
         puts(buf);
@@ -74,10 +74,10 @@ int main(int argc, char* argv[])
         while(*++argv) {
             switch(mode) {
                 case 'm':
-                    mingw_path(*argv);
+                    mingw_path2(*argv);
                     break;
                 case 'w':
-                    win32_path(*argv);
+                    win32_path2(*argv);
                     break;
             }
             puts(*argv);

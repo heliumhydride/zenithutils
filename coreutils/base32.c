@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 static int _b32_err = 0;

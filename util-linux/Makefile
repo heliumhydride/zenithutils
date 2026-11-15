@@ -16,15 +16,15 @@ all: $(PROGS)
 %.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-rev: rev.o ../lib/prettyprint.o ../lib/util.o
+rev: rev.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 nologin: nologin.o
 	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$(PROG_PREFIX)$@
 
 # requires libsodium
-uuidgen: uuidgen.o ../lib/prettyprint.o ../lib/util.o
+uuidgen: uuidgen.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
 
-hexdump: hexdump.o ../lib/prettyprint.o
+hexdump: hexdump.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@

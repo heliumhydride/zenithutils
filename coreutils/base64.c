@@ -6,7 +6,6 @@
 #include <string.h>
 #include <getopt.h>
 #include <sodium.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 #include "../config.h"
 

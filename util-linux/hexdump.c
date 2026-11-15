@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <ctype.h>
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 
 void print_ascii_representation(const uint8_t* buf)
 {

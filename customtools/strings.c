@@ -2,7 +2,6 @@
 #include <getopt.h>
 #include <string.h>
 #include <ctype.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 #include "../config.h"
 

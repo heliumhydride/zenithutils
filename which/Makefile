@@ -7,6 +7,6 @@ all: $(PROGS)
 %.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-which: which.o ../lib/prettyprint.o ../lib/util.o
+which: which.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 

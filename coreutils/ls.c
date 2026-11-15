@@ -3,7 +3,7 @@
 #include <errno.h>
 #include <unistd.h>
 //#include <getopt.h>
-#include "../include/prettyprint.h" // includes "../include/color.h"
+#include "../include/util.h" // includes "../include/color.h"
 #include "../config.h"
 
 #define DT_UNKNOWN 0

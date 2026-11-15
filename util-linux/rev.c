@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/util.h"
-#include "../include/prettyprint.h"
 
 void rev(char* out, char* in)
 { 

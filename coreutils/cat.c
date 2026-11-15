@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <getopt.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 void print_usage(const char* program)

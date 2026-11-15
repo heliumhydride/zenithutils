@@ -4,7 +4,6 @@
 #define STB_DS_IMPLEMENTATION
 #include "../include/stb_ds.h"
 
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 // void print_usage(const char* program);

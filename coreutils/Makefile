@@ -12,25 +12,25 @@ all: $(PROGS)
 %.o: %.c ../config.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-dos2unix.o: dos2unix.c
+dos2unix.o: dos2unix.c ../lib/util.o
 	$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-cat: cat.o ../lib/prettyprint.o ../lib/util.o
+cat: cat.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 nproc: nproc.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-ls: ls.o ../lib/prettyprint.o
+ls: ls.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-uname: uname.o ../lib/prettyprint.o ../lib/utsname_winnt.o
+uname: uname.o ../lib/util.o ../lib/utsname_winnt.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-seq: seq.o ../lib/prettyprint.o
+seq: seq.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-pwd: pwd.o ../lib/prettyprint.o ../lib/util.o
+pwd: pwd.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 true: true.o
@@ -48,59 +48,59 @@ dirname: dirname.o
 basename: basename.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-tac: tac.o ../lib/prettyprint.o ../lib/util.o
+tac: tac.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-sleep: sleep.o ../lib/prettyprint.o
+sleep: sleep.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-wc: wc.o ../lib/prettyprint.o
+wc: wc.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-tr: tr.o ../lib/prettyprint.o ../lib/util.o
+tr: tr.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-base64: base64.o ../lib/prettyprint.o ../lib/util.o
+base64: base64.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
 
-base32: base32.o ../lib/prettyprint.o ../lib/util.o
+base32: base32.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-# requires ../libsodium
-mktemp: mktemp.o ../lib/prettyprint.o ../lib/util.o
+# requires libsodium
+mktemp: mktemp.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
 
-mknod: mknod.o ../lib/prettyprint.o ../lib/util.o
+mknod: mknod.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$(PROG_PREFIX)$@
 
-whoami: whoami.o ../lib/prettyprint.o
+whoami: whoami.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 tty: tty.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-test: test.o ../lib/prettyprint.o
+test: test.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-uniq: uniq.o ../lib/prettyprint.o ../lib/util.o
+uniq: uniq.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-mkdir: mkdir.o ../lib/prettyprint.o ../lib/util.o
+mkdir: mkdir.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-rmdir: rmdir.o ../lib/prettyprint.o
+rmdir: rmdir.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-head: head.o ../lib/prettyprint.o ../lib/util.o
+head: head.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-tail: tail.o ../lib/prettyprint.o ../lib/util.o
+tail: tail.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-readlink: readlink.o ../lib/prettyprint.o
+readlink: readlink.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-dos2unix: dos2unix.o ../lib/prettyprint.o
+dos2unix: dos2unix.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 unix2dos: dos2unix
@@ -113,23 +113,23 @@ endif
 echo: echo.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-tee: tee.o ../lib/prettyprint.o
+tee: tee.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-shred: shred.o ../lib/prettyprint.o
+shred: shred.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@ -lsodium 
 
-rm: rm.o ../lib/prettyprint.o
+rm: rm.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-sha512sum: sha512sum.o ../lib/prettyprint.o ../lib/util.o
-	$(LD) $(LDFLAGS) -lsodium $^ -o ../o/bin/$(PROG_PREFIX)$@
+sha512sum: sha512sum.o ../lib/util.o
+	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
 
-hostname: hostname.o ../lib/prettyprint.o
+hostname: hostname.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-factor: factor.o ../lib/prettyprint.o
+factor: factor.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-touch: touch.o ../lib/prettyprint.o
+touch: touch.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@

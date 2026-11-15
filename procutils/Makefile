@@ -21,7 +21,7 @@ else
 	$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c kill.c -o kill.o
 endif
 
-kill: kill.o ../lib/prettyprint.o ../lib/util.o
+kill: kill.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 pkill: kill
@@ -31,5 +31,5 @@ else
 	cp ../o/bin/$(PROG_PREFIX)kill ../o/bin/$(PROG_PREFIX)pkill
 endif
 
-w: w.o ../lib/prettyprint.o ../lib/util.o ../lib/util_m.o
+w: w.o ../lib/util.o ../lib/util_m.o
 	$(LD) $(LDFLAGS) $^ -lm -o ../o/bin/$(PROG_PREFIX)$@ 

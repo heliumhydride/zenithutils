@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <errno.h>
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 
 // TODO rm -r, -i
 // TODO properly make use of -f flag ?

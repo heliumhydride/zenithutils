@@ -13,25 +13,25 @@ ascii: ascii.o
 clear: clear.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-exedump: exedump.o ../lib/prettyprint.o ../lib/util.o
+exedump: exedump.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-read: read.o ../lib/prettyprint.o
+read: read.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-rng: rng.o ../lib/prettyprint.o ../lib/util.o
+rng: rng.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@ -lsodium
 
-strings: strings.o ../lib/prettyprint.o ../lib/util.o
+strings: strings.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 time: time.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-usleep: usleep.o ../lib/prettyprint.o ../lib/util.o
+usleep: usleep.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
-wpath: wpath.o ../lib/prettyprint.o
+wpath: wpath.o ../lib/util.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 zenithutils_version: zenithutils_version.o

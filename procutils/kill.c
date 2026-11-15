@@ -4,7 +4,6 @@
 #include <string.h>
 #include <getopt.h>
 #include <signal.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 #include "../include/sigmap.h"
 #include "../config.h"

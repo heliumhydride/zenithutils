@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <getopt.h>
 
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 #include <sodium.h>
 

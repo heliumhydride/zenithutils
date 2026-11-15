@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <getopt.h>
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 
 #ifdef _WIN32
-  // #include <sysinfoapi.h>
-  #include "../include/utsname_winnt.h"
+    // #include <sysinfoapi.h>
+    #include "../include/utsname_winnt.h"
 #else // On Unix
-  #include <sys/utsname.h>
+    #include <sys/utsname.h>
 #endif
 
 void print_usage(const char* program)
 {
-  fprintf(stderr, "usage: %s [-asnrvmpio]\n", program);
+    fprintf(stderr, "usage: %s [-asnrvmpio]\n", program);
 }
 
 void print_sysname(struct utsname u)

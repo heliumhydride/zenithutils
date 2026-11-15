@@ -3,7 +3,6 @@
 #include <string.h>
 #include <tlhelp32.h>
 #include <windows.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 int getpid_ext(const char* image)

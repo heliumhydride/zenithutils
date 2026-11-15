@@ -8,7 +8,7 @@
 #include <windows.h>
 #endif
 
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 
 void print_usage(const char* program)
 {

@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../config.h"
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 // TODO sha512sum -b, -t, -c, -z

@@ -6,7 +6,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 #include "../config.h"
 

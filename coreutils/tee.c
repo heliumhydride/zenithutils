@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 
 void print_usage(const char* program)
 {

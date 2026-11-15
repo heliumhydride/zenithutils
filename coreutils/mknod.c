@@ -5,7 +5,6 @@
 #if !defined(_WIN32) // On Unix
 #include <fcntl.h>
 #include <sys/stat.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 #endif
 

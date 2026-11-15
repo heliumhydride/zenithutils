@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 
 #ifdef _WIN32
 #include <windows.h>

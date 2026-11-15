@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h> // ssize_t
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 #include "../config.h"
 
 int factor_primes(long n, long* factors, const ssize_t cap)

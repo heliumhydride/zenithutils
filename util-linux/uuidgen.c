@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sodium.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 const char* charset = "0123456789abcdef";

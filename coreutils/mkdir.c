@@ -8,7 +8,6 @@
 #include <errno.h>
 #include <libgen.h>
 #include <dirent.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 int direxists(const char* pathname)

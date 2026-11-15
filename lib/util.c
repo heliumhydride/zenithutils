@@ -125,7 +125,7 @@ void mingw_path(char* out, const char* path)
     out[pathlen] = '\0';
 }
 
-int is_mode_t(char* mode_str)
+int is_mode_t(const char* mode_str)
 {
     // Conditions: must not be over 3 digits long and must be in positive octal (digits 1 to 7)
     if(strlen(mode_str) >= 3)  return 1;
@@ -177,5 +177,58 @@ int mkdir2(const char* pathname, const mode_t mode)
     return mkdir(pathname);
     #else // On Unix
     return mkdir(pathname, mode);
+    #endif
+}
+
+void print_error(const char* format, ...)
+{
+    va_list args;
+    #if COLORED_ERRORS
+    fprintf(stderr, "%s", ANSI_RED);
+    #endif // COLORED_ERRORS
+
+    va_start(args,format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+
+    #if COLORED_ERRORS
+    fprintf(stderr, "%s", ANSI_NORM);
+    #endif // COLORED_ERRORS
+    putchar('\n');
+}
+
+void print_warn(const char* format, ...)
+{
+    va_list args;
+    #if COLORED_ERRORS
+    fprintf(stderr, "%swarn -> ", ANSI_YELLOW);
+    #endif // COLORED_ERRORS
+
+    va_start(args,format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+
+    #if COLORED_ERRORS
+    fprintf(stderr, "%s", ANSI_NORM);
+    #endif // COLORED_ERRORS
+    putchar('\n');
+}
+
+void perror2(const char* s, const char* program)
+{
+    #if COLORED_ERRORS
+    printf(ANSI_RED);
+    fflush(stdout);
+    #endif
+
+    if(program != NULL) {
+        printf("%s: ", program);
+        fflush(stdout);
+    }
+    perror(s);
+
+    #if COLORED_ERRORS
+    printf(ANSI_NORM);
+    fflush(stdout);
     #endif
 }

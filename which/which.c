@@ -5,7 +5,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "../include/prettyprint.h"
 #include "../include/util.h"
 
 #ifndef PATH_MAX

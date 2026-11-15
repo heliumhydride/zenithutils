@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-#include "../include/prettyprint.h"
+#include "../include/util.h"
 
 int main(int argc, char* argv[])
 {
