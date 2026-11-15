@@ -1,4 +1,6 @@
-mkdir -v: print when a directory has been created, outside the mkdir function (maybe in mkdir_p)
+mkdir: 
+    are we even checking with is_mode_t? testing doesn't say so
+    -v: print when a directory has been created, outside the mkdir function (maybe in mkdir_p)
 make a argv,argc shifting function in util.c, to avoid weird argv+= optind-1 etc..
     make two versions, one when getopt is or isn't used
         shift_args(&argc,&argv);
