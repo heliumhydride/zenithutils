@@ -179,4 +179,3 @@ int mkdir2(const char* pathname, const mode_t mode)
     return mkdir(pathname, mode);
     #endif
 }
-

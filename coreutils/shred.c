@@ -8,7 +8,7 @@
 
 void print_usage(const char* program)
 {
-  fprintf(stderr, "usage: %s [-n iterations] [-u] file\n", program);
+    fprintf(stderr, "usage: %s [-n iterations] [-u] file\n", program);
 }
 
 int main(int argc, char* argv[])
@@ -58,7 +58,9 @@ int main(int argc, char* argv[])
 
     FILE* fp = fopen(*argv, "r+");
     if(fp == NULL) {
-        print_error("%s: could not open file %s", program, *argv);
+        char errstring[150] = {0};
+        snprintf(errstring, sizeof(errstring), "could not open file %s", *argv);
+        perror2(errstring, program);
         return 1;
     }
 
@@ -74,7 +76,9 @@ int main(int argc, char* argv[])
     fclose(fp);
     if(uflag) {
         if(unlink(*argv) == -1) {
-            print_error("%s: '%s': could not remove file", program, *argv);
+            char errstring[150] = {0};
+            snprintf(errstring, sizeof(errstring), "'%s': could not remove file", *argv);
+            perror2(errstring, program);
             return 1;
         }
     }

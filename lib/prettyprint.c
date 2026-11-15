@@ -34,3 +34,22 @@ void print_warn(const char* format, ...)
     #endif // COLORED_ERRORS
     putchar('\n');
 }
+
+void perror2(const char* s, const char* program)
+{
+    #if COLORED_ERRORS
+    printf(ANSI_RED);
+    fflush(stdout);
+    #endif
+
+    if(program != NULL) {
+        printf("%s: ", program);
+        fflush(stdout);
+    }
+    perror(s);
+
+    #if COLORED_ERRORS
+    printf(ANSI_NORM);
+    fflush(stdout);
+    #endif
+}

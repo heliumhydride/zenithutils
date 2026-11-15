@@ -47,48 +47,18 @@ int main(int argc, char* argv[])
 
     // TODO implement rmdir -p
     (void)pflag;
+    int excode = 0;
     while(*++argv) {
         if(rmdir(*argv) == -1) {
-            switch(errno) { // UGLY ERROR HANDLING
-                case EACCES:
-                    print_error("%s: failed to remove '%s': access denied", program, *argv);
-                    break;
-                case EBUSY:
-                    print_error("%s: failed to remove '%s': device or resource busy", program, *argv);
-                    break;
-                case EINVAL:
-                    print_error("%s: failed to remove '%s': invalid argument", program, *argv);
-                    break;
-                case ELOOP:
-                    print_error("%s: failed to remove '%s': too many levels of symlinks", program, *argv);
-                    break;
-                case ENAMETOOLONG:
-                    print_error("%s: failed to remove '%s': pathname too long", program, *argv);
-                    break;
-                case ENOENT:
-                    print_error("%s: failed to remove '%s': no such file or directory", program, *argv);
-                    break;
-                case ENOTDIR:
-                    print_error("%s: failed to remove '%s': not a directory", program, *argv);
-                    break;
-                case ENOTEMPTY:
-                    print_error("%s: failed to remove '%s': directory not empty", program, *argv);
-                    break;
-                case EPERM:
-                    print_error("%s: failed to remove '%s': operation not permitted", program, *argv);
-                    break;
-                case EROFS:
-                    print_error("%s: failed to remove '%s': read-only filesystem", program, *argv);
-                    break;
-                default:
-                    print_error("%s: failed to remove '%s'", program, *argv);
-                    break;
-            }
-            return 1;
+            char errstring[150] = {0};
+            snprintf(errstring, sizeof(errstring), "removing directory '%s' failed", *argv);
+            perror2(errstring, program);
+            excode = 1;
+            break;
         }
         if(vflag)
             printf("%s: removing directory '%s'\n", program, *argv);
     }
 
-    return 0;
+    return excode;
 }

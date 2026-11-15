@@ -116,61 +116,25 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    (void)vflag; // TODO
+    int excode = 0;
     while(*++argv) {
-      int status;
-      if(pflag) status = mkdir_p(*argv, mode);
-      else      status = mkdir2(*argv, mode);
+        int status;
+        if(pflag) status = mkdir_p(*argv, mode);
+        else      status = mkdir2(*argv, mode);
 
-      if(status == -1) {
-          switch(errno) { // UGLY ERROR HANDLING
-              case EACCES:
-                  print_error("%s: cannot create directory '%s': access denied", program, *argv);
-                  break;
-              case EINVAL:
-                  print_error("%s: cannot create directory '%s': invalid argument", program, *argv);
-                  break;
-              case EMLINK: // fallthrough
-              case ELOOP:
-                  print_error("%s: cannot create directory '%s': too many levels of symlinks", program, *argv);
-                  break;
-              case ENAMETOOLONG:
-                  print_error("%s: cannot create directory '%s': pathname too long", program, *argv);
-                  break;
-              case ENOENT:
-                  print_error("%s: cannot create directory '%s': no such file or directory", program, *argv);
-                  break;
-              case ENOTDIR:
-                  print_error("%s: cannot create directory '%s': not a directory", program, *argv);
-                  break;
-              case EPERM:
-                  print_error("%s: cannot create directory '%s': operation not permitted", program, *argv);
-                  break;
-              case EROFS:
-                  print_error("%s: cannot create directory '%s': read-only filesystem", program, *argv);
-                  break;
-              case EBADF:
-                  print_error("%s: cannot create directory '%s': invalid file descriptor", program, *argv);
-                  break;
-              case EEXIST:
-                  print_error("%s: cannot create directory '%s': file/directory exists", program, *argv);
-                  break;
-              #if defined(_WIN32) // On Unix
-              case EDQUOT: // fallthrough
-              #endif
-              case ENOSPC:
-                  print_error("%s: cannot create directory '%s': no space left on device", program, *argv);
-                  break;
-              default:
-                  print_error("%s: cannot create directory '%s'", program, *argv);
-                  break;
-          }
-          return 1;
-      }
+        if(status == -1) {
+            char errstring[150] = {0};
+            snprintf(errstring, sizeof(errstring), "creating directory '%s' failed", *argv);
+            perror2(errstring, program);
+            excode = 1;
+            break;
+        }
     }
 
     #if !defined(_WIN32) // On Unix
     if(mflag) (void)umask(process_umask);
     #endif // !_WIN32
 
-    return 0;
+    return excode;
 }

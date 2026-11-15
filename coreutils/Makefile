@@ -117,7 +117,7 @@ tee: tee.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
 
 shred: shred.o ../lib/prettyprint.o
-	$(LD) $(LDFLAGS) -lsodium $^ -o ../o/bin/$(PROG_PREFIX)$@
+	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@ -lsodium 
 
 rm: rm.o ../lib/prettyprint.o
 	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@

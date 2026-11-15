@@ -1,3 +1,4 @@
+use perror2() for any programs using fopen()
 mkdir: 
     are we even checking with is_mode_t? testing doesn't say so
     -v: print when a directory has been created, outside the mkdir function (maybe in mkdir_p)
@@ -8,8 +9,6 @@ make a argv,argc shifting function in util.c, to avoid weird argv+= optind-1 etc
 lib/util.c:
     read_entire_file() function
     is_mode_t: modes can be e.g. 1777, so 4 chars long
-    perror2(const char* s, const char* program),
-        see ctests/httpd.c, but program is passed as arg instead of being a global
     shift_args family of functions
     in lib/util_m.c explain why libutil was split (to avoid linking with -lm all the time)
 lib/prettyprint.c: cleanup a bit?
