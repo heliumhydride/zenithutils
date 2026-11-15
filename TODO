@@ -3,7 +3,6 @@ make a argv,argc shifting function in util.c, to avoid weird argv+= optind-1 etc
         shift_args(&argc,&argv);
         shift_args_getopt(&argc,&argv,optind);
 lib/util.c:
-    update code style
     move my_mkdir and rename to mkdir2
     read_entire_file() function
     is_mode_t: modes can be e.g. 1777, so 4 chars long
