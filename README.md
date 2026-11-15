@@ -26,12 +26,18 @@ To build an individual program
 $ make -C coreutils readlink
 ```
 
+Optional: prepare documentation for installation
+```sh
+$ make docs
+```
+This copies the manpages into the output directory, under `o/share/man/man*`
+
 ### installing
+
 The standard way
 ```
 $ make install
 ```
-Man pages are always installed by default (this might change in the future)
 
 ### required dependencies:
   - a c99 toolchain such as gcc / mingw / Clang+LLVM / tcc... but not visual c

@@ -11,6 +11,12 @@ all: $(SUBDIRS)
 $(SUBDIRS):
 	$(MAKE) -C $@
 
+docs:
+	mkdir -pv o/share/man/man1
+	cp -v docs/*.1 o/share/man/man1/
+# mkdir -pv o/share/man/man8
+# cp -v docs/*.8 o/share/man/man8/
+
 install: 
 	PREFIX="$(PREFIX)" DESTDIR="$(DESTDIR)" scripts/install.sh
 
@@ -31,4 +37,4 @@ check:
 tags:
 	ctags -R --c-kinds=+p --exclude=TODO --exclude=docs --exclude=o --exclude=scripts --exclude=README.md
 
-.PHONY: all $(SUBDIRS) clean distclean install check tags
+.PHONY: all $(SUBDIRS) clean distclean install check tags docs

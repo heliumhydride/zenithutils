@@ -13,9 +13,6 @@ lib/util.c:
     in lib/util_m.c explain why libutil was split (to avoid linking with -lm all the time)
 lib/prettyprint.c: cleanup a bit?
 build system:
-    make documentation optional:
-         make docs (copies documentation to o/usr/share)
-         say in readme to run make docs optionally to get documentation
     allow make check, make tags to run before checking for config.{h,mk}
     make check:
         instead of using find and xargs, just run cppcheck on the current directory, but exclude stb_ds.h
