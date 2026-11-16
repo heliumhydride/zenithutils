@@ -2,14 +2,13 @@ use perror2() for any programs using fopen()
 mkdir: 
     are we even checking with is_mode_t? testing doesn't say so
     -v: print when a directory has been created, outside the mkdir function (maybe in mkdir_p)
-make a argv,argc shifting function in util.c, to avoid weird argv+= optind-1 etc..
-    make two versions, one when getopt is or isn't used
-        shift_args(&argc,&argv);
-        shift_args_getopt(&argc,&argv,optind);
 lib/util.c:
     read_entire_file() function
     is_mode_t: modes can be e.g. 1777, so 4 chars long
     shift_args family of functions
+        shift_args(&argc,&argv);
+        shift_args_getopt(&argc,&argv,optind); // same as above but account for getopt
+        hack_in_stdin(&argc,&argv); // adds "-" to the arguments, see coreutils/wc.c
 build system:
     configure --debug-build: auto set LDFLAGS="-ggdb" CFLAGS="-O0 -ggdb -Wall -Wextra -Wpedantic -Werror"
     if target is windows, instead of building binaries saying "doesnt apply to windows", just don't build them lol (ifeq w/ WIN32 and change PROGRAMS accordingly)
@@ -21,7 +20,7 @@ implement:
     ++ date, cal, errno*
     -- reconsider read, some things need to be left to the shell (time may be kept because dash doesn't have it)
 * see errno(3). doesn't seem to be standard however, but glibc says it exists so let's go
-
+coreutils/factor: work with stdin if no arguments are passed
 
 rework: uniq, tr
 coreutils/rmdir: recursive directory destruction (-p)
