@@ -8,28 +8,42 @@ PROGS=kill pkill w top pstree fuser killall ps sysctl pidof free pgrep vmstat
 
 all: $(PROGS)
 
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+#$(SPROGS): %: ../o/sbin/$(PROG_PREFIX)%
+
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-w.o: w.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@ -DPROG_PREFIX=\"$(PROG_PREFIX)\"
+.SECONDEXPANSION:
 
-kill.o: kill.c
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+
+#../o/sbin/$(PROG_PREFIX)%: %.o $$(OBJS)
+#	@echo "  LD    $(notdir $@)"
+#	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+
+../o/bin/$(PROG_PREFIX)kill: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)w:    OBJS = ../lib/util.o ../lib/util_m.o
+
+../o/bin/$(PROG_PREFIX)w: LIBS = -lm
+
+# TODO needs testing
 ifeq ($(WIN32), 1)
-	$(CC) $(CFLAGS) -c kill_win32.c -o kill.o
-else
-	$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c kill.c -o kill.o
+kill.o: kill_win32.c
+#	@echo "  CC    $(notdir $@)"
+#	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 endif
 
-kill: kill.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-pkill: kill
+../o/bin/$(PROG_PREFIX)pkill: ../o/bin/$(PROG_PREFIX)kill
 ifeq ($(WIN32), 1)
-	cp ../o/bin/$(PROG_PREFIX)kill.exe ../o/bin/$(PROG_PREFIX)pkill.exe
+	@echo "  COPY  $(notdir $(@).exe)"
+	@cp $<.exe $@.exe
 else
-	cp ../o/bin/$(PROG_PREFIX)kill ../o/bin/$(PROG_PREFIX)pkill
+	@echo "  COPY  $(notdir $@)"
+	@cp $< $@
 endif
 
-w: w.o ../lib/util.o ../lib/util_m.o
-	$(LD) $(LDFLAGS) $^ -lm -o ../o/bin/$(PROG_PREFIX)$@ 
+.PHONY: all $(PROGS)

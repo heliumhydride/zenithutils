@@ -4,9 +4,18 @@ PROGS=which
 
 all: $(PROGS)
 
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-which: which.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+.SECONDEXPANSION:
 
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+
+../o/bin/$(PROG_PREFIX)which: OBJS = ../lib/util.o
+
+.PHONY: all $(PROGS)

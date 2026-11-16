@@ -4,15 +4,16 @@ PROGS=diff cmp sdiff
 
 all: $(PROGS)
 
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-diff: diff.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+.SECONDEXPANSION:
 
-cmp: cmp.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-sdiff: sdiff.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
+.PHONY: all $(PROGS)

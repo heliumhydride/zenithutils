@@ -8,23 +8,32 @@ include ../config.mk
 # for login on windows: use as a frontend to LogonUI/runas.exe maybe ? kind of a strech but I don't see what else login.exe would do...
 # fsck on windows: do we just 'execvp("chkdsk.exe", ...);' ?
 
-# TODO note to self: nologin, fdisk, fsck, losetup, mkfs, mkswap, mount, pivot_root are in /sbin.
-PROGS=rev nologin uuidgen hexdump lscpu column blkid cal cfdisk chsh col dmesg eject fallocate fdisk findfs fsck getopt ionice last login losetup lsblk lslogins mcookie mkfs mkswap more mount mountpoint pivot_root renice write whereis swapon swapoff
+PROGS=rev uuidgen hexdump lscpu column blkid cal cfdisk chsh col dmesg eject fallocate findfs getopt ionice last login lsblk lslogins mcookie more mount mountpoint renice write whereis swapon swapoff
+SPROGS=nologin fdisk fsck losetup mkfs mkswap mount pivot_root
 
-all: $(PROGS)
+all: $(PROGS) $(SPROGS)
+
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+$(SPROGS): %: ../o/sbin/$(PROG_PREFIX)%
 
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-rev: rev.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+.SECONDEXPANSION:
 
-nologin: nologin.o
-	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-# requires libsodium
-uuidgen: uuidgen.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
+../o/sbin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-hexdump: hexdump.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)rev: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)uuidgen: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)hexdump: OBJS = ../lib/util.o
+
+../o/bin/$(PROG_PREFIX)uuidgen: LIBS = -lsodium
+
+.PHONY: all $(PROGS) $(SPROGS)

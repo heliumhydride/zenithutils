@@ -4,35 +4,26 @@ PROGS=ascii clear exedump read rng strings time usleep wpath zenithutils_version
 
 all: $(PROGS)
 
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-ascii: ascii.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+.SECONDEXPANSION:
 
-clear: clear.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-exedump: exedump.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)exedump: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)read: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)rng: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)strings: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)time: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)usleep: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)wpath: OBJS = ../lib/util.o
 
-read: read.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)rng: LIBS = -lsodium
 
-rng: rng.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@ -lsodium
-
-strings: strings.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-time: time.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-usleep: usleep.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-wpath: wpath.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-zenithutils_version: zenithutils_version.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+.PHONY: all $(PROGS)

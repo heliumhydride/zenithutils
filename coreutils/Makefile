@@ -5,131 +5,70 @@ include ../config.mk
 # [ is a link to test
 # how would 'nohup' work on Windows?
 
-PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty base64 base32 mkdir rmdir test mknod whoami readlink dos2unix unix2dos head echo tee shred rm sha512sum tail hostname factor uniq tr mkfifo cp mv sync sort touch timeout truncate users nice ln install id groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum pr chgrp comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv nohup numfmt paste pathchk finger realpath stat shuf
+SPROGS=mknod
+PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty base64 base32 mkdir rmdir test whoami readlink dos2unix unix2dos head echo tee shred rm sha512sum tail hostname factor uniq tr mkfifo cp mv sync sort touch timeout truncate users nice ln install id groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum pr chgrp comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv nohup numfmt paste pathchk finger realpath stat shuf
 
-all: $(PROGS)
+all: $(SPROGS) $(PROGS)
+
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+$(SPROGS): %: ../o/sbin/$(PROG_PREFIX)%
 
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-dos2unix.o: dos2unix.c ../lib/util.o
-	$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
+.SECONDEXPANSION:
 
-cat: cat.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-nproc: nproc.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/sbin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-ls: ls.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)dos2unix: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)cat: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)ls: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)uname: OBJS = ../lib/util.o ../lib/utsname_winnt.o
+../o/bin/$(PROG_PREFIX)seq: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)pwd: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)tac: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)sleep: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)wc: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)tr: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)base64: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)base32: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)mktemp: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)whoami: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)test: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)uniq: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)mkdir: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)rmdir: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)head: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)tail: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)readlink: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)tee: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)shred: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)rm: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)sha512sum: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)hostname: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)factor: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)touch: OBJS = ../lib/util.o
+../o/sbin/$(PROG_PREFIX)mknod: OBJS = ../lib/util.o
 
-uname: uname.o ../lib/util.o ../lib/utsname_winnt.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)base64: LIBS = -lsodium
+../o/bin/$(PROG_PREFIX)mktemp: LIBS = -lsodium
+../o/bin/$(PROG_PREFIX)shred:  LIBS = -lsodium
+../o/bin/$(PROG_PREFIX)sha512sum:  LIBS = -lsodium
 
-seq: seq.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-pwd: pwd.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-true: true.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-false: false.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-yes: yes.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-dirname: dirname.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-basename: basename.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-tac: tac.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-sleep: sleep.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-wc: wc.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-tr: tr.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-base64: base64.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
-
-base32: base32.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-# requires libsodium
-mktemp: mktemp.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
-
-mknod: mknod.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/sbin/$(PROG_PREFIX)$@
-
-whoami: whoami.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-tty: tty.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-test: test.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-uniq: uniq.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-mkdir: mkdir.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-rmdir: rmdir.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-head: head.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-tail: tail.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-readlink: readlink.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-dos2unix: dos2unix.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-unix2dos: dos2unix
+../o/bin/$(PROG_PREFIX)unix2dos: ../o/bin/$(PROG_PREFIX)dos2unix
 ifeq ($(WIN32), 1)
-		cp ../o/bin/$(PROG_PREFIX)dos2unix.exe ../o/bin/$(PROG_PREFIX)unix2dos.exe
+	@echo "  COPY  $(notdir $(@).exe)"
+	@cp $<.exe $@.exe
 else
-		cp ../o/bin/$(PROG_PREFIX)dos2unix ../o/bin/$(PROG_PREFIX)unix2dos
+	@echo "  COPY  $(notdir $@)"
+	@cp $< $@
 endif
 
-echo: echo.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-tee: tee.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-shred: shred.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@ -lsodium 
-
-rm: rm.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-sha512sum: sha512sum.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -lsodium -o ../o/bin/$(PROG_PREFIX)$@
-
-hostname: hostname.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-factor: factor.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
-
-touch: touch.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+.PHONY: all $(PROGS) $(SPROGS)

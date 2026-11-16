@@ -4,15 +4,23 @@ PROGS=shar uuencode uudecode
 
 all: $(PROGS)
 
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-shar: shar.sh
-	cp shar.sh ../o/bin/$(PROG_PREFIX)shar
+.SECONDEXPANSION:
 
-uuencode: uuencode.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
-uudecode: uudecode.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+../o/bin/$(PROG_PREFIX)uuencode: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)uudecode: OBJS = ../lib/util.o
 
+../o/bin/$(PROG_PREFIX)shar: shar.sh
+	@echo "  COPY  $(notdir $@)"
+	@cp $< $@
+
+.PHONY: all $(PROGS)

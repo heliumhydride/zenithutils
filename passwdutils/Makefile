@@ -1,13 +1,27 @@
 include ../config.mk
 
-# TODO note to self: chage, useradd, userdel, usermod, groupadd, groupdel, groupmod, sg are in /sbin
-PROGS=passwd chage useradd userdel usermod groupadd groupdel groupmod sg
+PROGS=passwd 
+SPROGS=chage useradd userdel usermod groupadd groupdel sg
 
-all: $(PROGS)
+all: $(SPROGS) $(PROGS)
+
+$(PROGS): %: ../o/bin/$(PROG_PREFIX)%
+$(SPROGS): %: ../o/sbin/$(PROG_PREFIX)%
 
 %.o: %.c ../config.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 
-passwd: passwd.o ../lib/prettyprint.o ../lib/util.o
-	$(LD) $(LDFLAGS) $^ -o ../o/bin/$(PROG_PREFIX)$@
+.SECONDEXPANSION:
 
+../o/bin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+
+../o/sbin/$(PROG_PREFIX)%: %.o $$(OBJS)
+	@echo "  LD    $(notdir $@)"
+	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
+
+../o/bin/$(PROG_PREFIX)passwd: OBJS = ../lib/util.o
+
+.PHONY: all $(PROGS) $(SPROGS)
