@@ -14,7 +14,6 @@ build system:
     configure --debug-build: auto set LDFLAGS="-ggdb" CFLAGS="-O0 -ggdb -Wall -Wextra -Wpedantic -Werror"
     if target is windows, instead of building binaries saying "doesnt apply to windows", just don't build them lol (ifeq w/ WIN32 and change PROGRAMS accordingly)
 try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c and zenithutils/coreutils/hostname.c for example)
-clear command: adapt for mingw, see related todo in customtools/clear.c
 some programs still need style update, eg coreutils/base64
 mknod check atoi validity for maj/min of nodes
 retest build for all platforms
