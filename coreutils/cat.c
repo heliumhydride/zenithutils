@@ -64,7 +64,7 @@ char* Tfilter(const char *s)
     return out;
 }
 
-int isnonprint(char c) {
+int isnonprint(int c) {
     if(c >= 0 && c < 0x20) return 1;
     if(c == 0x7f)          return 1;
     return 0;
