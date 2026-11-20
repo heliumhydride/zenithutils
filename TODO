@@ -16,11 +16,11 @@ some programs still need style update, eg coreutils/base64
 mknod check atoi validity for maj/min of nodes
 retest build for all platforms
 implement:
-    ++ date, cal, errno*
+    ++ date, cal
     -- reconsider read, some things need to be left to the shell (time may be kept because dash doesn't have it)
-* see errno(3). doesn't seem to be standard however, but glibc says it exists so let's go
 coreutils/factor: work with stdin if no arguments are passed
 
+coreutils/errno: todos mentionned at the top of the source file
 rework: uniq, tr
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
