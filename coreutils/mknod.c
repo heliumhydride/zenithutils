@@ -1,12 +1,9 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <unistd.h>
-
-#if !defined(_WIN32) // On Unix
 #include <fcntl.h>
 #include <sys/stat.h>
 #include "../include/util.h"
-#endif
 
 void print_usage(const char* program)
 {
@@ -15,12 +12,6 @@ void print_usage(const char* program)
 }
 
 int main(int argc, char* argv[]) {
-    #if defined(_WIN32)
-    fprintf(stderr, "Does not apply to windows\n");
-    return 1;
-    #endif // _WIN32
-
-    #if !defined(_WIN32) // On Unix
     if(optind > (argc - 3)) {
         print_usage(argv[0]);
         return 1;
@@ -100,5 +91,4 @@ int main(int argc, char* argv[]) {
     // TODO segfault when not providing some variables
     printf("%c %s %d:%d\n", type, filename, maj, min);
     return 0;
-    #endif
 }
