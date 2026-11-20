@@ -10,6 +10,9 @@
 #include <dirent.h>
 #include "../include/util.h"
 
+char *program;
+static int vflag = 0;
+
 int direxists(const char* pathname)
 {
     struct stat st;
@@ -35,6 +38,8 @@ int mkdir_p(const char* pathname, mode_t mode)
         mkdir_p(parent, mode);
 
     if(mkdir2(pathname, mode) == 0) {
+        if(vflag)
+            printf("%s: created directory '%s'\n", program, pathname);
         free(tmp);
         return 0;
     }
@@ -61,46 +66,45 @@ void print_usage(const char* program)
 
 int main(int argc, char* argv[])
 {
-    const char* program = argv[0];
+    program = argv[0];
+
     int opt;
     int pflag = 0; // create directories recursively
-    int vflag = 0; // show operations / verbose mode
-    int mflag = 0; // using mode flag to set mode
+    // int vflag = 0; // show operations / verbose mode
+
     mode_t mode = 0755;
     #if !defined(_WIN32) // On Unix
-    mode_t process_umask = 0;
+    mode_t process_umask = umask(0);
     #endif // !_WIN32
 
     while((opt = getopt(argc, argv, ":m:pv")) != -1) {
-      switch(opt) {
-          case 'v':
-              vflag = 1;
-              break;
-          case 'p':
-              pflag = 1;
-              break;
-          case 'm':
-              mflag = 1;
-              if(!is_mode_t(optarg)) {
-                print_error("%s: invalid mode '%s'", optarg);
+        switch(opt) {
+            char *old_optarg;
+            case 'v':
+                vflag = 1;
+                break;
+            case 'p':
+                pflag = 1;
+                break;
+            case 'm':
+                old_optarg = optarg;
+                if(!is_mode_t(optarg)) {
+                  print_error("%s: invalid mode '%s'", program, old_optarg);
+                  return 1;
+                }
+                mode = (mode_t)strtol(optarg, NULL, 8);
+                break;
+            case '?':
+                print_error("%s: option error: unknown option '-%c'", program, optopt);
+                print_usage(program);
                 return 1;
-              }
-              mode = (mode_t)strtol(optarg, NULL, 8);
-              #if defined(_WIN32) // On Unix
-              process_umask = umask(0);
-              #endif // !_WIN32
-              break;
-          case '?': // fallthrough
-              print_error("%s: option error: unknown option '-%c'", program, optopt);
-              print_usage(program);
-              return 1;
-              break;
-          case ':':
-              print_error("%s: option '-%c' needs an argument", program, optopt);
-              print_usage(program);
-              return 1;
-              break;
-      }
+                break;
+            case ':':
+                print_error("%s: option '-%c' needs an argument", program, optopt);
+                print_usage(program);
+                return 1;
+                break;
+        }
     }
 
     if(optind == argc) {
@@ -115,7 +119,6 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    (void)vflag; // TODO
     int excode = 0;
     while(*++argv) {
         int status;
@@ -128,11 +131,14 @@ int main(int argc, char* argv[])
             perror2(errstring, program);
             excode = 1;
             break;
+        } else {
+            if(!pflag && vflag)
+                printf("%s: created directory '%s'\n", program, *argv);
         }
     }
 
     #if !defined(_WIN32) // On Unix
-    if(mflag) (void)umask(process_umask);
+    umask(process_umask);
     #endif // !_WIN32
 
     return excode;
