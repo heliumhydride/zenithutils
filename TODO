@@ -1,10 +1,6 @@
 use perror2() for any programs using fopen()
-mkdir: 
-    are we even checking with is_mode_t? testing doesn't say so
-    -v: print when a directory has been created, outside the mkdir function (maybe in mkdir_p)
 lib/util.c:
     read_entire_file() function
-    is_mode_t: modes can be e.g. 1777, so 4 chars long
     shift_args family of functions
         shift_args_getopt(&argc,&argv,optind); // same as above but account for getopt
         hack_in_stdin(&argc,&argv); // adds "-" to the arguments, see coreutils/wc.c
