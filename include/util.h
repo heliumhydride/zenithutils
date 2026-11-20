@@ -26,5 +26,6 @@ int mkdir2(const char* pathname, const mode_t mode);
 void print_error(const char* format, ...);
 void print_warn(const char* format, ...);
 void perror2(const char* s, const char* program);
+void shift_args(int *argcp, char ***argvp);
 
 #endif // UTIL_H

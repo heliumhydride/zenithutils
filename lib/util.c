@@ -228,3 +228,10 @@ void perror2(const char* s, const char* program)
     fprintf(stderr, ANSI_NORM);
     #endif
 }
+
+void shift_args(int *argcp, char ***argvp)
+{
+    (void)(*argcp)--;
+    (void)(*argvp)++;
+}
+
