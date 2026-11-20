@@ -67,6 +67,7 @@ Installation + Compilation options:
   --destdir=[path]             Install into [path] (default /)
   --program-prefix=[prefix]    Append [prefix] to every program name (default none)
   --enable-win32               Target os is Windows
+  --debug-build                Apply CFLAGS useful for debugging
 
 global zenithutils options:
   --stdin-max=[int]            Max number of characters allowed on standard input (default 4096)
@@ -107,17 +108,12 @@ EOF
 #  Default options
 #
 
-_cflags="-std=c99 -Wall -Wextra -Wpedantic"
 [ -z "$CC" ] && CC="cc"
-if [ -z "$CFLAGS" ]; then
-    CFLAGS="$_cflags -O2 -Werror"
-else
-    CFLAGS="$_cflags $CFLAGS"
-fi
-# for stb_ds.h: not my library, not my problem:
-CFLAGS="$CFLAGS -Wno-error=sign-compare"
-
-[ -z "$LDFLAGS" ] && LDFLAGS="-s"
+# some default settings for cflags are specified after argument parsing
+# search for '[1]' for details
+_cflags="-std=c99 -Wall -Wextra -Wpedantic"
+_cflags="$_cflags -Wno-error=sign-compare"    # for include/stb_ds.h: not my library, not my problem:
+DEBUG=0
 PREFIX="/usr/local"
 WIN32=0
 stdin_max=4096
@@ -161,6 +157,7 @@ while :; do
         --exedump-color2*)            exedump_color2="$(parse_option "$1")";;
         --no-exedump-color)           exedump_color1=""; exedump_color2="";;
         --no-exedump-color2)          exedump_color2="";;
+        --debug-build)                DEBUG=1;;
         --host*)                      warn "if you are cross-compiling, --host isn't supported, instead specify C compiler via 'CC=...' envronment variable";;
         --help|-h) print_usage;;
         --) shift; break;;
@@ -169,6 +166,24 @@ while :; do
     esac
     shift
 done
+
+# [1]
+if [ -z "$CFLAGS" ]; then
+    if [ "$DEBUG" = 1 ]; then
+        CFLAGS="$_cflags -O0 -ggdb"
+    else
+        CFLAGS="$_cflags -O2 -Werror"
+    fi
+else
+    CFLAGS="$_cflags $CFLAGS"
+fi
+[ -z "$LDFLAGS" ] && {
+    if [ "$DEBUG" = 1 ]; then
+        LDFLAGS="-ggdb"
+    else
+        LDFLAGS="-s"
+    fi
+}
 
 check_installed "$CC"
 check_installed make
