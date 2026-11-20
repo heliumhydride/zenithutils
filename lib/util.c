@@ -217,18 +217,14 @@ void print_warn(const char* format, ...)
 void perror2(const char* s, const char* program)
 {
     #if COLORED_ERRORS
-    printf(ANSI_RED);
-    fflush(stdout);
+    fprintf(stderr, ANSI_RED);
     #endif
 
-    if(program != NULL) {
-        printf("%s: ", program);
-        fflush(stdout);
-    }
+    if(program != NULL)
+        fprintf(stderr, "%s: ", program);
     perror(s);
 
     #if COLORED_ERRORS
-    printf(ANSI_NORM);
-    fflush(stdout);
+    fprintf(stderr, ANSI_NORM);
     #endif
 }
