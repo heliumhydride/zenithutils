@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h> // ssize_t
-#include "../include/util.h"
-#include "../config.h"
+#include <stdio.h>           // fprintf(), printf()
+#include <stdlib.h>          // strtol()
+#include <string.h>          // strcmp()
+#include <unistd.h>          // ssize_t
+#include "../include/util.h" // print_error()
+#include "../config.h"       // FACTOR_MAX_PRIMES
 
 int factor_primes(long n, long* factors, const ssize_t cap)
 {
@@ -36,30 +36,42 @@ int factor_primes(long n, long* factors, const ssize_t cap)
 
 void print_usage(const char* program)
 {
-    fprintf(stderr, "usage: %s number\n", program);
+    fprintf(stderr, "usage: %s [numbers...]\n", program);
 }
 
 int main(int argc, char* argv[])
 {
-    if(argc < 2 || !strcmp(argv[1], "--help")) {
-        print_usage(argv[0]);
+    const char *program = argv[0];
+    shift_args(&argc, &argv);
+    if(!strcmp(*argv, "--help")) {
+        print_usage(program);
         return 1;
     }
 
-    char* endptr;
-    long n = strtol(argv[1], &endptr, 10);
-    if(endptr == argv[1] || n <= 0) {
-        print_error("%s: '%s' is not a positive integer", argv[0], argv[1]);
-        return 1;
+    if(argc < 1) {
+        // TODO
+        fprintf(stderr, "TODO  coreutils/factor: make use of stdin");
+        return 2;
+    } else {
+        while(*argv) {
+            char* endptr;
+            long n = strtol(*argv, &endptr, 10);
+            if(endptr == *argv || n <= 0) {
+                print_error("%s: '%s' is not a positive integer", program, *argv);
+                return 1;
+            }
+
+            // TODO factor (haha) this out code into some function(s) and use it for stdin too
+            long factors[FACTOR_MAX_PRIMES];
+            ssize_t count = factor_primes(n, factors, FACTOR_MAX_PRIMES);
+            if(count < 0) return 1;
+
+            printf("%ld: ", n);
+            for(ssize_t i = 0; i < count; i++)
+                printf("%ld%c", factors[i], (i + 1 < count) ? ' ' : '\n');
+
+            shift_args(&argc, &argv);
+        }
     }
-
-    long factors[FACTOR_MAX_PRIMES];
-    ssize_t count = factor_primes(n, factors, FACTOR_MAX_PRIMES);
-    if(count < 0) return 1;
-
-    printf("%ld: ", n);
-    for(ssize_t i = 0; i < count; i++)
-        printf("%ld%c", factors[i], (i + 1 < count) ? ' ' : '\n');
-
     return 0;
 }

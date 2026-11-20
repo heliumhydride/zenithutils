@@ -15,7 +15,7 @@ retest build for all platforms
 implement:
     ++ date, cal
     -- reconsider read, some things need to be left to the shell (time may be kept because dash doesn't have it)
-coreutils/factor: work with stdin if no arguments are passed
+coreutils/factor: todos mentionned in source file
 coreutils/errno: todos mentionned at the top of the source file
 
 rework: uniq, tr
