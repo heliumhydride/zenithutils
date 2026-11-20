@@ -4,8 +4,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h> // ssize_t
-#include <sys/stat.h> // umask(), mkdir()
+#include <unistd.h>    // ssize_t
+#include <sys/stat.h>  // umask(), mkdir()
+#include <sys/types.h> // mode_t [on linux-glibc platform]
 #include "../config.h"
 
 #include "colors.h"
