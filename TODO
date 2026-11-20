@@ -6,21 +6,20 @@ lib/util.c:
     read_entire_file() function
     is_mode_t: modes can be e.g. 1777, so 4 chars long
     shift_args family of functions
-        shift_args(&argc,&argv);
         shift_args_getopt(&argc,&argv,optind); // same as above but account for getopt
         hack_in_stdin(&argc,&argv); // adds "-" to the arguments, see coreutils/wc.c
 build system:
     if target is windows, instead of building binaries saying "doesnt apply to windows", just don't build them lol (ifeq w/ WIN32 and change PROGRAMS accordingly)
 try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c and zenithutils/coreutils/hostname.c for example)
 some programs still need style update, eg coreutils/base64
-mknod check atoi validity for maj/min of nodes
+coreutils/mknod: make use of strtol instead of atoi?
 retest build for all platforms
 implement:
     ++ date, cal
     -- reconsider read, some things need to be left to the shell (time may be kept because dash doesn't have it)
 coreutils/factor: work with stdin if no arguments are passed
-
 coreutils/errno: todos mentionned at the top of the source file
+
 rework: uniq, tr
 coreutils/rmdir: recursive directory destruction (-p)
 coreutils/rm: -rfi
