@@ -3,10 +3,13 @@ include ../config.mk
 # logname is a link to whoami
 # md5sum is a link to md5
 # [ is a link to test
-# how would 'nohup' work on Windows?
+# TODO how would 'nohup' work on Windows?
 
-SPROGS=mknod
 PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty base64 base32 mkdir rmdir test whoami readlink dos2unix unix2dos head echo tee shred rm sha512sum tail hostname factor uniq tr mkfifo cp mv sync sort touch timeout truncate users nice ln install id groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum pr chgrp comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv nohup numfmt paste pathchk finger realpath stat shuf
+SPROGS=
+ifeq ($(WIN32), 0)
+	SPROGS += mknod
+endif
 
 all: $(SPROGS) $(PROGS)
 

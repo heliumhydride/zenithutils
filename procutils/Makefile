@@ -1,10 +1,13 @@
 include ../config.mk
 
-# sysctl will either show a "does not apply to windows" or will implement some kind of command line windows control panel
 # pkill is a link to kill
 # uptime is a link to w
+# sysctl: will implement some kind of command line windows control panel?
 
 PROGS=kill pkill w top pstree fuser killall ps sysctl pidof free pgrep vmstat
+#ifeq ($(WIN32), 0)
+#	PROGS+=sysctl
+#endif
 
 all: $(PROGS)
 

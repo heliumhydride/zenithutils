@@ -8,8 +8,6 @@ lib/util.c:
     shift_args family of functions
         shift_args_getopt(&argc,&argv,optind); // same as above but account for getopt
         hack_in_stdin(&argc,&argv); // adds "-" to the arguments, see coreutils/wc.c
-build system:
-    if target is windows, instead of building binaries saying "doesnt apply to windows", just don't build them lol (ifeq w/ WIN32 and change PROGRAMS accordingly)
 try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c and zenithutils/coreutils/hostname.c for example)
 some programs still need style update, eg coreutils/base64
 coreutils/mknod: make use of strtol instead of atoi?
