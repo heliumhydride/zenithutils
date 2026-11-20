@@ -125,27 +125,13 @@ void mingw_path(char* out, const char* path)
     out[pathlen] = '\0';
 }
 
-int is_mode_t(const char* mode_str)
-{
-    // Conditions: must not be over 3 digits long and must be in positive octal (digits 1 to 7)
-    if(strlen(mode_str) >= 3)  return 1;
-    int state = 0;
-    for(size_t i = 0; i < strlen(mode_str); i++) {
-        switch(mode_str[i]) {
-            case '0': // fallthrough
-            case '1': // fallthrough
-            case '2': // fallthrough
-            case '3': // fallthrough
-            case '4': // fallthrough
-            case '5': // fallthrough
-            case '6': // fallthrough
-            case '7': // fallthrough
-                break;
-            default:
-                state = 1;
-        }
-    }
-    return state;
+int is_mode_t(const char *modestr)
+{ 
+    char *endptr;
+    mode_t m = (mode_t)strtol(modestr, &endptr, 8);
+    // TODO check if num digits > 4
+    if((m >> 9) > 0x1) return 0;
+    return endptr > modestr;
 }
 
 uint16_t reverse_end16(uint16_t val)
