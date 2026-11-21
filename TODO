@@ -9,7 +9,7 @@ some programs still need style update, eg coreutils/base64
 coreutils/mknod: make use of strtol instead of atoi?
 retest build for all platforms
 implement:
-    ++ date, cal
+    ++ cal
     -- reconsider read, some things need to be left to the shell (time may be kept because dash doesn't have it)
 coreutils/errno: todos mentionned at the top of the source file
 

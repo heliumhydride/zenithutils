@@ -2,11 +2,13 @@
 
 VERSION="v0.0_wip"
 
-ANSI_RED="\033[1;31m"
-ANSI_GREEN="\033[1;32m"
-ANSI_YELLOW="\033[1;33m"
-ANSI_BLUE="\033[1;34m"
-ANSI_NORM="\033[0m"
+[ -z "$NOCOLOR" ] && {
+    ANSI_RED="\033[1;31m"
+    ANSI_GREEN="\033[1;32m"
+    ANSI_YELLOW="\033[1;33m"
+    ANSI_BLUE="\033[1;34m"
+    ANSI_NORM="\033[0m"
+}
 
 #
 #  Support functions
@@ -14,23 +16,28 @@ ANSI_NORM="\033[0m"
 
 error()
 {
-    >&2 printf "${ANSI_RED}[  ERROR] -> %s${ANSI_NORM}\n" "$1" 
+    >&2 printf "${ANSI_RED}error -> %s${ANSI_NORM}\n" "$1"
     exit 1
 }
 
 warn()
 {
-    printf "${ANSI_YELLOW}[  WARN] -> %s${ANSI_NORM}\n" "$1"
+    printf "${ANSI_YELLOW}warn -> %s${ANSI_NORM}\n" "$1"
 }
 
-info()
+info_noln()
 {
-    printf "${ANSI_BLUE}-> %s${ANSI_NORM}\n" "$1"
+    printf "${ANSI_BLUE}%s${ANSI_NORM}" "$1"
+}
+
+info() {
+    info_noln "$1"
+    printf "\n"
 }
 
 success()
 {
-    printf "${ANSI_GREEN}-> %s${ANSI_NORM}\n" "$1"
+    printf "${ANSI_GREEN}%s${ANSI_NORM}\n" "$1"
 }
 
 check_installed()
@@ -39,11 +46,24 @@ check_installed()
     [ "$?" -eq 127 ] && error "$1 command not installed / not found in \$PATH"
 }
 
+check_working_cc()
+{
+    info_noln "Checking whether C compiler ($CC) works --> "
+    echo 'int main(void){return 0;}' | "$CC" $CFLAGS -xc - >> "$LOGFILE" 2>&1 || {
+        error "The C compiler '$CC' did not output a binary, check '$LOGFILE' for error details"
+    }
+    rm -f a.out a.exe
+    success "ok"
+}
+
 check_lib()
 {
-    echo "Checking for lib${1} (-l$1) ..."
-    echo 'int main(void){}' | "$CC" $CFLAGS -xc - -l"$1" >/dev/null 2>&1 || error "Library 'lib${1}' not installed"
+    info_noln "Checking for lib${1} (-l$1) --> "
+    echo 'int main(void){return 0;}' | "$CC" $LDFLAGS $CFLAGS -xc - -l"$1" >> "$LOGFILE" 2>&1 || {
+        error "Library 'lib${1}' not available, check '$LOGFILE' for linker error details"
+    }
     rm -f a.out a.exe
+    success "ok"
 }
 
 parse_option()
@@ -99,6 +119,8 @@ Environment variables:
     [CC]       defines the C compiler                       ($CC)
     [CFLAGS]   pass CFLAGS to the C compiler                ($CFLAGS)
     [LDFLAGS]  pass LDFLAGS to the C compiler at link-time  ($LDFLAGS)
+    [LOGFILE]  log the commands configure runs in this file ($LOGFILE)
+    [NOCOLOR]  configure will not output any color if set   ($NOCOLOR)
 
 EOF
     exit 1
@@ -108,6 +130,7 @@ EOF
 #  Default options
 #
 
+[ -z "$LOGFILE" ] && LOGFILE="config.log"
 [ -z "$CC" ] && CC="cc"
 # some default settings for cflags are specified after argument parsing
 # search for '[1]' for details
@@ -185,7 +208,14 @@ fi
     fi
 }
 
-check_installed "$CC"
+cat << EOF
+
+heliumhydride's configure script
+
+EOF
+
+:> "$LOGFILE" # empty the logfile, create it if it doesn't exist
+check_working_cc
 check_installed make
 check_lib sodium
 # check_lib z
@@ -206,8 +236,6 @@ else
     _destdir="$DESTDIR"
 fi
 cat << EOF
-
-heliumhydride's configure script
 
 Configuration summary:
 

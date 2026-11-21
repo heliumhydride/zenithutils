@@ -36,7 +36,7 @@ clean:
 	done
 
 distclean: clean
-	rm -rf config.h config.mk o/
+	rm -rf config.h config.mk config.log o/
 
 check:
 	#                                             -> not my library not my problem
