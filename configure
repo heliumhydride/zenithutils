@@ -63,42 +63,42 @@ zenithutils configure script
 usage:  $0 [options]
 
 Installation + Compilation options:
-  --prefix=[path]              Root directory of the installation (default /usr/local)
-  --destdir=[path]             Install into [path] (default /)
-  --program-prefix=[prefix]    Append [prefix] to every program name (default none)
-  --enable-win32               Target os is Windows
-  --debug-build                Apply CFLAGS useful for debugging
+    --prefix=[path]              Root directory of the installation (default /usr/local)
+    --destdir=[path]             Install into [path] (default /)
+    --program-prefix=[prefix]    Append [prefix] to every program name (default none)
+    --enable-win32               Target os is Windows
+    --debug-build                Apply CFLAGS useful for debugging
 
 global zenithutils options:
-  --stdin-max=[int]            Max number of characters allowed on standard input (default 4096)
-  --pathname-max=[int]         Max length for a pathname (default 512)
-  --enable-force-mingw-paths   Convert any path to mingw on Windows (c:\\xyz -> c:/xyz)
-  --disable-colored-errors     Do not print errors in red
+    --stdin-max=[int]            Max number of characters allowed on standard input (default 4096)
+    --pathname-max=[int]         Max length for a pathname (default 512)
+    --enable-force-mingw-paths   Convert any path to mingw on Windows (c:\\xyz -> c:/xyz)
+    --disable-colored-errors     Do not print errors in red
 
 coreutils/ options:
-  --disable-strict-seq         Allow -f to accept formats with no % directive
-  --max-link-length=[int]      Max link length for readlink (default 1024)
-  --disable-ls-color           Do not color output in ls
-  --base64-ignore=[str]        Ignore these characters (default " \n", space and newline)
-  --base64-variant=[str]       Can be one of ORIGINAL, ORIGINAL_NO_PADDING, URLSAFE, URLSAFE_NO_PADDING
-  --base32-ab=[str]            Alphabet to use for Base32 conversion
-  --factor-max-primes=[int]    Maximum amount of prime factors a number can have (default 128)
+    --disable-strict-seq         Allow -f to accept formats with no % directive
+    --max-link-length=[int]      Max link length for readlink (default 1024)
+    --disable-ls-color           Do not color output in ls
+    --base64-ignore=[str]        Ignore these characters (default " \n", space and newline)
+    --base64-variant=[str]       Can be one of ORIGINAL, ORIGINAL_NO_PADDING, URLSAFE, URLSAFE_NO_PADDING
+    --base32-ab=[str]            Alphabet to use for Base32 conversion
+    --factor-max-primes=[int]    Maximum amount of prime factors a number can have (default 128)
 
 customtools/ options:
-  --enable-ascii-show-octal    Show octal code for characters for ascii table (takes wider screen space)
-  --string-maxstrlen=[int]     Max length for a string for string (default 256)
-  --exedump-color1=[str]       Primary color for exedump, ansi color code (default "\033[1;34m", which is blue)
-  --exedump-color2=[str]       Secondary color for exedump, ansi color code (default "\033[1;31m", which is red)
-  --no-exedump-color           Disable all color output for exedump
-  --no-exedump-color2          Disable secondary color for exedump
+    --enable-ascii-show-octal    Show octal code for characters for ascii table (takes wider screen space)
+    --string-maxstrlen=[int]     Max length for a string for string (default 256)
+    --exedump-color1=[str]       Primary color for exedump, ansi color code (default "\033[1;34m", which is blue)
+    --exedump-color2=[str]       Secondary color for exedump, ansi color code (default "\033[1;31m", which is red)
+    --no-exedump-color           Disable all color output for exedump
+    --no-exedump-color2          Disable secondary color for exedump
 
 Misc options:
-  -h, --help                   Show this help
+    -h, --help                   Show this help
 
 Environment variables:
-  [CC]       defines the C compiler                       ($CC)
-  [CFLAGS]   pass CFLAGS to the C compiler                ($CFLAGS)
-  [LDFLAGS]  pass LDFLAGS to the C compiler at link-time  ($LDFLAGS)
+    [CC]       defines the C compiler                       ($CC)
+    [CFLAGS]   pass CFLAGS to the C compiler                ($CFLAGS)
+    [LDFLAGS]  pass LDFLAGS to the C compiler at link-time  ($LDFLAGS)
 
 EOF
     exit 1
