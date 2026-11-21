@@ -1,3 +1,10 @@
+x86_64-windows-mingw platform, clang compiler (neptunium64)
+    rng.c:49: 21 error: format specifies type 'long' but the argument has type 'ssize_t' (aka 'long long')
+    uname.c:43:30: error: unused parameter 'u'
+    base32.c:57:10: error: variable 'chars' set but not used
+    attempts to compile kill.c, not kill_win32.c
+    w.c:25:19: error: a function declaration without a prototype is deprecated in all versions of C
+
 use perror2() for any programs using fopen()
 lib/util.c:
     read_entire_file() function
