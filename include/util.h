@@ -1,9 +1,9 @@
 #ifndef UTIL_H
 #define UTIL_H
-#include <string.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <string.h>    // strlen()
+#include <stdint.h>    // uint*_t
+#include <stdlib.h>    // strtol()
+#include <stdio.h>     // fprintf(), printf()
 #include <unistd.h>    // ssize_t
 #include <sys/stat.h>  // umask(), mkdir()
 #include <sys/types.h> // mode_t [on linux-glibc platform]
