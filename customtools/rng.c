@@ -48,6 +48,6 @@ int main(int argc, char *argv[])
         }
     }
     
-    printf("%zd\n", randombytes_uniform(max-min) + min);
+    printf("%ld\n", (long)(randombytes_uniform(max-min) + min));
     return 0;
 }
