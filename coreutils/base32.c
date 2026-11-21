@@ -54,10 +54,10 @@ size_t base32_decode(const char* in, uint8_t* out, int iflag) {
   // ^^^ TODO work with -i
 
   size_t in_len = strlen(in);
-  size_t chars = 0;
+  // size_t chars = 0;
   for(size_t i = 0; i < in_len; i++) {
     if(in[i] == '=') break;
-    if(!isspace((uint8_t)in[i])) chars++;
+    // if(!isspace((uint8_t)in[i])) chars++;
   }
 
   size_t out_i = 0;

@@ -14,8 +14,8 @@ void print_usage(const char* program)
 
 int main(int argc, char* argv[])
 {
-    char* string1 = '\0';
-    char* string2 = '\0';
+    char* string1 = "";
+    char* string2 = "";
 
     int cflag = 0;
     int dflag = 0;
