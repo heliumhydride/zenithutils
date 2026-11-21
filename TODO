@@ -1,13 +1,26 @@
 finish documenting includes
-use perror2() for any programs using fopen()
+
+coreutils/ls.c
+    implement file_ext_is (libutil)
+    color for windows-mingw (call stat on each entry)
+
+customtools/ascii.c:  --help, void print_usage(const char *program)
+
+build system: configure
+    --optimize={0,1,2,3,s,z} flag (-O2 by default)
+    --disable-werror flag         (on by default)
+
 lib/util.c:
+    int file_ext_is(const char *path, const char *ext)
     read_entire_file() function
     shift_args family of functions
         shift_args_getopt(&argc,&argv,optind); // same as above but account for getopt
         hack_in_stdin(&argc,&argv); // adds "-" to the arguments, see coreutils/wc.c
+
+use perror2() for any programs using fopen()
 try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c and zenithutils/coreutils/hostname.c for example)
 some programs still need style update, eg coreutils/base64
-coreutils/mknod: make use of strtol instead of atoi?
+https://blog.mozilla.org/nnethercote/2009/03/13/atol-considered-harmful/
 retest build for all platforms
 implement:
     ++ cal
