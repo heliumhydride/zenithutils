@@ -5,7 +5,7 @@ include ../config.mk
 # [ is a link to test
 # TODO how would 'nohup' work on Windows?
 
-PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty base64 base32 mkdir rmdir test whoami readlink dos2unix unix2dos head echo tee shred rm sha512sum tail hostname factor uniq tr mkfifo cp mv sync sort touch timeout truncate users nice ln install id groups df chroot chmod chown cut date dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum pr chgrp comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv nohup numfmt paste pathchk finger realpath stat shuf
+PROGS=cat nproc ls uname seq pwd true false yes dirname basename tac sleep wc mktemp tty base64 base32 mkdir rmdir test whoami readlink dos2unix unix2dos head echo tee shred rm sha512sum tail hostname factor uniq tr date mkfifo cp mv sync sort touch timeout truncate users nice ln install id groups df chroot chmod chown cut dd fmt fold md5 sha1sum sha224sum sha256sum sha384sum pr chgrp comm du env expand expr join od printf split stty tsort unexpand who nl ed printenv nohup numfmt paste pathchk finger realpath stat shuf
 SPROGS=
 ifeq ($(WIN32), 0)
 	SPROGS += mknod
@@ -58,6 +58,7 @@ $(SPROGS): %: ../o/sbin/$(PROG_PREFIX)%
 ../o/bin/$(PROG_PREFIX)hostname: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)factor: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)touch: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)date: OBJS = ../lib/util.o
 ../o/sbin/$(PROG_PREFIX)mknod: OBJS = ../lib/util.o
 
 ../o/bin/$(PROG_PREFIX)base64: LIBS = -lsodium
