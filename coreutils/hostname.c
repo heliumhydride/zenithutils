@@ -1,16 +1,16 @@
 // Why do *hostname() need this garbage? Can't there just be a '#define _POSIX to handle that?'
-#define _DEFAULT_SOURCE
-#define _XOPEN_SOURCE   500
-#define _POSIX_C_SOURCE 200112L
+#define _DEFAULT_SOURCE          // sethostname()
+#define _XOPEN_SOURCE   500      // gethostname()
+#define _POSIX_C_SOURCE 200112L  // gethostname()
 
-#include <stdio.h>
-#include <string.h>
-#include "../include/util.h"
+#include <stdio.h>            // puts(), fprintf()
+#include <string.h>           // strlen(), strcmp()
+#include "../include/util.h"  // perror2()
 
 #ifdef _WIN32
-#include <windows.h>
+#include <windows.h> // GetComputerName(), SetComputerName()
 #else // On Unix
-#include <unistd.h>
+#include <unistd.h>  // gethostname(), sethostname()
 #endif // _WIN32
 
 #ifdef _WIN32

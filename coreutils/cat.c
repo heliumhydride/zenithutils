@@ -1,7 +1,8 @@
-#include <stdio.h>
-#include <string.h>
-#include <getopt.h>
-#include "../include/util.h"
+#include <stdio.h>            // fprintf(), printf(), fopen(), fclose()
+#include <stdlib.h>           // malloc(), free()
+#include <string.h>           // strlen(), strcmp()
+#include <getopt.h>           // getopt(), optind, optopt
+#include "../include/util.h"  // print_error(), getline()
 
 void print_usage(const char* program)
 {

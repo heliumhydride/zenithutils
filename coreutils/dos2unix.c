@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <libgen.h>
-#include "../include/util.h"
+#include <stdio.h>   // fprintf(), printf(), fopen(), fclose(), fgetc(), tmpfile(), fputc(), rewind()
+#include <string.h>  // strcmp()
+#include <libgen.h>  // basename()
+#include "../include/util.h"  // PROG_PREFIX, print_error()
 
 void print_usage(const char* program)
 {
@@ -40,12 +39,10 @@ int main(int argc, char* argv[])
                 fprintf(stderr, "%s: converting %s to Unix format...\n", program, *argv);
             else
                 fprintf(stderr, "%s: converting %s to DOS format...\n", program, *argv);
-        }
-
-        if(fp_in == stdin)
-            fp_out = stdout;
-        else
             fp_out = tmpfile();
+        } else {
+            fp_out = stdout;
+        }
 
         int c;
         while((c = fgetc(fp_in)) != EOF) {

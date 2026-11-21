@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h> // printf(), putchar()
 
 // TODO echo -e
 // TODO echo -n

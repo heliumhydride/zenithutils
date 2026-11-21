@@ -1,3 +1,4 @@
+finish documenting includes
 use perror2() for any programs using fopen()
 lib/util.c:
     read_entire_file() function

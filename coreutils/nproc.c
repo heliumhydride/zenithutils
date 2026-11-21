@@ -1,9 +1,9 @@
-#include <stdio.h>
+#include <stdio.h> // printf()
 
 #ifdef _WIN32
-  #include <sysinfoapi.h>
+#include <sysinfoapi.h> // GetSystemInfo()
 #else // On Unix
-  #include <unistd.h>
+#include <unistd.h>     // sysconf()
 #endif
 
 int main(void)

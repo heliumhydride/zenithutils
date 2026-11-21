@@ -1,10 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <getopt.h>
-#include <sodium.h>
-#include <unistd.h>
-#include "../include/util.h"
+#include <stdio.h>           // fprintf(), printf(), snprintf(), fseek(), fopen(), fclose(), fgetc(), fputc(), SEEK_*
+#include <stdlib.h>          // strtol()
+#include <getopt.h>          // getopt(), optind, optopt, optarg
+#include <sodium.h>          // sodium_init(), randombytes_random()
+#include <unistd.h>          // unlink()
+#include "../include/util.h" // print_error(), perror2()
 
 void print_usage(const char* program)
 {

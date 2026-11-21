@@ -1,13 +1,13 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <getopt.h>
-#include "../include/util.h"
+#include <stdio.h>            // fprintf(), printf(), putchar()
+#include <unistd.h>           // uname()
+#include <getopt.h>           // getopt(), optopt
+#include "../include/util.h"  // print_error()
 
+// utsname
 #ifdef _WIN32
-    // #include <sysinfoapi.h>
-    #include "../include/utsname_winnt.h"
+#include "../include/utsname_winnt.h"
 #else // On Unix
-    #include <sys/utsname.h>
+#include <sys/utsname.h>
 #endif
 
 void print_usage(const char* program)

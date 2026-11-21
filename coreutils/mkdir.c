@@ -1,14 +1,12 @@
-#define _XOPEN_SOURCE 500
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <getopt.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
-#include <libgen.h>
-#include <dirent.h>
-#include "../include/util.h"
+#define _XOPEN_SOURCE 500     // strdup()
+#include <stdio.h>            // fprintf(), printf(), snprintf()
+#include <stdlib.h>           // strtol(), free()
+#include <sys/stat.h>         // stat(), S_ISDIR()
+#include <getopt.h>           // getopt(), optind, optopt, optarg
+#include <string.h>           // strcmp(), strdup()
+#include <errno.h>            // errno, EINVAL, EEXIST, ENOTDIR
+#include <libgen.h>           // dirname()
+#include "../include/util.h"  // mkdir2(), is_mode_t(), print_error(), perror2()
 
 char *program;
 static int vflag = 0;

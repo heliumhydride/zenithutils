@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <libgen.h>
-#include <string.h>
+#include <stdio.h>  // fprintf(), puts()
+#include <libgen.h> // basename()
+#include <string.h> // strlen(), strcmp()
 
 void print_usage(const char* program)
 {

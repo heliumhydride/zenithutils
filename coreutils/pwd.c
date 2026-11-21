@@ -1,23 +1,20 @@
 #define _POSIX_C_SOURCE 200809L // PATH_MAX
-#include <getopt.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "../include/util.h"
-#include "../config.h"
+#include <getopt.h>             // getopt(), optind, optopt
+#include <stdio.h>              // fprintf(), printf()
+#include <stdlib.h>             // malloc(), free(), getenv()
+#include <string.h>             // strlen()
+#include "../include/util.h"    // print_error(), mingw_path()
+#include "../config.h"          // FORCE_MINGW_PATHS
 
 #ifdef _WIN32
-#include <windows.h>
+#include <windows.h> // GetCurrentDirectory()
 #endif // _WIN32
 
 #ifndef PATH_MAX
 #define PATH_MAX 4096
 #endif // !PATH_MAX
 
-void print_usage(char* program)
+void print_usage(const char* program)
 {
     fprintf(stderr, "usage: %s [-LP]", program);
 }
@@ -49,13 +46,14 @@ int main(int argc, char* argv[])
         if(FORCE_MINGW_PATHS) {
             char* m_cwd = malloc(strlen(cwd));
             mingw_path(m_cwd, cwd);
-            printf("%s\n", m_cwd);
+            puts(m_cwd);
+            free(m_cwd);
         } else {
-            printf("%s\n", cwd);
+            puts(cwd);
         }
         #else // On Unix
         if(getcwd(cwd, sizeof(cwd)) != NULL) {
-            printf("%s\n", cwd);
+            puts(cwd)
         } else {
             print_error("%s: getcwd() failed", argv[0]);
             return 1;

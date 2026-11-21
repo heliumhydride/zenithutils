@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "../include/util.h"
+#include <stdio.h>            // fprintf(), printf(), fopen(), fclose()
+#include <stdlib.h>           // malloc(), free()
+#include <string.h>           // strlen(), strcmp()
+#include "../include/util.h"  // print_error(), getline()
 
 void rev(char* out, char* in)
 { 
@@ -51,10 +51,10 @@ int main(int argc, char* argv[])
                return 2;
             rev(line_rev, line);
             printf("%s", line_rev);
+            free(line_rev);
         }
 
         if(fp != stdin) fclose(fp);
     }
-
     return 0;
 }

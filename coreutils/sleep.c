@@ -1,9 +1,9 @@
-#define _XOPEN_SOURCE 500
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include "../include/util.h"
+#define _XOPEN_SOURCE 500    // usleep()
+#include <stdio.h>           // fprintf()
+#include <stdlib.h>          // strtof()
+#include <string.h>          // strlen()
+#include <unistd.h>          // usleep()
+#include "../include/util.h" // print_error()
 
 void print_usage(const char* program)
 {

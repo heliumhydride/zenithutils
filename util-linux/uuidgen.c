@@ -1,9 +1,8 @@
-#include <getopt.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sodium.h>
-#include "../include/util.h"
+#include <getopt.h>           // getopt(), optarg, optopt
+#include <stdio.h>            // fprintf(), puts()
+#include <stdlib.h>           // atol()
+#include <sodium.h>           // sodium_init(), randombytes_uniform()
+#include "../include/util.h"  // str_is_nan(), print_error()
 
 const char* charset = "0123456789abcdef";
 

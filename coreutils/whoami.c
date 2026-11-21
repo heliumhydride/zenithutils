@@ -1,26 +1,27 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <stdio.h>            // puts(), fprintf()
+#include <stdlib.h>           // getenv()
+#include <string.h>           // strcmp()
+#include <unistd.h>           // getlogin()
+#include "../include/util.h"  // print_error(), shift_args()
 
-#ifdef _WIN32
-#include "windows.h"
-#endif
-
-#include "../include/util.h"
-
-/*
 void print_usage(const char* program) {
     fprintf(stderr, "usage: %s", program);
 }
-*/
 
 int main(int argc, char* argv[])
 {
-    (void)argc;
-    char* username = NULL;
+    const char *program = argv[0];
+    shift_args(&argc, &argv);
 
+    if(argc <= 0 && !strcmp(*argv, "--help")) {
+        print_usage(program);
+        return 0;
+    }
+
+    char *username = NULL;
     #ifdef _WIN32
     // that's right we're gonna cheat (using the environment variable USERNAME)
+    // TODO do this the right way?
     username = getenv("USERNAME");
     #else // On Unix
     // TODO when i run "su root" and then run o/usr/bin/whoami, it shows my username before running su instead of "root"... [probably because this acts like logname and not whoami]

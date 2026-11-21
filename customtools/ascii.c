@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-#include "../config.h"
+#include <stdio.h>      // printf(), putchar()
+#include <string.h>     // strcmp()
+#include <stdint.h>     // int8_t  code
+#include "../config.h"  // ASCII_SHOW_OCTAL
 
 typedef struct {
     const char*   representation;

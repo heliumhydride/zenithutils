@@ -1,8 +1,7 @@
-#include <getopt.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "../include/util.h"
+#include <getopt.h>           // getopt(), optarg, optopt
+#include <stdio.h>            // fprintf()
+#include <string.h>           // strlen()
+#include "../include/util.h"  // print_error()
 
 void print_usage(const char* program)
 {
@@ -15,6 +14,7 @@ int main(int argc, char* argv[])
 {
     // TODO implement -o, -a, multiple arguments for test
     // TODO implement -eq, -lt, ...
+    // TODO if called as '[', expect a closing bracket as last argument
     // Do we use getopt() or do we use our own parser ? (for -eq, -lt, ...)
 
     int opt;

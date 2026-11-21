@@ -1,5 +1,5 @@
-#include <errno.h>            // hmm... i wonder why
-#include <stdio.h>            // printf() et al.
+#include <errno.h>            // errno, perror()
+#include <stdio.h>            // printf(), fprintf()
 #include <stdlib.h>           // strtol()
 #include <string.h>           // strcmp()
 #include <unistd.h>           // ssize_t

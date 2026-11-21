@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h> // puts()
 
 int main(int argc, char* argv[])
 {

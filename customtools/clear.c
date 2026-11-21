@@ -1,7 +1,11 @@
-#include <stdio.h>
+#include <stdio.h> // printf()
 
 #ifdef _WIN32
-#include <windows.h>
+#include <windows.h> /* GetConsoleScreenBufferInfo()
+                        FillConsoleOutputCharacter()
+                        FillConsoleOutputAttribute()
+                        SetConsoleCursorPosition(),
+                        GetStdHandle() */
 
 /*
     This function is the reason I am glad Win10+ cmd supports ansi escape clearing...
@@ -11,7 +15,7 @@
 
     Code was cleaned up[1] compared to the original eyesore.
 
-    [1] As much as Win32 code can be clean up of course
+    [1] As much as Win32 code can be clean of course
 */
 void cls(HANDLE hConsole)
 {

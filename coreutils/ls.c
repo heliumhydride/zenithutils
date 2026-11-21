@@ -1,10 +1,11 @@
-#include <stdio.h>
-#include <dirent.h>
-#include <errno.h>
-#include <unistd.h>
-//#include <getopt.h>
-#include "../include/util.h" // includes "../include/color.h"
-#include "../config.h"
+#include <stdio.h>             // printf(), putchar()
+#include <dirent.h>            // opendir(), closedir(), readdir()
+#include <errno.h>             // E* constants (ENOTDIR, ENOENT, EACCES)
+#include <unistd.h>            // access()
+//#include <getopt.h>          // getopt(), optind, optopt
+#include "../include/util.h"   // print_error(), file_ext_is()
+#include "../include/colors.h" // ANSI_*
+#include "../config.h"         // LSCOLOR
 
 #define DT_UNKNOWN 0
 #define DT_FIFO 1
@@ -21,6 +22,14 @@
 // TODO show directory names if there are multiple directories
 // TODO options
 // TODO formatting
+
+#ifdef _WIN32
+#define file_is_executable(f) file_ext_is((f), "exe") || \
+                              file_ext_is((f), "cmd") || \
+                              file_ext_is((f), "bat") // TODO this configuration is not hardcoded into windows
+#else // On Unix
+#define file_is_executable(f) access((f), X_OK) == 0
+#endif // _WIN32
 
 int main(int argc, char* argv[])
 {
@@ -54,7 +63,10 @@ int main(int argc, char* argv[])
         switch(type) {
             case 'd':
                 while((ent = readdir(d))) {
-                    #if LS_COLOR && !defined(_WIN32) // TODO d_type not supported on mingw?
+                    #if LS_COLOR
+                    #ifdef _WIN32
+                    // TODO detect filetype mingw
+                    #else // On Unix
                     switch(ent->d_type) {
                         case DT_BLK: // fallthrough
                         case DT_CHR: // bright yellow
@@ -71,19 +83,12 @@ int main(int argc, char* argv[])
                             printf(ANSI_CYAN);
                             break;
                         default: // any other file, check executable permission
-                            #ifdef _WIN32
-                            if(
-                              file_ext_is(ent->d_name, "exe") ||
-                              file_ext_is(ent->d_name, "cmd") ||
-                              file_ext_is(ent->d_name, "bat")
-                            ) // TODO this configuration is not hardcoded into windows
-                            #else // On Unix
-                            if(access(ent->d_name, X_OK) == 0)
-                            #endif
-                              printf(ANSI_GREEN);
+                            if(file_is_executable(ent->d_name))
+                                printf(ANSI_GREEN);
                             break;
                     }
-                    #endif // LS_COLOR, !_WIN32
+                    #endif // _WIN32
+                    #endif // LS_COLOR
 
                     printf("%s ", ent->d_name);
 

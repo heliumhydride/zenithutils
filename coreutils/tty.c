@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <unistd.h>
+#include <stdio.h>  // puts()
+#include <unistd.h> // ttyname()
 
 int main(void)
 {
     #ifdef _WIN32
-    printf("CON\n"); // assume con device on windows
+    puts("CON"); // assume con device on windows
     #else // On Unix
     char* tty_dev = ttyname(STDIN_FILENO);
     if(tty_dev == NULL) {

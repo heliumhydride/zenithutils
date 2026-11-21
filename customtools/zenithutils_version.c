@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include "../config.h"
+#include <stdio.h>      // printf()
+#include "../config.h"  // VERSION
 
 int main(void)
 {
