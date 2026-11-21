@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <getopt.h>
-#include <string.h>
-#include "../include/util.h"
-#include "../config.h"
+#include <stdio.h>            // fprintf(), puts()
+#include <getopt.h>           // getopt(), optind
+#include <string.h>           // strlen()
+#include "../include/util.h"  // print_error()
+#include "../config.h"        // STDIN_MAX
 
-static int pflag = 0; // {mingw,win32}path need to know about this
+static int pflag = 0; // {mingw,win32}path2 need to know about this
 
 void mingw_path2(char* path)
 {
