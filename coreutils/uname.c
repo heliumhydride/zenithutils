@@ -43,6 +43,7 @@ void print_machine(struct utsname u)
 void print_os(struct utsname u)
 {
     #ifdef _WIN32
+    (void)u;
     printf("Windows ");
     #else // On Unix
     print_sysname(u);

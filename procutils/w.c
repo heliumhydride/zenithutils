@@ -22,7 +22,7 @@ void print_usage(const char* program)
     fprintf(stderr, "usage: %s [-ps]\n", program);
 }
 
-void print_version()
+void print_version(void)
 {
     fputs("w/uptime from zenithutils " VERSION "\n", stderr);
 }
@@ -152,7 +152,8 @@ int main(int argc, char* argv[]) {
     #ifdef _WIN32
     // TODO windows
     // TODO do we emulate /dev/ttyX or just output CON ?
-    fputs("TODO  windows(mingw)", stderr);
+    (void)hflag;
+    fputs("TODO  windows-mingw", stderr);
     return 1;
     #endif
 

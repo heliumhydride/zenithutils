@@ -7,6 +7,11 @@
 #include <windows.h>
 #include "../include/utsname_winnt.h"
 
+/* TODO error handling, with errno
+        return -1, then set EFAULT if buf is invalid
+        see uname(2) 'RETURN VALUE'
+*/
+
 int uname(struct utsname* uts)
 {
     // structs to init: sysname;nodename;release;version;machine
@@ -61,6 +66,7 @@ int uname(struct utsname* uts)
             strcpy(uts->machine, "unknown");
             break;
     }
+    return 0;
 }
 #else
 void utsname_winnt_unused(void)

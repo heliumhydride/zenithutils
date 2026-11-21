@@ -36,8 +36,8 @@ $(PROGS): %: ../o/bin/$(PROG_PREFIX)%
 # TODO needs testing
 ifeq ($(WIN32), 1)
 kill.o: kill_win32.c
-#	@echo "  CC    $(notdir $@)"
-#	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
+	@echo "  CC    $(notdir $@)"
+	@$(CC) $(CFLAGS) -DPROG_PREFIX=\"$(PROG_PREFIX)\" -c $< -o $@
 endif
 
 ../o/bin/$(PROG_PREFIX)pkill: ../o/bin/$(PROG_PREFIX)kill
