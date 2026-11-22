@@ -1,17 +1,5 @@
 coreutils/ls.c
     linux-android platform: '.' directory not found
-    full rework
-    sorting: use such da
-        typedef struct {
-            FILE   **data;
-            size_t count;
-            size_t capacity;
-        } da_files;
-        initialise files.data then qsort(3) it
-        and use different keys for different sorts (-t, -S, -X, ...)
-            default sort alphabetically
-        -r flag reverse order while sorting
-            just call da_reverse(&files)
     color for windows-mingw (call stat on each entry)
     -l option ?
         on windows-mingw, how to get permissions and uid/gid (username/groupname) ?
