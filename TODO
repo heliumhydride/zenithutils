@@ -1,10 +1,3 @@
-coreutils/ls.c
-    linux-android platform: '.' directory not found
-    color for windows-mingw (call stat on each entry)
-    -l option ?
-        on windows-mingw, how to get permissions and uid/gid (username/groupname) ?
-
-customtools/ascii.c: todos listed in source file
 finish documenting includes
 
 build system: configure
@@ -12,11 +5,33 @@ build system: configure
     --disable-werror flag         (on by default)
 
 lib/util.c:
+    nob.h-like command running in libutil
+        handle fork/exec on unixes, just execvp on windows-mingw
+        typedef struct {
+            char   **data
+            size_t count;
+            size_t capacity;
+        } cmd_t; // in util.h
+        cmd_run(), consumes cmd
+        example usage:
+            da_cmd_t cmd = {0};
+            da_append(&cmd, "cc");
+            da_append(&cmd, "main.c");
+            da_append(&cmd, "-o");
+            da_append(&cmd, "main");
+            cmd_run(&cmd);
     int file_ext_is(const char *path, const char *ext)
     read_entire_file() function
     shift_args family of functions
         shift_args_getopt(&argc,&argv,optind); // same as above but account for getopt
         hack_in_stdin(&argc,&argv); // adds "-" to the arguments, see coreutils/wc.c
+
+coreutils/ls.c
+    linux-android platform: '.' directory not found
+    color for windows-mingw (call stat on each entry)
+    -l option ?
+        on windows-mingw, how to get permissions and uid/gid (username/groupname) ?
+
 
 use perror2() for any programs using fopen()
 try to factor out any _WIN32/!_WIN32 clause into macro-functions (see ctests/conway.c and zenithutils/coreutils/hostname.c for example)
