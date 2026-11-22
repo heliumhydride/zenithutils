@@ -16,6 +16,7 @@ $(PROGS): %: ../o/bin/$(PROG_PREFIX)%
 	@echo "  LD    $(notdir $@)"
 	@$(LD) $(LDFLAGS) $^ -o $@ $(LIBS)
 
+../o/bin/$(PROG_PREFIX)ascii: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)errno: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)exedump: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)read: OBJS = ../lib/util.o

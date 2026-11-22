@@ -30,7 +30,7 @@ const asciientry_t ascii_map[] = {
 
 void print_usage(const char *program)
 {
-    fprintf(stderr, "usage: %s [ascii representation]")
+    fprintf(stderr, "usage: %s [ascii representation]", program);
 }
 
 // TODO char* find_ascii_repr(char c)
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     fmt = "%3d %02X %-3s ";
 #endif // ASCII_SHOW_OCTAL
 
-    if(argc < 2) { // no argument, show whole ascii table
+    if(argc <= 0) { // no argument, show whole ascii table
         #if ASCII_SHOW_OCTAL
         printf("Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct\n");
         #else
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
         printf(" Oct");
         #endif
         putchar('\n');
-        while(*++argv) {
+        while(*argv) {
             for(size_t i = 0; i < 128; i++) {
                 if(!strcmp(*argv, ascii_map[i].representation)) {
                     printf(fmt,
@@ -100,6 +100,7 @@ int main(int argc, char* argv[])
                 }
             }
             putchar('\n');
+            shift_args(&argc, &argv);
         }
     }
     return 0;
