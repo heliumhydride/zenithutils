@@ -1,7 +1,8 @@
-#include <stdio.h>      // printf(), putchar()
-#include <string.h>     // strcmp()
-#include <stdint.h>     // int8_t  code
-#include "../config.h"  // ASCII_SHOW_OCTAL
+#include <stdio.h>            // printf(), putchar()
+#include <string.h>           // strcmp()
+#include <stdint.h>           // int8_t
+#include "../include/util.h"  // shift_args()
+#include "../config.h"        // ASCII_SHOW_OCTAL
 
 typedef struct {
     const char*   representation;
@@ -27,34 +28,58 @@ const asciientry_t ascii_map[] = {
     {"x", 0x78},   {"y", 0x79},   {"z", 0x7a},   {"{", 0x7b},   {"|", 0x7c},   {"}", 0x7d},   {"~", 0x7e},   {"DEL", 0x7f}
 };
 
+void print_usage(const char *program)
+{
+    fprintf(stderr, "usage: %s [ascii representation]")
+}
+
+// TODO char* find_ascii_repr(char c)
+// TODO char find_ascii_code(const char *repr)
+
+/*
+TODO if the code is a decimal/hex(0x*)/octal(0o*) integer
+     can easily be checked with strtol
+     use that to find ascii repr
+     But what if we want 'ascii 1' to give the code for the literal character '1'?
+*/
+
 int main(int argc, char* argv[])
 {
+    const char *program = argv[0];
+    shift_args(&argc, &argv);
     char* fmt;
+
+    if(argc >= 1 && !strcmp(*argv, "--help")) {
+        print_usage(program);
+        return 0;
+    }
+
 #if ASCII_SHOW_OCTAL
     fmt = "%3d %02X %03o %-3s ";
 #else
     fmt = "%3d %02X %-3s ";
 #endif // ASCII_SHOW_OCTAL
+
     if(argc < 2) { // no argument, show whole ascii table
-      #if ASCII_SHOW_OCTAL
-      printf("Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct\n");
-      #else
-      printf("Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx\n");
-      #endif // ASCII_SHOW_OCTAL
-      for (int r = 0; r < 16; r++) {
-          for (int c = 0; c < 8; c++) {
-              int i = r + 16*c;
-              printf(fmt,
-                  ascii_map[i].code,
-                  ascii_map[i].code,
-                  #if ASCII_SHOW_OCTAL
-                  ascii_map[i].code,
-                  #endif
-                  ascii_map[i].representation
-              );
-          }
-          putchar('\n');
-      }
+        #if ASCII_SHOW_OCTAL
+        printf("Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct\n");
+        #else
+        printf("Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx\n");
+        #endif // ASCII_SHOW_OCTAL
+        for (int r = 0; r < 16; r++) {
+            for (int c = 0; c < 8; c++) {
+                int i = r + 16*c;
+                printf(fmt,
+                    ascii_map[i].code,
+                    ascii_map[i].code,
+                    #if ASCII_SHOW_OCTAL
+                    ascii_map[i].code,
+                    #endif
+                    ascii_map[i].representation
+                );
+            }
+            putchar('\n');
+        }
     } else {
         printf("Dec Hx");
         #if ASCII_SHOW_OCTAL

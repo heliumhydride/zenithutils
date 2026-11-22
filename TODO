@@ -1,5 +1,3 @@
-customtools/ascii.c:  --help, void print_usage(const char *program)
-
 coreutils/ls.c
     linux-android platform: '.' directory not found
     full rework
@@ -18,6 +16,7 @@ coreutils/ls.c
     -l option ?
         on windows-mingw, how to get permissions and uid/gid (username/groupname) ?
 
+customtools/ascii.c: todos listed in source file
 finish documenting includes
 
 build system: configure
