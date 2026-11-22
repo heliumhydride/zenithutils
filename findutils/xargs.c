@@ -1,16 +1,19 @@
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#include <stdio.h>            // fprintf(), getchar()
+#include <string.h>           // strlen(), strtok(), strcpy()
+#include <unistd.h>           // execvp(), fork()
+#include <stdlib.h>           // malloc()
+#include "../include/util.h"  // da_append(), da_destroy(), print_error()
+#include "../config.h"        // STDIN_MAX
 
 #ifndef _WIN32 // On Unix
-#include <sys/wait.h>
+#include <sys/wait.h>         // waitpid(), WIFEXITED, WEXITSTATUS
 #endif // !_WIN32
 
-#define STB_DS_IMPLEMENTATION
-#include "../include/stb_ds.h"
-
-#include "../include/util.h"
-#include "../config.h"
+typedef struct {
+    char   **data;
+    size_t count;
+    size_t capacity;
+} da_args;
 
 // TODO -0 option
 void print_usage(const char* program)
@@ -21,21 +24,16 @@ void print_usage(const char* program)
 int main(int argc, char* argv[])
 {
     const char* program = argv[0];
+    shift_args(&argc, &argv);
 
-    if(argc < 2) {
+    // TODO --help
+    if(argc == 0) {
         print_usage(program);
         return 1;
     }
 
-    char* path = argv[1];
-    argv++;
-
-    char* buf = malloc(STDIN_MAX);
-    if(buf == NULL) {
-        print_error("%s: malloc() failed", program);
-        return 2;
-    }
-
+    char* path = *argv;
+    char buf[STDIN_MAX] = {0};
     int c;
     int i = 0;
     while((c = getchar()) != EOF) {
@@ -45,9 +43,9 @@ int main(int argc, char* argv[])
     buf[i] = '\0';
 
     // start building new argv from the program's one (after the program path)
-    char** new_argv = NULL;
-    stbds_arrput(new_argv, path);
-    while(*++argv) stbds_arrput(new_argv, *argv);
+    da_args new_argv = {0};
+    da_append(&new_argv, path);
+    while(*++argv) da_append(&new_argv, *argv);
 
     // build the rest of new argv from buffer (stdin)
     const char* separators = " \n\t";
@@ -59,14 +57,14 @@ int main(int argc, char* argv[])
             return 2;
         }
         strcpy(pch2, pch);
-        stbds_arrput(new_argv, pch2);
+        da_append(&new_argv, pch2);
         pch = strtok(NULL, separators);
     }
-    stbds_arrput(new_argv, NULL);
+    da_append(&new_argv, NULL);
 
     int res = 126;
     #ifdef _WIN32
-    res = execvp(path, new_argv);
+    res = execvp(path, new_argv.data);
     #else // On Unix
     int wstatus;
     pid_t pid = fork();
@@ -75,7 +73,7 @@ int main(int argc, char* argv[])
             print_error("%s: could not fork()", program);
             return 2;
         case 0:
-            res = execvp(path, new_argv);
+            res = execvp(path, new_argv.data);
             break;
         default:
             (void)waitpid(pid, &wstatus, 0);
@@ -85,8 +83,7 @@ int main(int argc, char* argv[])
     }
     #endif // _WIN32
 
-    free(buf);
-    stbds_arrfree(new_argv);
+    da_destroy(&new_argv);
     return res;
 }
 

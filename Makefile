@@ -39,8 +39,7 @@ distclean: clean
 	rm -rf config.h config.mk config.log o/
 
 check:
-	#                                             -> not my library not my problem
-	cppcheck --std=c99 . --check-level=exhaustive --suppress='*:include/stb_ds.h'
+	cppcheck --std=c99 . --check-level=exhaustive
 	shellcheck -S style -s sh scripts/* configure
 
 tags:

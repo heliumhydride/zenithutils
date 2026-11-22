@@ -1,58 +1,74 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#define STB_DS_IMPLEMENTATION
-#include "../include/stb_ds.h"
+#include <stdio.h>           // fprintf(), printf(), fopen(), fclose()
+#include <stddef.h>          // size_t
+#include <string.h>          // strcpy(), strcmp(), strlen()
+#include <stdlib.h>          // malloc()
+#include "../include/util.h" // getline(), print_error(), da_append(), da_reverse(), da_destroy()
 
-#include "../include/util.h"
+typedef struct {
+    char   **data;
+    size_t count;
+    size_t capacity;
+} da_lines;
 
-// void print_usage(const char* program);
+void print_usage(const char* program)
+{
+    fprintf(stderr, "usage: %s [files...]\n", program);
+}
+
 int main(int argc, char* argv[])
 {
     const char* program = argv[0];
+    shift_args(&argc, &argv);
 
-    if(argc < 2) {
-        argv--;
-        argv[1] = "-";
+    if(argc == 1 && !strcmp(*argv, "--help")) {
+        print_usage(program);
+        return 0;
+    }
+
+    // TODO maybe make an unshift_args() at this point
+    if(argc == 0) {
+        --argv;
+        ++argc;
+        *argv = "-";
     }
 
     FILE* fp;
-    while(*++argv) {
+    while(*argv) {
         fp = stdin;
         if(strcmp(*argv, "-"))
             fp = fopen(*argv, "r");
 
         if(fp == NULL) {
-            print_error("%s: %s: could not open file", program, *argv);
+            char errstring[150] = {0};
+            snprintf(errstring, sizeof(errstring), "could not open file %s", *argv);
+            perror2(errstring, program);
             return 1;
         }
 
         // compile the list of lines
-        char** line_list = NULL;
+        da_lines lines = {0};
         char* line = NULL;
         size_t cap = 0;
         while(getline(&line, &cap, fp) != -1) {
             char* line2 = malloc(strlen(line) + 1);
             if(line2 == NULL) {
-              print_error("%s: malloc() failed", program);
-              return 2;
+                perror2("malloc", program);
+                return 2;
             }
             strcpy(line2, line);
-            stbds_arrput(line_list, line2);
+            da_append(&lines, line2);
         }
-        if(fp != stdin) fclose(fp);
+        if(fp != stdin)  fclose(fp);
 
         // reverse the lines
-        char** rline_list = NULL;
-        for(size_t i = 0; i < stbds_arrlenu(line_list); i++)
-            stbds_arrins(rline_list, 0, line_list[i]);
+        da_reverse(&lines, char*);
 
         // print the reversed list
-        for(size_t i = 0; i < stbds_arrlenu(rline_list); i++)
-            printf("%s", rline_list[i]);
+        for(size_t i = 0; i < lines.count; ++i)
+            printf("%s", lines.data[i]);
 
-        stbds_arrfree(line_list);
-        stbds_arrfree(rline_list);
+        da_destroy(&lines);
+        shift_args(&argc, &argv);
     }
     return 0;
 }

@@ -135,7 +135,6 @@ EOF
 # some default settings for cflags are specified after argument parsing
 # search for '[1]' for details
 _cflags="-std=c99 -Wall -Wextra -Wpedantic"
-_cflags="$_cflags -Wno-error=sign-compare"    # for include/stb_ds.h: not my library, not my problem:
 DEBUG=0
 PREFIX="/usr/local"
 WIN32=0

@@ -81,4 +81,18 @@ void shift_args(int *argcp, char ***argvp);
         (da)->data = NULL;   \
     } while(0)
 
+// could have used 'typeof(*(da)->data)' but typeof is since C23
+#define da_reverse(da, type)                               \
+    do {                                                   \
+        for(size_t i = 0; i < (da)->count/2; ++i) {        \
+            type tmp = (da)->data[i];                      \
+            (da)->data[i] = (da)->data[(da)->count - i-1]; \
+            (da)->data[(da)->count - i-1] = tmp;           \
+        }                                                  \
+    } while(0)
+/*
+    I   ┌───────────┐   II     ┌─────┐     III
+        1  2  3  4  5       5  2  3  4  1      5  4  3  2  1
+*/
+
 #endif // UTIL_H
