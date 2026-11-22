@@ -32,6 +32,7 @@ void print_error(const char* format, ...);
 void print_warn(const char* format, ...);
 void perror2(const char* s, const char* program);
 void shift_args(int *argcp, char ***argvp);
+int str_startwith(const char *s, const char *prefix);
 
 /*
     Function macros

@@ -1,7 +1,8 @@
-#include <stdio.h>            // printf(), putchar()
-#include <string.h>           // strcmp()
+#include <stdio.h>            // printf(), putchar(), fprintf()
 #include <stdint.h>           // int8_t
-#include "../include/util.h"  // shift_args()
+#include <stdlib.h>           // strtol()
+#include <string.h>           // strcmp()
+#include "../include/util.h"  // shift_args(), print_error(), str_startwith()
 #include "../config.h"        // ASCII_SHOW_OCTAL
 
 typedef struct {
@@ -9,7 +10,7 @@ typedef struct {
     const int8_t  code;
 } asciientry_t;
 
-const asciientry_t ascii_map[] = {
+asciientry_t ascii_map[] = {
     {"NUL", 0x0},  {"SOH", 0x1},  {"STX", 0x2},  {"ETX", 0x3},  {"EOT", 0x4},  {"ENQ", 0x5},  {"ACK", 0x6},  {"BEL", 0x7},
     {"BS", 0x8},   {"HT", 0x9},   {"NL", 0xa},   {"VT", 0xb},   {"FF", 0xc},   {"CR", 0xd},   {"SO", 0xe},   {"SI", 0xf},
     {"DLE", 0x10}, {"DC1", 0x11}, {"DC2", 0x12}, {"DC3", 0x13}, {"DC4", 0x14}, {"NAK", 0x15}, {"SYN", 0x16}, {"ETB", 0x17},
@@ -30,28 +31,46 @@ const asciientry_t ascii_map[] = {
 
 void print_usage(const char *program)
 {
-    fprintf(stderr, "usage: %s [ascii representation]", program);
+    fprintf(stderr, "usage: %s [-l] [repr] | [code]\n", program);
 }
 
-// TODO char* find_ascii_repr(char c)
-// TODO char find_ascii_code(const char *repr)
+asciientry_t* ascii_from_repr(const char *repr)
+{
+    for(size_t i = 0; i < 128; i++) {
+        if(!strcmp(repr, ascii_map[i].representation))
+            return ascii_map + i;
+    }
+    return NULL;
+}
 
-/*
-TODO if the code is a decimal/hex(0x*)/octal(0o*) integer
-     can easily be checked with strtol
-     use that to find ascii repr
-     But what if we want 'ascii 1' to give the code for the literal character '1'?
-*/
+asciientry_t* ascii_from_code(const char c)
+{
+    for(size_t i = 0; i < 128; i++) {
+        if((char)(ascii_map[i].code) == c)
+            return ascii_map + i;
+    }
+    return NULL;
+}
 
 int main(int argc, char* argv[])
 {
     const char *program = argv[0];
     shift_args(&argc, &argv);
     char* fmt;
+    int lflag = 0; /*  the next arguments are literal
+                       e.g. 'ascii -l 1' would print ascii for the
+                           literal character '1', not code 0x01     
+                       exceptions are hex and octal literals
+                       they are always interpreted as codes */
 
-    if(argc >= 1 && !strcmp(*argv, "--help")) {
-        print_usage(program);
-        return 0;
+    if(argc >= 1) {
+        if(!strcmp(*argv, "--help")) {
+            print_usage(program);
+            return 0;
+        } else if(!strcmp(*argv, "-l")) {
+            shift_args(&argc, &argv);
+            lflag = 1;
+        }
     }
 
 #if ASCII_SHOW_OCTAL
@@ -61,20 +80,20 @@ int main(int argc, char* argv[])
 #endif // ASCII_SHOW_OCTAL
 
     if(argc <= 0) { // no argument, show whole ascii table
-        #if ASCII_SHOW_OCTAL
+#if ASCII_SHOW_OCTAL
         printf("Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct     Dec Hx Oct\n");
-        #else
+#else
         printf("Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx     Dec Hx\n");
-        #endif // ASCII_SHOW_OCTAL
-        for (int r = 0; r < 16; r++) {
-            for (int c = 0; c < 8; c++) {
+#endif // ASCII_SHOW_OCTAL
+        for(int r = 0; r < 16; r++) {
+            for(int c = 0; c < 8; c++) {
                 int i = r + 16*c;
                 printf(fmt,
                     ascii_map[i].code,
                     ascii_map[i].code,
-                    #if ASCII_SHOW_OCTAL
+#if ASCII_SHOW_OCTAL
                     ascii_map[i].code,
-                    #endif
+#endif
                     ascii_map[i].representation
                 );
             }
@@ -82,23 +101,37 @@ int main(int argc, char* argv[])
         }
     } else {
         printf("Dec Hx");
-        #if ASCII_SHOW_OCTAL
+#if ASCII_SHOW_OCTAL
         printf(" Oct");
-        #endif
+#endif
         putchar('\n');
         while(*argv) {
-            for(size_t i = 0; i < 128; i++) {
-                if(!strcmp(*argv, ascii_map[i].representation)) {
-                    printf(fmt,
-                        ascii_map[i].code,
-                        ascii_map[i].code,
-                        #if ASCII_SHOW_OCTAL
-                        ascii_map[i].code,
-                        #endif // ASCII_SHOW_OCTAL
-                        ascii_map[i].representation
-                    );
+            int base = 10;
+            if(str_startwith(*argv, "0x"))  { (*argv) += 2; base = 16; }
+            if(str_startwith(*argv, "0o"))  { (*argv) += 2; base = 8;  }
+
+            asciientry_t* entry = NULL;
+            char *endptr = *argv;
+
+            if(!lflag || base != 10)
+                entry = ascii_from_code((char)strtol(*argv, &endptr, base));
+
+            if(!strcmp(*argv, endptr)) {
+                entry = ascii_from_repr(*argv);
+                if(!entry) {
+                    print_error("%s: invalid ascii representation '%s'", program, *argv);
+                    return 1;
                 }
             }
+
+            printf(fmt,
+                entry->code,
+                entry->code,
+#if ASCII_SHOW_OCTAL
+                entry->code,
+#endif // ASCII_SHOW_OCTAL
+                entry->representation
+            );
             putchar('\n');
             shift_args(&argc, &argv);
         }

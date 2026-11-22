@@ -221,3 +221,8 @@ void shift_args(int *argcp, char ***argvp)
     (void)(*argvp)++;
 }
 
+int str_startwith(const char *s, const char *prefix)
+{
+    return strncmp(s, prefix, strlen(prefix)) == 0;
+}
+
