@@ -11,7 +11,7 @@ void print_usage(const char* program)
 
 int main(int argc, char* argv[])
 {
-    const char *program = argv[0]
+    const char *program = argv[0];
     shift_args(&argc, &argv);
 
     if(argc <= 0) {
