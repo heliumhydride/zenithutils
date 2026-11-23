@@ -4,7 +4,7 @@
 #include <stdint.h>    // uint*_t
 #include <stdlib.h>    // strtol(), realloc(), free(), abort()
 #include <stdio.h>     // fprintf(), printf()
-#include <unistd.h>    // ssize_t
+#include <unistd.h>    // ssize_t, STDOUT_FILENO
 #include <sys/stat.h>  // umask(), mkdir()
 #include <sys/types.h> // mode_t [on linux-glibc platform]
 #include <stdarg.h>    // va_list, va_start, va_end
@@ -14,6 +14,12 @@
 #else
 #include <sys/wait.h>  // waitpid(), WIFEXITED, WEXITSTATUS
 #endif
+
+#ifdef _WIN32
+#include <windows.h>    // GetStdHandle(), GetConsoleScreenBufferInfo(), CONSOLE_SCREEN_BUFFER_INFO, HANDLE
+#else // On Unix
+#include <sys/ioctl.h>  // ioctl(), TIO*, struct winsize
+#endif // _WIN32
 
 #include "../config.h" // COLORED_ERRORS
 #include "colors.h"    // ANSI_*
@@ -54,6 +60,7 @@ void shift_args_n(int *argcp, char ***argvp, const int n);
 int str_startwith(const char *s, const char *prefix);
 int str_endswith(const char *s, const char *suffix);
 int cmd_run(cmd_t *cmd);
+struct winsize get_termsize(void);
 
 /*
     Function macros

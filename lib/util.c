@@ -275,3 +275,35 @@ int cmd_run(cmd_t *cmd)
     cmd->count = 0;
     return excode;
 }
+
+
+#ifdef _WIN32
+struct winsize {
+    unsigned short ws_row;
+    unsigned short ws_col;
+    unsigned short ws_xpixel;  /* unused */
+    unsigned short ws_ypixel;  /* unused */
+};
+
+struct winsize get_termsize(void)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    // TODO error handling ???
+    GetConsoleScreenBufferInfo(hConsole, &csbi);
+    struct winsize ws = {
+        csbi.srWindow.Bottom - csbi.srWindow.Top + 1,
+        csbi.srWindow.Right - csbi.srWindow.Left + 1,
+        0, 0
+    };
+    return ws;
+}
+#else // On Unix
+struct winsize get_termsize(void)
+{
+    struct winsize ws = {0};
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
+    return ws;
+}
+#endif // _WIN32

@@ -38,6 +38,7 @@ $(SPROGS): %: ../o/sbin/$(PROG_PREFIX)%
 ../o/bin/$(PROG_PREFIX)uuidgen: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)hexdump: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)cal: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)more: OBJS = ../lib/util.o
 
 ../o/bin/$(PROG_PREFIX)uuidgen: LIBS = -lsodium
 
