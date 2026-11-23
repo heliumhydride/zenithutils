@@ -7,8 +7,13 @@ build system: configure
 lib/util.c:
     read_entire_file() function
 
+util-linux/more
+
 coreutils/ls.c
     linux-android platform: '.' directory not found
+    windows-mingw issues:
+        can't stat many files in root directories (like c:/, //wsl.localhost/*/)
+        a file would also be executable under a *sh shell (how to detect?) if it had a #!/bin/sh (this is how busybox-win32 sh decides if a script is executable or not beyond just the file ext), so aim to be compatible with that
     color for windows-mingw (call stat on each entry)
     -l option ?
         on windows-mingw, how to get permissions and uid/gid (username/groupname) ?
