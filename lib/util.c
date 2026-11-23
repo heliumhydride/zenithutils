@@ -226,3 +226,38 @@ int str_startwith(const char *s, const char *prefix)
     return strncmp(s, prefix, strlen(prefix)) == 0;
 }
 
+int cmd_run(cmd_t *cmd)
+{
+    int excode = 130;
+    da_append(cmd, NULL);
+#ifdef _WIN32
+    excode = (int)_spawnvp(_P_WAIT, cmd->data[0], (const char *const *)(cmd->data));
+    if(excode == -1) {
+        perror2("could not spawn process", LIBUTIL_NAME);
+        return -1;
+    }
+#else // On Unix
+    int wstatus;
+    pid_t pid = fork();
+    switch(pid) {
+        case -1:
+            perror2("could not fork", LIBUTIL_NAME);
+            return -1;
+        case 0:
+            excode = execvp(cmd->data[0], cmd->data);
+            if(excode == -1) {
+                char errstring[150] = {0};
+                snprintf(errstring, sizeof(errstring), "could not execute '%s'", cmd->data[0]);
+                perror2(errstring, LIBUTIL_NAME);
+                return -1;
+            }
+            break;
+        default:
+            (void)waitpid(pid, &wstatus, 0);
+            if(WIFEXITED(wstatus))
+                excode = WEXITSTATUS(wstatus);
+    }
+#endif // _WIN32
+    cmd->count = 0;
+    return excode;
+}

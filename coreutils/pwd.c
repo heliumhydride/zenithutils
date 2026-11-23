@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
         }
         #else // On Unix
         if(getcwd(cwd, sizeof(cwd)) != NULL) {
-            puts(cwd)
+            puts(cwd);
         } else {
             print_error("%s: getcwd() failed", argv[0]);
             return 1;

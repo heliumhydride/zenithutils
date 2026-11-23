@@ -5,21 +5,6 @@ build system: configure
     --disable-werror flag         (on by default)
 
 lib/util.c:
-    nob.h-like command running in libutil
-        handle fork/exec on unixes, just execvp on windows-mingw
-        typedef struct {
-            char   **data
-            size_t count;
-            size_t capacity;
-        } cmd_t; // in util.h
-        cmd_run(), consumes cmd
-        example usage:
-            da_cmd_t cmd = {0};
-            da_append(&cmd, "cc");
-            da_append(&cmd, "main.c");
-            da_append(&cmd, "-o");
-            da_append(&cmd, "main");
-            cmd_run(&cmd);
     int file_ext_is(const char *path, const char *ext)
     read_entire_file() function
     shift_args family of functions

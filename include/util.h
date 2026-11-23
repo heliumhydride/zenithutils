@@ -7,10 +7,28 @@
 #include <unistd.h>    // ssize_t
 #include <sys/stat.h>  // umask(), mkdir()
 #include <sys/types.h> // mode_t [on linux-glibc platform]
-#include "../config.h"
+#include <stdarg.h>    // va_list, va_start, va_end
 
-#include "colors.h"
-#include <stdarg.h>
+#ifdef _WIN32
+#include <process.h>   // _spawnvp();
+#else
+#include <sys/wait.h>  // waitpid(), WIFEXITED, WEXITSTATUS
+#endif
+
+#include "../config.h" // COLORED_ERRORS
+#include "colors.h"    // ANSI_*
+
+/*
+    Typedefs and defines
+*/
+
+#define LIBUTIL_NAME "zenithutils libutil"
+
+typedef struct {
+    char   **data;
+    size_t count;
+    size_t capacity;
+} cmd_t;
 
 /*
     Prototypes for util.c
@@ -33,6 +51,7 @@ void print_warn(const char* format, ...);
 void perror2(const char* s, const char* program);
 void shift_args(int *argcp, char ***argvp);
 int str_startwith(const char *s, const char *prefix);
+int cmd_run(cmd_t *cmd);
 
 /*
     Function macros
