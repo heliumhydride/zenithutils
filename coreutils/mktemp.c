@@ -1,17 +1,10 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <getopt.h>
-
-#include "../include/util.h"
-#include <sodium.h>
-
-#ifdef _WIN32
-  #include <windows.h>
-#else // On Unix
-  #include <sys/stat.h>
-#endif
+#include <stdio.h>           // fprintf(), puts(), snprintf()
+#include <string.h>          // strlen()
+#include <stdlib.h>          // malloc(), getenv()
+#include <getopt.h>          // getopt(), optopt, optarg, optind
+#include <sodium.h>          // sodium_init(), randombytes_uniform()
+#include "../include/util.h" // print_error(), mingw_path()
+#include "../config.h"       // FORCE_MINGW_PATHS
 
 const char* xreplacer = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyz0123456789";
 

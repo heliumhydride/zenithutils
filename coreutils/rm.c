@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <getopt.h>
-#include <errno.h>
-#include "../include/util.h"
+#include <stdio.h>           // printf(), fprintf()
+#include <unistd.h>          // unlink()
+#include <getopt.h>          // getopt(), optopt, optind
+#include "../include/util.h" // print_error()
 
 // TODO rm -r, -i
 // TODO properly make use of -f flag ?

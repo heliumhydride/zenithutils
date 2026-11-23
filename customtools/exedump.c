@@ -1,11 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include "../include/util.h"
-#include "../include/elf.h"
-#include "../include/pe.h"
-#include "../config.h"
+#include <stdio.h>           // fprintf(), printf(), fopen(), fclose(), fread(), putchar(), puts()
+#include <stdlib.h>          // malloc(), free()
+#include <string.h>          // strcmp(), memcpy()
+#include "../include/util.h" // get_filesize(), print_error(), reverse_end*()
+#include "../include/elf.h"  /* Elf32_Ehdr, Elf64_Ehdr, Elf32_Ehdr, Elf64_Phdr,
+                                ELF_BITS_32, ELF_BITS_64, ELF_MSB, ELF_LSB,
+                                ABI_*, EM_*, ET_REL, ET_EXEC, ET_DYN, ET_CORE   */
+#include "../include/pe.h"   /* DosStub_t, PeHeader_t, Pe32OptHeader_t, Pe32PlusOptHeader_t,
+                                IMAGE_FILE_*, IMAGE_SUBSYSTEM_*                              */
+#include "../config.h"       // EXEDUMP_COLOR1, EXEDUMP_COLOR2
 
 enum formats {
     FMT_AUTO,
@@ -21,7 +23,7 @@ void print_pe_info(uint8_t* buf);
 
 void print_usage(const char* program)
 {
-  fprintf(stderr, "usage: %s executable [...]\n", program);
+    fprintf(stderr, "usage: %s executable [...]\n", program);
 }
 
 int main(int argc, char* argv[])

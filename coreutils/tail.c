@@ -1,9 +1,8 @@
 #include <stdio.h>            // fprintf(), printf(), putchar(), snprintf(), fopen(), fclose()
 #include <stdlib.h>           // malloc(), strtol(), strtof()
 #include <string.h>           // strcmp(), strlen(), strcpy()
-#include <unistd.h>           //
 #include <getopt.h>           // getopt(), optarg, optind, optopt
-#include "../include/util.h"  // print_error(), perror2(), da_append(), da_destroy()
+#include "../include/util.h"  // print_error(), perror2(), da_append(), da_destroy(), getline()
 
 typedef struct {
     char   **data;

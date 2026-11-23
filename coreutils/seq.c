@@ -1,9 +1,9 @@
-#include <getopt.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "../include/util.h"
-#include "../config.h"
+#include <getopt.h>           // getopt(), optopt, optarg, optind
+#include <stdio.h>            // fprintf(), printf(), putchar()
+#include <stdlib.h>           // strtof()
+#include <string.h>           // strlen(), strcmp()
+#include "../include/util.h"  // print_error()
+#include "../config.h"        // STRICT_SEQ
 
 #ifndef BUFSIZE
 #define BUFSIZE 256

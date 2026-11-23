@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <getopt.h>
-#include <string.h>
-#include <ctype.h>
-#include "../include/util.h"
-#include "../config.h"
+#include <stdio.h>            // fprintf(), printf(), fopen(), fgetc(), fclose()
+#include <getopt.h>           // getopt(), optind, optopt, optarg
+#include <string.h>           // memset()
+#include <ctype.h>            // isprint()
+#include "../include/util.h"  // print_error(), str_is_nan()
+#include "../config.h"        // STRING_MAXSTRLEN
 
 void print_usage(const char* program)
 {

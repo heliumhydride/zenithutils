@@ -1,8 +1,7 @@
-#include <errno.h>
-#include <getopt.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "../include/util.h"
+#include <getopt.h>           // getopt(), optopt, optind
+#include <stdio.h>            // fprintf(), printf()
+#include <unistd.h>           // rmdir()
+#include "../include/util.h"  // print_error(), perror2()
 
 void print_usage(const char* program)
 {
