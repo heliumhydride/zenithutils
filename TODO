@@ -5,11 +5,7 @@ build system: configure
     --disable-werror flag         (on by default)
 
 lib/util.c:
-    int file_ext_is(const char *path, const char *ext)
     read_entire_file() function
-    shift_args family of functions
-        shift_args_getopt(&argc,&argv,optind); // same as above but account for getopt
-        hack_in_stdin(&argc,&argv); // adds "-" to the arguments, see coreutils/wc.c
 
 coreutils/ls.c
     linux-android platform: '.' directory not found

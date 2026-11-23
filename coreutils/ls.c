@@ -11,18 +11,19 @@
 #include "../include/colors.h" // ANSI_*
 #include "../config.h"         // LSCOLOR, PATHNAME_MAX, FORCE_MINGW_PATHS
 
-/* should not be needed, even on windows-mingw
-#define S_IFMT   0o0170000
-#define S_IFSOCK 0o0140000
-#define S_IFLNK  0o0120000
-#define S_IFREG  0o0100000
-#define S_IFBLK  0o0060000
-#define S_IFDIR  0o0040000
-#define S_IFCHR  0o0020000
-#define S_IFIFO  0o0010000
-*/
+#ifdef _WIN32
+// #define S_IFMT   0xf000
+#define S_IFSOCK 0xc000 // TODO likely immensely wrong and not defind for a reason, but
+#define S_IFLNK  0xa000 //      avoids compilation errors [1]
+// #define S_IFREG  0x8000
+// #define S_IFBLK  0x6000
+// #define S_IFDIR  0x4000
+// #define S_IFCHR  0x2000
+// #define S_IFIFO  0x1000
+#define lstat stat
+#endif // _WIN32
 
-// TODO options (-laAtS)
+// TODO options (-laA)
 // TODO print individual files, with color
 // TODO show directory names if there are multiple directories
 // TODO formatting
@@ -30,9 +31,9 @@
 // TODO LS_COLORS env variable
 
 #ifdef _WIN32
-#define file_is_executable(f) file_ext_is((f), "exe") || \
-                              file_ext_is((f), "cmd") || \
-                              file_ext_is((f), "bat") // TODO this configuration is not hardcoded into windows
+#define file_is_executable(f) str_endswith((f), ".exe") || \
+                              str_endswith((f), ".cmd") || \
+                              str_endswith((f), ".bat") // TODO this configuration is not hardcoded into windows
 #else // On Unix
 #define file_is_executable(f) access((f), X_OK) == 0
 #endif // _WIN32
@@ -111,11 +112,7 @@ int ls(char *path)
         char *dirpath  = strdup(ent->d_name);
         char filepath[PATHNAME_MAX] = {0};
         strcpy(filepath, path);
-#if defined(_WIN32) && !FORCE_MINGW_PATHS
-        strcat(filepath, "\\");
-#else
         strcat(filepath, "/");
-#endif
         strcat(filepath, dirpath);
 
         if(lstat(filepath, &sb) == -1) {
@@ -154,7 +151,7 @@ int ls(char *path)
             case S_IFDIR:
                 printf(ANSI_BLUE);
                 break;
-            case S_IFLNK:
+            case S_IFLNK: // [1]
                 printf(ANSI_CYAN);
                 break;
             case S_IFCHR:
@@ -162,7 +159,7 @@ int ls(char *path)
                 printf(ANSI_YELLOW);
                 break;
             case S_IFIFO:
-            case S_IFSOCK:
+            case S_IFSOCK: // [1]
                 printf(ANSI_MAGENTA);
                 break;
         }
@@ -194,7 +191,7 @@ int main(int argc, char* argv[])
 {
     program = argv[0];
 
-    if(argc == 1 && !strcmp(*argv, "--help")) {
+    if(argc >= 2 && !strcmp(argv[1], "--help")) {
         print_usage(program);
         return 0;
     }
@@ -239,10 +236,8 @@ int main(int argc, char* argv[])
                 break;
         }
     }
-    shift_args(&argc, &argv);
+    shift_args_n(&argc, &argv, optind);
 
-    argc -= optind-1;
-    argv += optind-1;
     if(argc == 0) {
         --argv;
         ++argc;

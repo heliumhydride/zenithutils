@@ -50,7 +50,9 @@ void print_error(const char* format, ...);
 void print_warn(const char* format, ...);
 void perror2(const char* s, const char* program);
 void shift_args(int *argcp, char ***argvp);
+void shift_args_n(int *argcp, char ***argvp, const int n);
 int str_startwith(const char *s, const char *prefix);
+int str_endswith(const char *s, const char *suffix);
 int cmd_run(cmd_t *cmd);
 
 /*

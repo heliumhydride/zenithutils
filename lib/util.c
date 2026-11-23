@@ -221,9 +221,23 @@ void shift_args(int *argcp, char ***argvp)
     (void)(*argvp)++;
 }
 
+void shift_args_n(int *argcp, char ***argvp, const int n)
+{
+    (*argcp) -= n;
+    (*argvp) += n;
+}
+
 int str_startwith(const char *s, const char *prefix)
 {
     return strncmp(s, prefix, strlen(prefix)) == 0;
+}
+
+int str_endswith(const char *s, const char *suffix)
+{
+    size_t lens = strlen(s);
+    size_t lensuffix = strlen(suffix);
+    if(lensuffix > lens) return 0;
+    return strncmp(s + lens - lensuffix, suffix, lensuffix) == 0;
 }
 
 int cmd_run(cmd_t *cmd)
