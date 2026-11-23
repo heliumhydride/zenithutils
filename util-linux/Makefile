@@ -7,7 +7,7 @@ include ../config.mk
 # for login on windows: use as a frontend to LogonUI/runas.exe maybe ? kind of a strech but I don't see what else login.exe would do...
 # fsck on windows: do we just 'execvp("chkdsk.exe", ...);' ?
 
-PROGS=rev uuidgen hexdump lscpu column blkid cal cfdisk chsh col dmesg eject fallocate findfs getopt last login lsblk lslogins mcookie more mount mountpoint renice whereis swapon swapoff
+PROGS=rev uuidgen hexdump cal more lscpu column blkid cfdisk chsh col dmesg eject fallocate findfs getopt last login lsblk lslogins mcookie mount mountpoint renice whereis swapon swapoff
 SPROGS=nologin fdisk fsck mkfs mount
 ifeq ($(WIN32), 0)
 	PROGS += ionice write 
@@ -37,6 +37,7 @@ $(SPROGS): %: ../o/sbin/$(PROG_PREFIX)%
 ../o/bin/$(PROG_PREFIX)rev: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)uuidgen: OBJS = ../lib/util.o
 ../o/bin/$(PROG_PREFIX)hexdump: OBJS = ../lib/util.o
+../o/bin/$(PROG_PREFIX)cal: OBJS = ../lib/util.o
 
 ../o/bin/$(PROG_PREFIX)uuidgen: LIBS = -lsodium
 
