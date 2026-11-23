@@ -109,18 +109,18 @@ int ls(char *path)
     struct stat sb;
     while((ent = readdir(d))) {
         // concat current dir to filename
-        char *dirpath  = strdup(ent->d_name);
+        char *pathindir  = strdup(ent->d_name);
         char filepath[PATHNAME_MAX] = {0};
         strcpy(filepath, path);
         strcat(filepath, "/");
-        strcat(filepath, dirpath);
+        strcat(filepath, pathindir);
 
         if(lstat(filepath, &sb) == -1) {
             char errstring[150] = {0};
             snprintf(errstring, sizeof(errstring), "could not stat '%s'", filepath);
             perror2(errstring, program);
         }
-        fileinfo_t fi = {dirpath, sb};
+        fileinfo_t fi = {pathindir, sb};
         da_append(&fileinfos, fi);
     }
 
@@ -141,12 +141,19 @@ int ls(char *path)
     if(rflag)  da_reverse(&fileinfos, fileinfo_t);
 
     for(size_t i = 0; i < fileinfos.count; ++i) {
-        fileinfo_t fi = fileinfos.data[i];
 #if LS_COLOR
-        mode_t filetype = fi.st.st_mode & S_IFMT;
-        if(file_is_executable(fi.filename))
+        // concat current dir to filename
+        fileinfo_t fi = fileinfos.data[i];
+
+        char filepath[PATHNAME_MAX] = {0};
+        strcpy(filepath, path);
+        strcat(filepath, "/");
+        strcat(filepath, fi.filename);
+        if(file_is_executable(filepath))
             printf(ANSI_GREEN);
         // ^^^ TODO should probably be done using stat
+
+        mode_t filetype = fi.st.st_mode & S_IFMT;
         switch(filetype) {
             case S_IFDIR:
                 printf(ANSI_BLUE);
