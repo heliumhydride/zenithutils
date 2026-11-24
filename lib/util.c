@@ -180,7 +180,7 @@ void print_error(const char* format, ...)
     #if COLORED_ERRORS
     fprintf(stderr, "%s", ANSI_NORM);
     #endif // COLORED_ERRORS
-    putchar('\n');
+    fputc('\n', stderr);
 }
 
 void print_warn(const char* format, ...)
@@ -197,7 +197,7 @@ void print_warn(const char* format, ...)
     #if COLORED_ERRORS
     fprintf(stderr, "%s", ANSI_NORM);
     #endif // COLORED_ERRORS
-    putchar('\n');
+    fputc('\n', stderr);
 }
 
 void perror2(const char* s, const char* program)
